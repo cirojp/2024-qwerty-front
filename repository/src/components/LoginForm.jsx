@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function LoginForm() {
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const onClick = ()=>{
@@ -11,6 +13,7 @@ function LoginForm() {
     console.log(userData);
     setUsername("");
     setPassword("");
+    navigate("/index")
   }
   const changeUsername = (event) => {
     setUsername(event.target.value);
@@ -19,24 +22,28 @@ function LoginForm() {
     setPassword(event.target.value)
   }
   return (
-    <div className="row ml-3 mr-3 border border-secondary rounded bg-dark">
-    <div className="col blockquote text-center text-light font-weight-bold">LOGIN</div>
-    <div className="w-100"/>
-    <div className="col blockquote text-center text-light">Ingrese su usuario y contraseña</div>
-    <div className="w-100"/>
-    <form className="bg-dark-subtle col">
-      <div>
-        <label className="form-label text-light text-left">Usuario:</label>
-        <input type="text" className="form-control" value={username} placeholder='Username' onChange={(newEvent) => {changeUsername(newEvent)}}/><br/>
-        <label className="form-label text-light text-left">Contraseña:</label>
-        <input type="password" className="form-control" value={password} placeholder='Password' onChange={(newEvent) => {changePassword(newEvent)}}/><br/>
-        <div className="btn-group" role="group">
-          <input type="button" className="btn btn-lg btn-primary mb-3" value="Log In" onClick={onClick}/>
-          <input type="button" className="btn btn-lg btn-primary mb-3 ml-1" value="Sign Up" onClick={()=> {console.log("A Registrarse!")}}/>
-        </div>
+    <div className='container bg-success mw-100 mh-100 p-3'>
+      <div className="row ml-3 mr-3 border border-secondary rounded bg-dark">
+        <div className="col blockquote text-center text-light font-weight-bold">LOGIN</div>
+        <div className="w-100"/>
+        <div className="col blockquote text-center text-light">Ingrese su usuario y contraseña</div>
+        <div className="w-100"/>
+        <form className="bg-dark-subtle col">
+          <div>
+            <label className="form-label text-light text-left">Usuario:</label>
+            <input type="text" className="form-control" value={username} placeholder='Username' onChange={(newEvent) => {changeUsername(newEvent)}}/><br/>
+            <label className="form-label text-light text-left">Contraseña:</label>
+            <input type="password" className="form-control" value={password} placeholder='Password' onChange={(newEvent) => {changePassword(newEvent)}}/><br/>
+            <div className="btn-group" role="group">
+              <input type="button" className="btn btn-lg btn-primary mb-3" value="Log In" onClick={onClick}/>
+              <input type="button" className="btn btn-lg btn-primary mb-3 ml-1" value="Sign Up" onClick={()=> {console.log("A Registrarse!")}}/>
+            </div>
+          </div>
+        </form>
       </div>
-    </form>
-  </div>);
+      <div className='text-center font-weight-light'>Recuperar Contraseña</div>
+    </div>
+    );
 }
 
 export default LoginForm;

@@ -1,12 +1,20 @@
 import './App.css'
+import HomePage from './components/HomePage';
 import LoginForm from './components/LoginForm'
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+} from "react-router-dom";
 
 function App() {
   return (
-    <div className='container bg-success mw-100 mh-100 p-3'>
-      <LoginForm/>
-      <div className='text-center font-weight-light'>Recuperar Contraseña</div>
-    </div>
+    <Router>
+      <Routes>
+        <Route exact path='/' element={<LoginForm/>} />
+        <Route exact path='/index' element={<HomePage/>} />
+      </Routes>
+    </Router>
   )
 }
 

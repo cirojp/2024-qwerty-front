@@ -1,7 +1,19 @@
 import React, { useEffect, useState } from 'react';
+import DataTable from 'react-data-table-component'
 
 function HomePage() {
     const [transacciones, setTransacciones] = useState([]);
+    const columns = [
+        {
+            name: "Motivo",
+            selector: row => row.motivo,
+        },
+        {
+            name: "Valor",
+            selector: row => row.valor,
+            sortable: true
+        }, 
+    ]
 
     useEffect(() => {
         const token = localStorage.getItem("token");  // Obtener el token del localStorage
@@ -16,6 +28,7 @@ function HomePage() {
         .then(data => {
             console.log(data);
             setTransacciones(data);
+            
         })
         .catch(err => console.log(err));
     }, []);
@@ -23,13 +36,21 @@ function HomePage() {
     return (
         <div>
             <h1>Transacciones</h1>
-            <ul>
+            <div>
+                <DataTable 
+                    title="Historial de Transacciones"
+                    columns={columns}
+                    data={transacciones}
+                    pagination
+                />
+            </div>
+            {/*<ul>
                 {transacciones.map(transaccion => (
                     <li key={transaccion.id}>
                         Motivo: {transaccion.motivo}, Valor: {transaccion.valor}
                     </li>
                 ))}
-            </ul>
+            </ul>*/}
         </div>
     );
 }

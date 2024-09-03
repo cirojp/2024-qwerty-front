@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+/*import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function LoginForm() {
@@ -44,6 +44,66 @@ function LoginForm() {
       <div className='text-center font-weight-light'>Recuperar Contraseña</div>
     </div>
     );
+}
+
+export default LoginForm;*/
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+function LoginForm() {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
+
+  const onClick = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          email: email,
+          password: password,
+        }),
+      });
+      const responseData = await response.json(); // Lee la respuesta para obtener más información
+      if (response.ok) {
+        navigate("/index");
+      } else {
+        setError("Credenciales inválidas");
+      }
+    } catch (err) {
+      console.error("Error during login:", err);
+      setError("Ocurrió un error. Intenta nuevamente.");
+    }
+  };
+
+  return (
+    <div className='container bg-success mw-100 mh-100 p-3'>
+      <div className="row ml-3 mr-3 border border-secondary rounded bg-dark">
+        <div className="col blockquote text-center text-light font-weight-bold">LOGIN</div>
+        <div className="w-100"/>
+        <div className="col blockquote text-center text-light">Ingrese su email y contraseña</div>
+        <div className="w-100"/>
+        <form className="bg-dark-subtle col" onSubmit={(e) => { e.preventDefault(); onClick(); }}>
+          <div>
+            <label className="form-label text-light text-left">Email:</label>
+            <input type="email" className="form-control" value={email} placeholder='Email' onChange={(e) => setEmail(e.target.value)}/><br/>
+            <label className="form-label text-light text-left">Contraseña:</label>
+            <input type="password" className="form-control" value={password} placeholder='Password' onChange={(e) => setPassword(e.target.value)}/><br/>
+            {error && <div className="text-danger">{error}</div>}
+            <div className="btn-group" role="group">
+              <button type="submit" className="btn btn-lg btn-primary mb-3">Log In</button>
+              <button type="button" className="btn btn-lg btn-primary mb-3 ml-1" onClick={() => navigate("/register")}>Sign Up</button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div className='text-center font-weight-light'>Recuperar Contraseña</div>
+    </div>
+  );
 }
 
 export default LoginForm;

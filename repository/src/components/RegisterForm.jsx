@@ -7,7 +7,8 @@ function RegisterForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
 
-  const onRegister = async () => {
+  const onRegister = async (e) => {
+    e.preventDefault();
     try {
       const response = await fetch("http://localhost:8080/api/auth/register", {
         method: "POST",
@@ -21,8 +22,7 @@ function RegisterForm() {
       });
 
       if (response.ok) {
-        // Redirige al usuario a la página de inicio de sesión después del registro
-        navigate("/login");
+        navigate("/"); // Redirige al login después del registro exitoso
       } else {
         setError("Error al registrar el usuario");
       }
@@ -39,7 +39,7 @@ function RegisterForm() {
         <div className="w-100"/>
         <div className="col blockquote text-center text-light">Crea una nueva cuenta</div>
         <div className="w-100"/>
-        <form className="bg-dark-subtle col" onSubmit={(e) => { e.preventDefault(); onRegister(); }}>
+        <form className="bg-dark-subtle col" onSubmit={onRegister}>
           <div>
             <label className="form-label text-light text-left">Email:</label>
             <input type="email" className="form-control" value={email} placeholder='Email' onChange={(e) => setEmail(e.target.value)}/><br/>

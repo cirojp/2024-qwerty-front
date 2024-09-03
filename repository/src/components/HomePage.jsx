@@ -1,17 +1,23 @@
-import React, { useEffect, useState } from 'react'
-
+import React, { useEffect, useState } from 'react';
 
 function HomePage() {
     const [transacciones, setTransacciones] = useState([]);
 
     useEffect(() => {
-        fetch("http://localhost:8080/api/transacciones", { method: "GET" })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                setTransacciones(data);
-            })
-            .catch(err => console.log(err));
+        const token = localStorage.getItem("token");  // Obtener el token del localStorage
+
+        fetch("http://localhost:8080/api/transacciones", {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`  // Incluir el token en el encabezado
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            setTransacciones(data);
+        })
+        .catch(err => console.log(err));
     }, []);
 
     return (

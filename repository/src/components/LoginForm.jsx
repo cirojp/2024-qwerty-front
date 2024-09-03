@@ -68,14 +68,22 @@ function LoginForm() {
           password: password,
         }),
       });
-      const responseData = await response.json(); // Lee la respuesta para obtener más información
+
       if (response.ok) {
+        const token = await response.text(); // Si el backend devuelve un string directamente
+        console.log("Token recibido:", token);
+        
+        // Almacenar el token JWT en el localStorage
+        localStorage.setItem("token", token);
+        
+        // Navegar a la página de inicio o la página protegida
         navigate("/index");
       } else {
+        // Manejo de errores de autenticación
         setError("Credenciales inválidas");
       }
     } catch (err) {
-      console.error("Error during login:", err);
+      console.error("Error durante el login:", err);
       setError("Ocurrió un error. Intenta nuevamente.");
     }
   };

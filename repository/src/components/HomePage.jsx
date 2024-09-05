@@ -7,6 +7,7 @@ function HomePage() {
     const [valor, setValor] = useState("");    
     const [fecha, setFecha] = useState("");    // Campo para la fecha y hora
     const [error, setError] = useState(null);
+    const [edit, setEdit] = useState(false);
 
     const columns = [
         {
@@ -22,6 +23,7 @@ function HomePage() {
             name: "Fecha",
             selector: row => row.fecha,
             format: row => new Date(row.fecha).toLocaleString(), // Formatea la fecha
+            sortable: true
         } 
     ];
 
@@ -39,36 +41,52 @@ function HomePage() {
         .catch(err => console.log(err));
     }, []);
 
+    const editRow = (row) =>{
+        console.log(row)
+        setEdit(true);
+        setMotivo(row.motivo);
+        setValor(row.valor);
+        setFecha(row.fecha);
+
+    }
+
     const agregarTransaccion = async (e) => {
         e.preventDefault();
         const token = localStorage.getItem("token");
-
-        try {
-            const response = await fetch("http://localhost:8080/api/transacciones", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    motivo: motivo,
-                    valor: valor,
-                    fecha: fecha // Envía la fecha seleccionada
-                }),
-            });
-
-            if (response.ok) {
-                const nuevaTransaccion = await response.json();
-                setTransacciones([...transacciones, nuevaTransaccion]); 
-                setMotivo("");
-                setValor("");
-                setFecha(""); // Limpia el campo de fecha después de guardar
-            } else {
-                setError("Error al agregar la transacción");
+        if(!edit){
+            try {
+                const response = await fetch("http://localhost:8080/api/transacciones", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        motivo: motivo,
+                        valor: valor,
+                        fecha: fecha // Envía la fecha seleccionada
+                    }),
+                });
+    
+                if (response.ok) {
+                    const nuevaTransaccion = await response.json();
+                    setTransacciones([...transacciones, nuevaTransaccion]); 
+                    setMotivo("");
+                    setValor("");
+                    setFecha(""); // Limpia el campo de fecha después de guardar
+                } else {
+                    setError("Error al agregar la transacción");
+                }
+            } catch (err) {
+                console.error("Error al agregar la transacción:", err);
+                setError("Ocurrió un error. Intenta nuevamente.");
             }
-        } catch (err) {
-            console.error("Error al agregar la transacción:", err);
-            setError("Ocurrió un error. Intenta nuevamente.");
+        }else{
+            console.log("Editar celda");
+            setMotivo("");
+            setValor("");
+            setFecha("");
+            setEdit(0);
         }
     };
 
@@ -81,6 +99,9 @@ function HomePage() {
                     columns={columns}
                     data={transacciones}
                     pagination
+                    onRowClicked={(row, event) => {
+                        editRow(row)
+                    }}
                 />
             </div>
             <h2>Agregar Nueva Transacción</h2>

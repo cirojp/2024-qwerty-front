@@ -16,7 +16,11 @@ function HomePage() {
             name: "Valor",
             selector: row => row.valor,
             sortable: true
-        }, 
+        },
+        {
+            name: "Fecha",
+            selector: row => row.fecha,
+        } 
     ];
 
     useEffect(() => {
@@ -30,6 +34,9 @@ function HomePage() {
         })
         .then(response => response.json())
         .then(data => {
+            data.forEach(trans => {
+                console.log(typeof(trans.fecha))
+            });
             setTransacciones(data);
         })
         .catch(err => console.log(err));

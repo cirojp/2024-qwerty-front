@@ -29,10 +29,14 @@ function HomePage() {
         {
             name: "Acciones",
             cell: (row) => (
-                <button onClick={() => editRow(row)}>Editar</button>
+                <>
+                    <button onClick={() => editRow(row)}>Editar</button>
+                    <button onClick={() => deleteRow(row.id)}>Eliminar</button>
+                </>
             )
         }
     ];
+    
     
 
     useEffect(() => {
@@ -126,6 +130,27 @@ function HomePage() {
             }
         }
     };
+    const deleteRow = async (id) => {
+        const token = localStorage.getItem("token");
+        try {
+            const response = await fetch(`http://localhost:8080/api/transacciones/${id}`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
+    
+            if (response.ok) {
+                setTransacciones(transacciones.filter(t => t.id !== id));
+            } else {
+                setError("Error al eliminar la transacción");
+            }
+        } catch (err) {
+            console.error("Error al eliminar la transacción:", err);
+            setError("Ocurrió un error. Intenta nuevamente.");
+        }
+    };
+    
 
     return (
         <div>

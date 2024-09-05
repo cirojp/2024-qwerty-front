@@ -3,8 +3,9 @@ import DataTable from 'react-data-table-component';
 
 function HomePage() {
     const [transacciones, setTransacciones] = useState([]);
-    const [motivo, setMotivo] = useState("");  // Campo para el motivo
-    const [valor, setValor] = useState("");    // Campo para el valor
+    const [motivo, setMotivo] = useState("");  
+    const [valor, setValor] = useState("");    
+    const [fecha, setFecha] = useState("");    // Campo para la fecha y hora
     const [error, setError] = useState(null);
 
     const columns = [
@@ -20,6 +21,7 @@ function HomePage() {
         {
             name: "Fecha",
             selector: row => row.fecha,
+            format: row => new Date(row.fecha).toLocaleString(), // Formatea la fecha
         } 
     ];
 
@@ -33,12 +35,7 @@ function HomePage() {
             }
         })
         .then(response => response.json())
-        .then(data => {
-            data.forEach(trans => {
-                console.log(typeof(trans.fecha))
-            });
-            setTransacciones(data);
-        })
+        .then(data => setTransacciones(data))
         .catch(err => console.log(err));
     }, []);
 
@@ -56,14 +53,16 @@ function HomePage() {
                 body: JSON.stringify({
                     motivo: motivo,
                     valor: valor,
+                    fecha: fecha // Envía la fecha seleccionada
                 }),
             });
 
             if (response.ok) {
                 const nuevaTransaccion = await response.json();
-                setTransacciones([...transacciones, nuevaTransaccion]); // Agregar nueva transacción a la lista
+                setTransacciones([...transacciones, nuevaTransaccion]); 
                 setMotivo("");
                 setValor("");
+                setFecha(""); // Limpia el campo de fecha después de guardar
             } else {
                 setError("Error al agregar la transacción");
             }
@@ -104,9 +103,18 @@ function HomePage() {
                         required
                     />
                 </div>
-                <button type="submit">Agregar</button>
+                <div>
+                    <label>Fecha y Hora:</label>
+                    <input
+                        type="datetime-local"  // Usamos un campo de fecha y hora
+                        value={fecha}
+                        onChange={(e) => setFecha(e.target.value)}
+                        required
+                    />
+                </div>
+                <button type="submit">Agregar Transacción</button>
             </form>
-            {error && <div style={{color: "red"}}>{error}</div>}
+            {error && <p>{error}</p>}
         </div>
     );
 }

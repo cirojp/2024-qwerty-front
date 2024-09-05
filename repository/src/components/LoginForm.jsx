@@ -1,80 +1,3 @@
-/*import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-
-function LoginForm() {
-  const navigate = useNavigate();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  
-  const onClick = () => {
-    const userData = {
-      username: username,
-      password: password
-    };
-    console.log(userData);
-    setUsername("");
-    setPassword("");
-    navigate("/index");
-  };
-
-  const changeUsername = (event) => {
-    setUsername(event.target.value);
-  };
-
-  const changePassword = (event) => {
-    setPassword(event.target.value);
-  };
-
-  return (
-    <div className='min-h-screen flex items-center justify-center bg-green-500 p-4 h-full'>
-      <div className="w-full max-w-md bg-success border border-gray-700 rounded-lg p-6 shadow-lg">
-        <div className="text-center text-2xl text-black font-bold mb-4">LOGIN</div>
-        <div className="text-left text-black mb-3 ml-3">Ingrese su usuario y contraseña</div>
-        <form className="space-y-10">
-          <div>
-            <label className="block text-black mb-5 ml-3 mr-3">Usuario:</label>
-            <input 
-              type="text" 
-              className="w-50 ml-4 p-2 rounded bg-gray-700 border border-gray-600 placeholder-gray-400 text-white" 
-              value={username} 
-              placeholder='Username' 
-              onChange={changeUsername} 
-            />
-          </div>
-          <div>
-            <label className="block text-black ml-3 mb-5">Contraseña:</label>
-            <input 
-              type="password" 
-              className="w-50 ml-3 p-2 rounded bg-gray-700 border border-gray-600 placeholder-gray-400 text-white" 
-              value={password} 
-              placeholder='Password' 
-              onChange={changePassword} 
-            />
-          </div>
-          <div className="flex space-x-4 ml-3 ">
-            <button 
-              type="button" 
-              className="bg-primary text-white py-2 rounded hover:bg-blue-700"
-              onClick={onClick}
-            >
-              Log In
-            </button>
-            <button 
-              type="button" 
-              className="bg-primary text-white py-2 rounded hover:bg-blue-700"
-              onClick={() => { console.log("A Registrarse!"); }}
-            >
-              Sign Up
-            </button>
-          </div>
-        </form>
-        <div className='text-center text-gray-400 mt-4'>Recuperar Contraseña</div>
-      </div>
-    </div>
-  );
-}
-
-export default LoginForm;*/
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -98,16 +21,11 @@ function LoginForm() {
       });
 
       if (response.ok) {
-        const token = await response.text(); // Si el backend devuelve un string directamente
+        const token = await response.text();
         console.log("Token recibido:", token);
-        
-        // Almacenar el token JWT en el localStorage
         localStorage.setItem("token", token);
-        
-        // Navegar a la página de inicio o la página protegida
         navigate("/index");
       } else {
-        // Manejo de errores de autenticación
         setError("Credenciales inválidas");
       }
     } catch (err) {
@@ -117,27 +35,59 @@ function LoginForm() {
   };
 
   return (
-    <div className='container bg-success mw-100 mh-100 p-3'>
-      <div className="row ml-3 mr-3 border border-secondary rounded bg-dark">
-        <div className="col blockquote text-center text-light font-weight-bold">LOGIN</div>
-        <div className="w-100"/>
-        <div className="col blockquote text-center text-light">Ingrese su email y contraseña</div>
-        <div className="w-100"/>
-        <form className="bg-dark-subtle col" onSubmit={(e) => { e.preventDefault(); onClick(); }}>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-6">
+      <div className="bg-white shadow-md rounded-lg p-8 max-w-md w-full">
+        <h2 className="text-2xl font-bold text-center mb-6 text-gray-700">LOGIN</h2>
+        <p className="text-center text-gray-600 mb-6">Ingrese su email y contraseña</p>
+        <form 
+          onSubmit={(e) => { e.preventDefault(); onClick(); }} 
+          className="space-y-4"
+        >
           <div>
-            <label className="form-label text-light text-left">Email:</label>
-            <input type="email" className="form-control" value={email} placeholder='Email' onChange={(e) => setEmail(e.target.value)}/><br/>
-            <label className="form-label text-light text-left">Contraseña:</label>
-            <input type="password" className="form-control" value={password} placeholder='Password' onChange={(e) => setPassword(e.target.value)}/><br/>
-            {error && <div className="text-danger">{error}</div>}
-            <div className="btn-group" role="group">
-              <button type="submit" className="btn btn-lg btn-primary mb-3">Log In</button>
-              <button type="button" className="btn btn-lg btn-primary mb-3 ml-1" onClick={() => navigate("/register")}>Sign Up</button>
-            </div>
+            <label className="block text-sm font-medium text-gray-700">Email:</label>
+            <input 
+              type="email" 
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" 
+              value={email} 
+              placeholder="Email" 
+              onChange={(e) => setEmail(e.target.value)} 
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Contraseña:</label>
+            <input 
+              type="password" 
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" 
+              value={password} 
+              placeholder="Password" 
+              onChange={(e) => setPassword(e.target.value)} 
+              required
+            />
+          </div>
+          {error && <div className="text-red-500 text-sm">{error}</div>}
+          <div className="flex justify-between items-center">
+            <button 
+              type="submit" 
+              className="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700"
+            >
+              Log In
+            </button>
+          </div>
+          <div className="flex justify-between items-center mt-4">
+            <button 
+              type="button" 
+              className="w-full bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400"
+              onClick={() => navigate("/register")}
+            >
+              Sign Up
+            </button>
           </div>
         </form>
+        <div className="mt-4 text-center text-gray-500">
+          <a href="#" className="text-indigo-600 hover:underline">Recuperar Contraseña</a>
+        </div>
       </div>
-      <div className='text-center font-weight-light'>Recuperar Contraseña</div>
     </div>
   );
 }

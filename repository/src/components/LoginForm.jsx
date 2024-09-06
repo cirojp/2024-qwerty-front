@@ -85,7 +85,7 @@ function LoginForm() {
           </div>
         </form>
         <div className="mt-4 text-center text-gray-500">
-          <a href="#" className="text-indigo-600 hover:underline">Recuperar Contraseña</a>
+          <a href="#" className="text-indigo-600 hover:underline" onClick={() => navigate("/forgot-password")}>Recuperar Contraseña</a>
         </div>
       </div>
     </div>

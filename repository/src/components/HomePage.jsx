@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
+import { useNavigate } from 'react-router-dom'; // Importa useNavigate para redirigir
 
 function HomePage() {
     const [transacciones, setTransacciones] = useState([]);
@@ -9,6 +10,7 @@ function HomePage() {
     const [error, setError] = useState(null);
     const [edit, setEdit] = useState(false);
     const [editId, setEditId] = useState(null);
+    const navigate = useNavigate(); // Inicializa useNavigate para navegar entre rutas
 
     const columns = [
         {
@@ -149,8 +151,8 @@ function HomePage() {
             <form onSubmit={agregarTransaccion} className="space-y-4">
                 <div className="flex flex-col">
                     <label className="mb-2 font-semibold">Motivo:</label>
-                    <input
-                        type="text"
+                    <input 
+                        type="text" 
                         value={motivo}
                         onChange={(e) => setMotivo(e.target.value)}
                         className="border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-blue-500"
@@ -159,8 +161,8 @@ function HomePage() {
                 </div>
                 <div className="flex flex-col">
                     <label className="mb-2 font-semibold">Valor:</label>
-                    <input
-                        type="number"
+                    <input 
+                        type="number" 
                         value={valor}
                         onChange={(e) => setValor(e.target.value)}
                         className="border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-blue-500"
@@ -168,23 +170,31 @@ function HomePage() {
                     />
                 </div>
                 <div className="flex flex-col">
-                    <label className="mb-2 font-semibold">Fecha y Hora:</label>
-                    <input
-                        type="datetime-local"
+                    <label className="mb-2 font-semibold">Fecha:</label>
+                    <input 
+                        type="datetime-local" 
                         value={fecha}
                         onChange={(e) => setFecha(e.target.value)}
                         className="border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-blue-500"
                         required
                     />
                 </div>
-                <button
+                <button 
                     type="submit"
-                    className={`mt-4 bg-${edit ? 'yellow' : 'green'}-500 hover:bg-${edit ? 'yellow' : 'green'}-700 text-white font-bold py-2 px-4 rounded-lg`}
+                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg"
                 >
                     {edit ? "Guardar Cambios" : "Agregar Transacción"}
                 </button>
             </form>
             {error && <p className="text-red-500 mt-4">{error}</p>}
+            <div className="mt-6">
+                <button 
+                    className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-lg"
+                    onClick={() => navigate('/change-password')}
+                >
+                    Cambiar Contraseña
+                </button>
+            </div>
         </div>
     );
 }

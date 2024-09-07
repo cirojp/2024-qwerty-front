@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { useNavigate } from 'react-router-dom'; // Importa useNavigate para redirigir
+import ExpandedRow from './ExpandedRow';
 
 function HomePage() {
     const [transacciones, setTransacciones] = useState([]);
@@ -9,8 +10,10 @@ function HomePage() {
     const [fecha, setFecha] = useState("");    
     const [error, setError] = useState(null);
     const [edit, setEdit] = useState(false);
-    const [editId, setEditId] = useState(null);
+    const [descripcion, setDescripcion] = useState("");
+    const [tipoGasto, setTipoGasto] = useState("");
     const navigate = useNavigate(); // Inicializa useNavigate para navegar entre rutas
+
 
     const columns = [
         {
@@ -68,7 +71,9 @@ function HomePage() {
     const editRow = (row) => {
         setEdit(true);
         setMotivo(row.motivo);
+        setDescripcion(row.descripcion);
         setValor(row.valor);
+        setTipoGasto(row.tipoGasto);
         setFecha(row.fecha);
         setTransaccionId(row.id);
     };
@@ -90,7 +95,7 @@ function HomePage() {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 },
-                body: JSON.stringify({ motivo, valor, fecha })
+                body: JSON.stringify({ motivo, descripcion, valor,tipoGasto, fecha})
             });
 
             if (response.ok) {
@@ -104,7 +109,9 @@ function HomePage() {
                     setTransacciones([...transacciones, data]);
                 }
                 setMotivo("");
+                setDescripcion("");
                 setValor("");
+                setTipoGasto("");
                 setFecha("");
                 setEdit(false);
             } else {
@@ -145,6 +152,8 @@ function HomePage() {
                     data={transacciones}
                     pagination
                     className="mb-4"
+                    expandableRows={true}
+                    expandableRowsComponent={({data}) => <ExpandedRow data={data}/>}
                 />
             </div>
             <h2 className="text-2xl font-semibold mb-4">{edit ? "Editar Transacción" : "Agregar Nueva Transacción"}</h2>
@@ -160,11 +169,31 @@ function HomePage() {
                     />
                 </div>
                 <div className="flex flex-col">
+                    <label className="mb-2 font-semibold">Descripcion:</label>
+                    <input 
+                        type="text" 
+                        value={descripcion}
+                        onChange={(e) => setDescripcion(e.target.value)}
+                        className="border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-blue-500"
+                        required
+                    />
+                </div>
+                <div className="flex flex-col">
                     <label className="mb-2 font-semibold">Valor:</label>
                     <input 
                         type="number" 
                         value={valor}
                         onChange={(e) => setValor(e.target.value)}
+                        className="border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-blue-500"
+                        required
+                    />
+                </div>
+                <div className="flex flex-col">
+                    <label className="mb-2 font-semibold">Tipo de Gasto:</label>
+                    <input 
+                        type="text" 
+                        value={tipoGasto}
+                        onChange={(e) => setTipoGasto(e.target.value)}
                         className="border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-blue-500"
                         required
                     />

@@ -3,7 +3,9 @@ import React from "react";
 const ExpandedRow = ({data = {
     motivo: "",
     valor: "",
-    fecha: ""
+    fecha: "",
+    descripcion: "",
+    tipoGasto: "",
 }}) => {
   return (
     <div>

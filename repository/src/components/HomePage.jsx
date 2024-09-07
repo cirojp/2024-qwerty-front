@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { useNavigate } from 'react-router-dom'; // Importa useNavigate para redirigir
 import ExpandedRow from './ExpandedRow';
+import Select from 'react-select';
 
 function HomePage() {
     const [transacciones, setTransacciones] = useState([]);
@@ -13,6 +14,12 @@ function HomePage() {
     const [descripcion, setDescripcion] = useState("");
     const [tipoGasto, setTipoGasto] = useState("");
     const navigate = useNavigate(); // Inicializa useNavigate para navegar entre rutas
+
+    const payOptions = [
+        {value: "credito", label: "Tarjeta de credito"},
+        {value: "debito", label: "Tarjeta de debito"},
+        {value: "efectivo", label: "Efectivo"}
+    ]
 
 
     const columns = [
@@ -190,13 +197,14 @@ function HomePage() {
                 </div>
                 <div className="flex flex-col">
                     <label className="mb-2 font-semibold">Tipo de Gasto:</label>
-                    <input 
+                    {/*<input 
                         type="text" 
                         value={tipoGasto}
                         onChange={(e) => setTipoGasto(e.target.value)}
                         className="border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-blue-500"
                         required
-                    />
+                    />*/}
+                    <Select options={payOptions} onChange={(value) => {setTipoGasto(value.label)}}/>
                 </div>
                 <div className="flex flex-col">
                     <label className="mb-2 font-semibold">Fecha:</label>

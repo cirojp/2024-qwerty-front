@@ -10,17 +10,20 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
+import PrivateRoutes from './components/PrivateRoutes';
 
 function App() {
   return (
     <Router>
       <Routes>
+        <Route element={<PrivateRoutes/>}>
+          <Route exact path='/index' element={<HomePage/>} />
+          <Route exact path='/change-password' element={<ChangePasswordForm/>} />
+        </Route>
+        <Route exact path='/reset-password' element={<ResetPasswordForm />} />
         <Route exact path='/' element={<LoginForm/>} />
         <Route exact path="/register" element={<RegisterForm />} />
-        <Route exact path='/index' element={<HomePage/>} />
-        <Route exact path='/change-password' element={<ChangePasswordForm/>} />
         <Route exact path='/forgot-password' element={<ForgotPasswordForm />} />
-        <Route exact path='/reset-password' element={<ResetPasswordForm />} />
       </Routes>
     </Router>
   )

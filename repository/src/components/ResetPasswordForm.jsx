@@ -1,5 +1,5 @@
 // ResetPasswordForm.jsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 function ResetPasswordForm() {
@@ -9,6 +9,12 @@ function ResetPasswordForm() {
   const queryParams = new URLSearchParams(search);
   const token = queryParams.get('token');
   const navigate = useNavigate(); 
+
+  useEffect(() => {
+    if(token == null){
+      navigate("/");
+    }
+  }, [])
 
   const handleSubmit = async (e) => {
     e.preventDefault();

@@ -62,6 +62,7 @@ function HomePage() {
     
     useEffect(() => {
         const token = localStorage.getItem("token");
+        console.log(token);
 
         fetch("http://localhost:8080/api/transacciones/user", {
             method: "GET",
@@ -166,6 +167,11 @@ function HomePage() {
         setPayOptions([...payOptions, newOption]);
         handlePayChange(newOption);
     };
+    
+    const signOff = () => {
+        localStorage.removeItem("token");
+        navigate('/');
+    }
 
     return (
         <div className="container mx-auto p-6">
@@ -246,6 +252,13 @@ function HomePage() {
                     onClick={() => navigate('/change-password')}
                 >
                     Cambiar Contraseña
+                </button>
+                <br/>
+                <button 
+                    className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-lg mt-5"
+                    onClick={() => signOff()}
+                >
+                    Cerrar Sesion
                 </button>
             </div>
         </div>

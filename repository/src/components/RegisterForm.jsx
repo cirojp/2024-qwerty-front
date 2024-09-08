@@ -24,7 +24,11 @@ function RegisterForm() {
       if (response.ok) {
         navigate("/"); // Redirect to login after successful registration
       } else {
-        setError("Error al registrar el usuario");
+        if(response.status == 409){
+          setError("Email ya en uso. Intente iniciar sesion o utilizar otro e-mail")
+        }else{
+          setError("Ocurrió un error. Intenta nuevamente.");
+        }
       }
     } catch (err) {
       console.error("Error during registration:", err);

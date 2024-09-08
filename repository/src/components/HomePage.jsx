@@ -59,8 +59,8 @@ function HomePage() {
             )
         }
     ];
-    
-    useEffect(() => {
+
+    const getTransacciones = () =>{
         const token = localStorage.getItem("token");
         console.log(token);
 
@@ -73,6 +73,10 @@ function HomePage() {
         .then(response => response.json())
         .then(data => setTransacciones(data))
         .catch(err => console.log(err));
+    }
+    
+    useEffect(() => {
+        getTransacciones();
     }, []);
 
     const [transaccionId, setTransaccionId] = useState(null);
@@ -173,6 +177,28 @@ function HomePage() {
         navigate('/');
     }
 
+    const deleteAccount = async() => {
+        const token = localStorage.getItem("token");
+        try {
+            const response = await fetch(`http://localhost:8080/api/auth`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
+    
+            if (response.ok) {
+                console.log("Eliminado");
+                localStorage.removeItem("token");
+                navigate("/");
+            } else {
+                setError("Error al eliminar la transacción");
+            }
+        } catch (err) {
+            setError("Ocurrió un error. Intenta nuevamente.");
+        }
+    }
+
     return (
         <div className="container mx-auto p-6">
             <h1 className="text-3xl font-bold mb-6">Transacciones</h1>
@@ -253,12 +279,17 @@ function HomePage() {
                 >
                     Cambiar Contraseña
                 </button>
-                <br/>
                 <button 
-                    className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-lg mt-5"
+                    className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-lg ml-5"
                     onClick={() => signOff()}
                 >
                     Cerrar Sesion
+                </button>
+                <button 
+                    className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-lg ml-5"
+                    onClick={() => deleteAccount()}
+                >
+                    Eliminar Cuenta
                 </button>
             </div>
         </div>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { useNavigate } from 'react-router-dom'; // Importa useNavigate para redirigir
 import ExpandedRow from './ExpandedRow';
-import Select from 'react-select';
+import CreatableSelect from 'react-select/creatable';
 
 function HomePage() {
     const [transacciones, setTransacciones] = useState([]);
@@ -13,13 +13,14 @@ function HomePage() {
     const [edit, setEdit] = useState(false);
     const [descripcion, setDescripcion] = useState("");
     const [tipoGasto, setTipoGasto] = useState("");
-    const navigate = useNavigate(); // Inicializa useNavigate para navegar entre rutas
-
-    const payOptions = [
+    const [payOptions, setPayOptions] = useState([
         {value: "credito", label: "Tarjeta de credito"},
         {value: "debito", label: "Tarjeta de debito"},
         {value: "efectivo", label: "Efectivo"}
-    ]
+    ]);
+    const [selectedPayMethod, setSelectedPayMethod] = useState({label: "", value:""});
+    const navigate = useNavigate(); // Inicializa useNavigate para navegar entre rutas
+
 
 
     const columns = [
@@ -80,7 +81,12 @@ function HomePage() {
         setMotivo(row.motivo);
         setDescripcion(row.descripcion);
         setValor(row.valor);
-        setTipoGasto(row.tipoGasto);
+        payOptions.forEach((payMethod) =>{
+            if(row.tipoGasto == payMethod.label){
+                setSelectedPayMethod(payMethod);
+                setTipoGasto(payMethod.label);
+            }
+        });
         setFecha(row.fecha);
         setTransaccionId(row.id);
     };
@@ -119,6 +125,7 @@ function HomePage() {
                 setDescripcion("");
                 setValor("");
                 setTipoGasto("");
+                setSelectedPayMethod({value: "", label: ""});
                 setFecha("");
                 setEdit(false);
             } else {
@@ -147,6 +154,17 @@ function HomePage() {
         } catch (err) {
             setError("Ocurrió un error. Intenta nuevamente.");
         }
+    };
+
+    const handlePayChange = (value) =>{
+        setTipoGasto(value.label);
+        setSelectedPayMethod(value);
+    }
+
+    const handleCreate = (inputValue)=> {
+        const newOption = {label: inputValue, value: inputValue};
+        setPayOptions([...payOptions, newOption]);
+        handlePayChange(newOption);
     };
 
     return (
@@ -197,14 +215,12 @@ function HomePage() {
                 </div>
                 <div className="flex flex-col">
                     <label className="mb-2 font-semibold">Tipo de Gasto:</label>
-                    {/*<input 
-                        type="text" 
-                        value={tipoGasto}
-                        onChange={(e) => setTipoGasto(e.target.value)}
-                        className="border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-blue-500"
-                        required
-                    />*/}
-                    <Select options={payOptions} onChange={(value) => {setTipoGasto(value.label)}}/>
+                    <CreatableSelect 
+                        options={payOptions} 
+                        onChange={(value) => {handlePayChange(value)}}
+                        onCreateOption={handleCreate}
+                        value={selectedPayMethod}
+                    />
                 </div>
                 <div className="flex flex-col">
                     <label className="mb-2 font-semibold">Fecha:</label>

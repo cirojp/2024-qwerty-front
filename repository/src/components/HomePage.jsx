@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
-import { useNavigate } from 'react-router-dom'; // Importa useNavigate para redirigir
+import { useNavigate } from 'react-router-dom'; 
 import ExpandedRow from './ExpandedRow';
 import CreatableSelect from 'react-select/creatable';
 
@@ -18,7 +18,7 @@ function HomePage() {
         {value: "debito", label: "Tarjeta de debito"},
         {value: "efectivo", label: "Efectivo"}
     ]);
-    const [selectedPayMethod, setSelectedPayMethod] = useState({label: "", value:""});
+    const [selectedPayMethod, setSelectedPayMethod] = useState(null); // Inicialmente nulo
     const navigate = useNavigate(); // Inicializa useNavigate para navegar entre rutas
 
 
@@ -77,7 +77,28 @@ function HomePage() {
     
     useEffect(() => {
         getTransacciones();
+        fetchPersonalTipoGastos();
     }, []);
+
+    const fetchPersonalTipoGastos = async () => {
+        const token = localStorage.getItem("token");
+
+        try {
+            const response = await fetch("http://localhost:8080/api/personal-tipo-gasto", {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                const customOptions = data.map(tipo => ({ label: tipo.nombre, value: tipo.nombre }));
+                setPayOptions([...payOptions, ...customOptions]);
+            }
+        } catch (error) {
+            console.error("Error al obtener los tipos de gasto personalizados:", error);
+        }
+    };
 
     const [transaccionId, setTransaccionId] = useState(null);
 
@@ -86,18 +107,16 @@ function HomePage() {
         setMotivo(row.motivo);
         setDescripcion(row.descripcion);
         setValor(row.valor);
-        payOptions.forEach((payMethod) =>{
-            if(row.tipoGasto == payMethod.label){
-                setSelectedPayMethod(payMethod);
-                setTipoGasto(payMethod.label);
-            }
-        });
+        const selectedOption = payOptions.find(option => option.value === row.tipoGasto);
+        setSelectedPayMethod(selectedOption || null); // Selecciona el tipo de gasto correcto
         setFecha(row.fecha);
         setTransaccionId(row.id);
     };
 
     const agregarTransaccion = async (e) => {
         e.preventDefault();
+
+        if (!validateForm()) return;  // Detener la ejecución si la validación falla
         const token = localStorage.getItem("token");
 
         const url = edit 
@@ -130,7 +149,7 @@ function HomePage() {
                 setDescripcion("");
                 setValor("");
                 setTipoGasto("");
-                setSelectedPayMethod({value: "", label: ""});
+                setSelectedPayMethod(null);
                 setFecha("");
                 setEdit(false);
             } else {
@@ -161,16 +180,36 @@ function HomePage() {
         }
     };
 
-    const handlePayChange = (value) =>{
-        setTipoGasto(value.label);
+    const handlePayChange = (value) => {
+        setTipoGasto(value ? value.value : ""); // Usa el valor del objeto seleccionado
         setSelectedPayMethod(value);
-    }
-
-    const handleCreate = (inputValue)=> {
-        const newOption = {label: inputValue, value: inputValue};
-        setPayOptions([...payOptions, newOption]);
-        handlePayChange(newOption);
     };
+
+    const handleCreate = async (inputValue) => {
+        const token = localStorage.getItem("token");
+
+        try {
+            const response = await fetch("http://localhost:8080/api/personal-tipo-gasto", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify(inputValue) // Enviar solo el texto
+            });
+
+            if (response.ok) {
+                const newTipoGasto = await response.json();
+                const newOption = { label: newTipoGasto.nombre, value: newTipoGasto.nombre };
+                setPayOptions(prevOptions => [...prevOptions, newOption]);
+                setSelectedPayMethod(newOption);
+                setTipoGasto(newTipoGasto.nombre);
+            }
+        } catch (error) {
+            console.error("Error al agregar el tipo de gasto personalizado:", error);
+        }
+    };
+    
     
     const signOff = () => {
         localStorage.removeItem("token");
@@ -198,6 +237,15 @@ function HomePage() {
             setError("Ocurrió un error. Intenta nuevamente.");
         }
     }
+
+    const validateForm = () => {
+        if (!selectedPayMethod || !selectedPayMethod.value) {
+            setError("Por favor, selecciona un tipo de gasto.");
+            return false;
+        }
+        return true;
+    };
+    
 
     return (
         <div className="container mx-auto p-6">
@@ -249,7 +297,7 @@ function HomePage() {
                     <label className="mb-2 font-semibold">Tipo de Gasto:</label>
                     <CreatableSelect 
                         options={payOptions} 
-                        onChange={(value) => {handlePayChange(value)}}
+                        onChange={handlePayChange}
                         onCreateOption={handleCreate}
                         value={selectedPayMethod}
                     />

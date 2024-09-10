@@ -21,6 +21,38 @@ function HomePage() {
     const [selectedPayMethod, setSelectedPayMethod] = useState(null); // Inicialmente nulo
     const navigate = useNavigate(); // Inicializa useNavigate para navegar entre rutas
 
+    const [transaccionId, setTransaccionId] = useState(null);
+
+    // Validaciones
+    const validateMotivo = (value) => {
+        const regex = /^[a-zA-Z0-9\s]{0,30}$/;
+        return regex.test(value);
+    };
+
+    const validateDescripcion = (value) => {
+        const regex = /^[a-zA-Z0-9\s,.]{0,70}$/;
+        return regex.test(value);
+    };
+
+    const handleMotivoChange = (e) => {
+        const value = e.target.value;
+        if (validateMotivo(value)) {
+            setMotivo(value);
+            setError(null);
+        } else {
+            setError("El motivo debe tener un máximo de 30 caracteres y solo puede contener letras y números.");
+        }
+    };
+
+    const handleDescripcionChange = (e) => {
+        const value = e.target.value;
+        if (validateDescripcion(value)) {
+            setDescripcion(value);
+            setError(null);
+        } else {
+            setError("La descripción debe tener un máximo de 70 caracteres y solo puede contener letras, números, comas y puntos.");
+        }
+    };
 
 
     const columns = [
@@ -100,8 +132,6 @@ function HomePage() {
         }
     };
 
-    const [transaccionId, setTransaccionId] = useState(null);
-
     const editRow = (row) => {
         setEdit(true);
         setMotivo(row.motivo);
@@ -143,7 +173,9 @@ function HomePage() {
                     );
                     setTransacciones(updatedTransacciones);
                 } else {
-                    setTransacciones([...transacciones, data]);
+                    const updatedTransacciones = [...transacciones, data];
+                    updatedTransacciones.sort((a, b) => new Date(b.fecha) - new Date(a.fecha)); // Orden descendente por fecha
+                    setTransacciones(updatedTransacciones);
                 }
                 setMotivo("");
                 setDescripcion("");
@@ -268,7 +300,7 @@ function HomePage() {
                     <input 
                         type="text" 
                         value={motivo}
-                        onChange={(e) => setMotivo(e.target.value)}
+                        onChange={handleMotivoChange}
                         className="border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-blue-500"
                         required
                     />
@@ -278,7 +310,7 @@ function HomePage() {
                     <input 
                         type="text" 
                         value={descripcion}
-                        onChange={(e) => setDescripcion(e.target.value)}
+                        onChange={handleDescripcionChange}
                         className="border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-blue-500"
                         required
                     />

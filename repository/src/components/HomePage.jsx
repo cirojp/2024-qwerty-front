@@ -184,6 +184,7 @@ function HomePage() {
         setSelectedPayMethod(selectedOption || null); // Selecciona el tipo de gasto correcto
         setFecha(row.fecha);
         setTransaccionId(row.id);
+        openModal();
     };
 
     const agregarTransaccion = async (e) => {

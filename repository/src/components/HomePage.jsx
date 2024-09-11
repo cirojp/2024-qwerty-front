@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import DataTable from 'react-data-table-component';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; 
-import ExpandedRow from './ExpandedRow';
-import CreatableSelect from 'react-select/creatable';
-import Modal from 'react-modal';
+import TransaccionesTable from './TransaccionesTable';
+import ModalForm from './ModalForm';
+import ActionButtons from './ActionButtons';
 
 function HomePage() {
     const [transacciones, setTransacciones] = useState([]);
@@ -15,116 +14,22 @@ function HomePage() {
     const [descripcion, setDescripcion] = useState("");
     const [tipoGasto, setTipoGasto] = useState("");
     const [payOptions, setPayOptions] = useState([
-        {value: "credito", label: "Tarjeta de credito"},
-        {value: "debito", label: "Tarjeta de debito"},
-        {value: "efectivo", label: "Efectivo"}
+        { value: "credito", label: "Tarjeta de credito" },
+        { value: "debito", label: "Tarjeta de debito" },
+        { value: "efectivo", label: "Efectivo" }
     ]);
-    const [selectedPayMethod, setSelectedPayMethod] = useState(null); // Inicialmente nulo
-    const navigate = useNavigate(); // Inicializa useNavigate para navegar entre rutas
+    const [selectedPayMethod, setSelectedPayMethod] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [transaccionId, setTransaccionId] = useState(null);
+    const navigate = useNavigate();
 
-    // Estilos para el modal
-    const modalStyles = {
-        content: {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        right: 'auto',
-        bottom: 'auto',
-        marginRight: '-50%',
-        transform: 'translate(-50%, -50%)',
-        backgroundColor: 'white',
-        padding: '20px',
-        borderRadius: '10px',
-        width: '400px',
-        maxWidth: '90%',
-        zIndex: 1001,
-        },
-        overlay: {
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.7)', // Superposición oscura para cubrir el fondo
-            zIndex: 1000, // Asegura que la superposición esté por debajo del modal
-        },
-    };    
+    useEffect(() => {
+        getTransacciones();
+        fetchPersonalTipoGastos();
+    }, []);
 
-    // Validaciones
-    const validateMotivo = (value) => {
-        const regex = /^[a-zA-Z0-9\s]{0,30}$/;
-        return regex.test(value);
-    };
-
-    const validateDescripcion = (value) => {
-        const regex = /^[a-zA-Z0-9\s,.]{0,70}$/;
-        return regex.test(value);
-    };
-
-    const handleMotivoChange = (e) => {
-        const value = e.target.value;
-        if (validateMotivo(value)) {
-            setMotivo(value);
-            setError(null);
-        } else {
-            setError("El motivo debe tener un máximo de 30 caracteres y solo puede contener letras y números.");
-        }
-    };
-
-    const handleDescripcionChange = (e) => {
-        const value = e.target.value;
-        if (validateDescripcion(value)) {
-            setDescripcion(value);
-            setError(null);
-        } else {
-            setError("La descripción debe tener un máximo de 70 caracteres y solo puede contener letras, números, comas y puntos.");
-        }
-    };
-
-
-    const columns = [
-        {
-            name: "Motivo",
-            selector: row => row.motivo,
-        },
-        {
-            name: "Valor",
-            selector: row => row.valor,
-            sortable: true
-        },
-        {
-            name: "Fecha",
-            selector: row => row.fecha,
-            format: row => new Date(row.fecha).toLocaleString(),
-            sortable: true
-        },
-        {
-            name: "Acciones",
-            cell: (row) => (
-                <div className="flex space-x-2">
-                    <button 
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded"
-                        onClick={() => editRow(row)}
-                    >
-                        Editar
-                    </button>
-                    <button 
-                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded"
-                        onClick={() => deleteRow(row.id)}
-                    >
-                        Eliminar
-                    </button>
-                </div>
-            )
-        }
-    ];
-
-    const getTransacciones = () =>{
+    const getTransacciones = () => {
         const token = localStorage.getItem("token");
-        console.log(token);
-
         fetch("http://localhost:8080/api/transacciones/user", {
             method: "GET",
             headers: {
@@ -134,16 +39,10 @@ function HomePage() {
         .then(response => response.json())
         .then(data => setTransacciones(data))
         .catch(err => console.log(err));
-    }
-    
-    useEffect(() => {
-        getTransacciones();
-        fetchPersonalTipoGastos();
-    }, []);
+    };
 
     const fetchPersonalTipoGastos = async () => {
         const token = localStorage.getItem("token");
-
         try {
             const response = await fetch("http://localhost:8080/api/personal-tipo-gasto", {
                 headers: {
@@ -181,7 +80,7 @@ function HomePage() {
         setDescripcion(row.descripcion);
         setValor(row.valor);
         const selectedOption = payOptions.find(option => option.value === row.tipoGasto);
-        setSelectedPayMethod(selectedOption || null); // Selecciona el tipo de gasto correcto
+        setSelectedPayMethod(selectedOption || null);
         setFecha(row.fecha);
         setTransaccionId(row.id);
         openModal();
@@ -189,8 +88,6 @@ function HomePage() {
 
     const agregarTransaccion = async (e) => {
         e.preventDefault();
-
-        if (!validateForm()) return;  // Detener la ejecución si la validación falla
         const token = localStorage.getItem("token");
 
         const url = edit 
@@ -206,7 +103,7 @@ function HomePage() {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 },
-                body: JSON.stringify({ motivo, descripcion, valor,tipoGasto, fecha})
+                body: JSON.stringify({ motivo, descripcion, valor, tipoGasto, fecha })
             });
 
             if (response.ok) {
@@ -218,7 +115,7 @@ function HomePage() {
                     setTransacciones(updatedTransacciones);
                 } else {
                     const updatedTransacciones = [...transacciones, data];
-                    updatedTransacciones.sort((a, b) => new Date(b.fecha) - new Date(a.fecha)); // Orden descendente por fecha
+                    updatedTransacciones.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
                     setTransacciones(updatedTransacciones);
                 }
                 closeModal();
@@ -251,8 +148,16 @@ function HomePage() {
     };
 
     const handlePayChange = (value) => {
-        setTipoGasto(value ? value.value : ""); // Usa el valor del objeto seleccionado
+        setTipoGasto(value ? value.value : "");
         setSelectedPayMethod(value);
+    };
+
+    const handleMotivoChange = (e) => {
+        setMotivo(e.target.value);
+    };
+
+    const handleDescripcionChange = (e) => {
+        setDescripcion(e.target.value);
     };
 
     const handleCreate = async (inputValue) => {
@@ -265,7 +170,7 @@ function HomePage() {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 },
-                body: JSON.stringify(inputValue) // Enviar solo el texto
+                body: JSON.stringify(inputValue)
             });
 
             if (response.ok) {
@@ -279,14 +184,13 @@ function HomePage() {
             console.error("Error al agregar el tipo de gasto personalizado:", error);
         }
     };
-    
-    
+
     const signOff = () => {
         localStorage.removeItem("token");
         navigate('/');
-    }
+    };
 
-    const deleteAccount = async() => {
+    const deleteAccount = async () => {
         const token = localStorage.getItem("token");
         try {
             const response = await fetch(`http://localhost:8080/api/auth`, {
@@ -297,38 +201,24 @@ function HomePage() {
             });
     
             if (response.ok) {
-                console.log("Eliminado");
                 localStorage.removeItem("token");
                 navigate("/");
             } else {
-                setError("Error al eliminar la transacción");
+                setError("Error al eliminar la cuenta");
             }
         } catch (err) {
             setError("Ocurrió un error. Intenta nuevamente.");
         }
-    }
-
-    const validateForm = () => {
-        if (!selectedPayMethod || !selectedPayMethod.value) {
-            setError("Por favor, selecciona un tipo de gasto.");
-            return false;
-        }
-        return true;
     };
-    
 
     return (
         <div className="container mx-auto p-6">
             <h1 className="text-3xl font-bold mb-6">Transacciones</h1>
             <div className="bg-white shadow-md rounded-lg p-4 mb-6">
-                <DataTable 
-                    title="Historial de Transacciones"
-                    columns={columns}
-                    data={transacciones}
-                    pagination
-                    className="mb-4"
-                    expandableRows={true}
-                    expandableRowsComponent={({data}) => <ExpandedRow data={data}/>}
+                <TransaccionesTable
+                    transacciones={transacciones}
+                    editRow={editRow}
+                    deleteRow={deleteRow}
                 />
             </div>
             <button 
@@ -337,102 +227,31 @@ function HomePage() {
             >
                 Agregar Transacción
             </button>
-            <Modal
-                isOpen={isModalOpen}
-                onRequestClose={closeModal}
-                contentLabel="Agregar Transacción"
-                className="modal"
-                overlayClassName="modal-overlay"
-                style={{
-                    content: modalStyles.content,
-                    overlay: modalStyles.overlay,
-                }}
-            >
-                <h2 className="text-2xl font-semibold mb-4">{edit ? "Editar Transacción" : "Agregar Nueva Transacción"}</h2>
-                <form onSubmit={agregarTransaccion} className="space-y-4">
-                    <div className="flex flex-col">
-                        <label className="mb-2 font-semibold">Motivo:</label>
-                        <input 
-                            type="text" 
-                            value={motivo}
-                            onChange={handleMotivoChange}
-                            className="border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-blue-500"
-                            required
-                        />
-                    </div>
-                    <div className="flex flex-col">
-                        <label className="mb-2 font-semibold">Descripcion:</label>
-                        <input 
-                            type="text" 
-                            value={descripcion}
-                            onChange={handleDescripcionChange}
-                            className="border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-blue-500"
-                            required
-                        />
-                    </div>
-                    <div className="flex flex-col">
-                        <label className="mb-2 font-semibold">Valor:</label>
-                        <input 
-                            type="number" 
-                            value={valor}
-                            onChange={(e) => setValor(e.target.value)}
-                            className="border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-blue-500"
-                            required
-                        />
-                    </div>
-                    <div className="flex flex-col">
-                        <label className="mb-2 font-semibold">Tipo de Gasto:</label>
-                        <CreatableSelect 
-                            options={payOptions} 
-                            onChange={handlePayChange}
-                            onCreateOption={handleCreate}
-                            value={selectedPayMethod}
-                        />
-                    </div>
-                    <div className="flex flex-col">
-                        <label className="mb-2 font-semibold">Fecha:</label>
-                        <input 
-                            type="datetime-local" 
-                            value={fecha}
-                            onChange={(e) => setFecha(e.target.value)}
-                            className="border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-blue-500"
-                            required
-                        />
-                    </div>
-                    <button 
-                        type="submit"
-                        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg"
-                    >
-                        {edit ? "Guardar Cambios" : "Agregar Transacción"}
-                    </button>
-                </form>
-                <button 
-                    onClick={closeModal}
-                    className="mt-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg"
-                >
-                    Cerrar
-                </button>
-            </Modal>
-            <div className="mt-6">
-                <button 
-                    className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-lg"
-                    onClick={() => navigate('/change-password')}
-                >
-                    Cambiar Contraseña
-                </button>
-                <button 
-                    className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-lg ml-5"
-                    onClick={() => signOff()}
-                >
-                    Cerrar Sesion
-                </button>
-                <button 
-                    className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-lg ml-5"
-                    onClick={() => deleteAccount()}
-                >
-                    Eliminar Cuenta
-                </button>
-            </div>
+
+            <ModalForm
+                isModalOpen={isModalOpen}
+                closeModal={closeModal}
+                agregarTransaccion={agregarTransaccion}
+                edit={edit}
+                motivo={motivo}
+                descripcion={descripcion}
+                valor={valor}
+                fecha={fecha}
+                handleMotivoChange={handleMotivoChange}
+                handleDescripcionChange={handleDescripcionChange}
+                setValor={setValor}
+                handlePayChange={handlePayChange}
+                selectedPayMethod={selectedPayMethod}
+                payOptions={payOptions}
+                handleCreate={handleCreate}
+                setFecha={setFecha}
+            />
+
+            <ActionButtons
+                navigate={navigate}
+                signOff={signOff}
+                deleteAccount={deleteAccount}
+            />
         </div>
     );
 }

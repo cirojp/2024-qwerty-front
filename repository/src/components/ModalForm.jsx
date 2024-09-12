@@ -11,7 +11,7 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.6)',
+            backgroundColor: 'rgba(0, 0, 0, 0.75)',
             zIndex: 1000,
             display: 'flex',
             justifyContent: 'center',
@@ -132,19 +132,22 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
                         required
                     />
                 </div>
-                <button 
-                    type="submit" 
-                    className="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded hover:bg-blue-600 transition-colors duration-300"
-                >
-                    {edit ? "Guardar Cambios" : "Agregar Transacción"}
-                </button>
+                <div className="flex gap-2 mt-2">
+                    <button 
+                        type="submit" 
+                        className="flex-1 bg-blue-500 text-white font-bold py-3 px-4 rounded hover:bg-blue-600 transition-colors duration-300"
+                    >
+                        {edit ? "Guardar Cambios" : "Agregar Transacción"}
+                    </button>
+                    <button 
+                        onClick={closeModal}
+                        className="flex-1 bg-red-500 text-white font-bold py-3 px-4 rounded hover:bg-red-600 transition-colors duration-300"
+                    >
+                        Cerrar
+                    </button>
+                </div>
             </form>
-            <button 
-                onClick={closeModal}
-                className="w-full bg-red-500 text-white font-bold py-3 px-4 rounded hover:bg-red-600 transition-colors duration-300"
-            >
-                Cerrar
-            </button>
+            
         </Modal>
     );
 }

@@ -49,7 +49,6 @@ function TransaccionesTable({ transacciones, editRow, deleteRow }) {
     return (
         <DataTable 
             className="data-table"
-            title="Historial de Transacciones"
             columns={columns}
             data={transacciones}
             pagination

@@ -3,26 +3,26 @@ import "./styles/ActionButtons.css";
 
 function ActionButtons({ navigate, signOff, deleteAccount }) {
     return (
-        <div className="mt-5">
+        <div className="mt-5 flex justify-end space-x-4"> {/* Flex para alinear y espacio entre botones */}
             <button 
-                className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-lg change-password-btn"
+                className="w-32 bg-red-500 bg-opacity-80 text-white text-sm py-1 px-4 rounded-lg hover:bg-red-700"
                 onClick={() => navigate('/change-password')}
             >
                 Cambiar Contraseña
             </button>
             <button 
-                className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-lg sign-off-btn"
+                className="w-32 bg-red-500 bg-opacity-80 text-white text-sm py-1 px-4 rounded-lg hover:bg-red-700"
                 onClick={() => signOff()}
             >
                 Cerrar Sesión
             </button>
             <button 
-                className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-lg delete-account-btn"
+                className="w-32 bg-red-500 bg-opacity-80 text-white text-sm py-1 px-4 rounded-lg hover:bg-red-700"
                 onClick={() => deleteAccount()}
             >
                 Eliminar Cuenta
             </button>
-            </div>
+        </div>
 
     );
 }

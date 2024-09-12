@@ -234,7 +234,7 @@ function HomePage() {
                 />
             </div>
 
-
+            
             <ModalForm
                 isModalOpen={isModalOpen}
                 closeModal={closeModal}

@@ -43,47 +43,49 @@ function ChangePasswordForm() {
     };
 
     return (
-        <div className="container mx-auto p-6">
-            <h1 className="text-3xl font-bold mb-6">Cambiar Contraseña</h1>
-            <form onSubmit={handleChangePassword} className="space-y-4">
-                <div className="flex flex-col">
-                    <label className="mb-2 font-semibold">Contraseña Actual:</label>
-                    <input
-                        type="password"
-                        value={currentPassword}
-                        onChange={(e) => setCurrentPassword(e.target.value)}
-                        className="border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-blue-500"
-                        required
-                    />
-                </div>
-                <div className="flex flex-col">
-                    <label className="mb-2 font-semibold">Nueva Contraseña:</label>
-                    <input
-                        type="password"
-                        value={newPassword}
-                        onChange={(e) => setNewPassword(e.target.value)}
-                        className="border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-blue-500"
-                        required
-                    />
-                </div>
-                <div className="flex flex-col">
-                    <label className="mb-2 font-semibold">Confirmar Nueva Contraseña:</label>
-                    <input
-                        type="password"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        className="border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-blue-500"
-                        required
-                    />
-                </div>
-                <button
-                    type="submit"
-                    className="mt-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg"
-                >
-                    Cambiar Contraseña
-                </button>
-            </form>
-            {error && <p className="text-red-500 mt-4">{error}</p>}
+        <div className="min-h-screen flex items-center justify-center bg-indigo-950 p-6">
+            <div className="bg-blue-950 shadow-md rounded-lg p-8 max-w-md w-full">
+                <h1 className="text-2xl font-bold text-center mb-6 text-gray-100">Cambiar Contraseña</h1>
+                <form onSubmit={handleChangePassword} className="space-y-4">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-100">Contraseña Actual:</label>
+                        <input
+                            type="password"
+                            value={currentPassword}
+                            onChange={(e) => setCurrentPassword(e.target.value)}
+                            className="mt-1 block w-full p-2 border bg-blue-950 text-white border-blue-900 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-100">Nueva Contraseña:</label>
+                        <input
+                            type="password"
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                            className="mt-1 block w-full p-2 border bg-blue-950 text-white border-blue-900 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-100">Confirmar Nueva Contraseña:</label>
+                        <input
+                            type="password"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            className="mt-1 block w-full p-2 border bg-blue-950 text-white border-blue-900 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                            required
+                        />
+                    </div>
+                    <button
+                        type="submit"
+                        className="w-full bg-red-500 bg-opacity-80 text-white py-2 px-4 rounded-lg hover:bg-red-700"
+                    >
+                        Cambiar Contraseña
+                    </button>
+                </form>
+                {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+            </div>
         </div>
     );
 }

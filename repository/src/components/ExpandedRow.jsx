@@ -1,5 +1,5 @@
 import React from "react";
-import "./ExpandedRow.css";
+import "./styles/ExpandedRow.css";
 
 const ExpandedRow = ({data = {
     motivo: "",

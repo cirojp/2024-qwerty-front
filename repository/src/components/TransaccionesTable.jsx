@@ -1,9 +1,14 @@
 import React from 'react';
-import DataTable from 'react-data-table-component';
+import DataTable, {createTheme} from 'react-data-table-component';
 import ExpandedRow from './ExpandedRow';
-import './TransaccionesTable.css';
+import './styles/TransaccionesTable.css';
 
 function TransaccionesTable({ transacciones, editRow, deleteRow }) {
+    createTheme("dark", {
+        background: {
+			default: '#1b1c31',
+		},
+    })
     const columns = [
         {
             name: "Motivo",
@@ -28,13 +33,13 @@ function TransaccionesTable({ transacciones, editRow, deleteRow }) {
                         className="btn-action"
                         onClick={() => editRow(row)}
                     >
-                        Editar
+                        &#x270F;
                     </button>
                     <button 
                         className="btn-delete"
                         onClick={() => deleteRow(row.id)}
                     >
-                        Eliminar
+                        &#x274E;
                     </button>
                 </div>
             )
@@ -50,6 +55,7 @@ function TransaccionesTable({ transacciones, editRow, deleteRow }) {
             pagination
             expandableRows={true}
             expandableRowsComponent={({data}) => <ExpandedRow data={data}/>}
+            theme='dark'
         />
     );
 }

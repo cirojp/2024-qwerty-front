@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
 import CreatableSelect from 'react-select/creatable';
-import './ModalForm.css';
+import './styles/ModalForm.css';
 
 function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, descripcion, valor, fecha, handleMotivoChange, handleDescripcionChange, setValor, handlePayChange, selectedPayMethod, payOptions, handleCreate, setFecha }) {
     const modalStyles = {

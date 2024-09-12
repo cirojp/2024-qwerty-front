@@ -1,5 +1,5 @@
 import React from 'react';
-import "./ActionButtons.css";
+import "./styles/ActionButtons.css";
 
 function ActionButtons({ navigate, signOff, deleteAccount }) {
     return (

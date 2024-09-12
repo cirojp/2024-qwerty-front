@@ -215,7 +215,7 @@ function HomePage() {
 
     return (
         //<div className="container mx-auto p-6"}>
-        <div className="container min-h-screen min-w-full max-w-full bg-indigo-950 px-40">
+        <div className="container min-h-screen min-w-full max-w-full bg-indigo-950">
             <div className="flex justify-center mb-0">
           <div className="w-36 h-36 rounded-full overflow-hidden border-4 border-indigo-950">
             <img 

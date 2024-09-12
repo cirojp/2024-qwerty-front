@@ -215,7 +215,7 @@ function HomePage() {
 
     return (
         //<div className="container mx-auto p-6"}>
-        <div className="container min-h-screen min-w-full max-w-full">
+        <div className="container min-h-screen min-w-full max-w-full bg-indigo-950">
             <h1 className="text-3xl font-bold mb-6">Transacciones</h1>
             <div className="tabla shadow-md rounded-lg p-4 mb-6">
                 <TransaccionesTable

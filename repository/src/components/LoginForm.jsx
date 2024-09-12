@@ -37,7 +37,15 @@ function LoginForm() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-indigo-950 p-6">
       <div className="bg-blue-950 shadow-md rounded-lg p-8 max-w-md w-full">
-        <h2 className="text-2xl font-bold text-center mb-6 text-gray-100">LOGIN</h2>
+      <div className="flex justify-center mb-6">
+          <div className="w-36 h-36 rounded-full overflow-hidden border-4 border-indigo-950">
+            <img 
+              src="../src/assets/logo.png" 
+              alt="Logo" 
+              className="w-full h-full object-cover"
+            />
+          </div>
+        </div>
         <p className="text-center text-gray-100 mb-6">Ingrese su email y contraseña</p>
         <form 
           onSubmit={(e) => { e.preventDefault(); onClick(); }} 

@@ -10,7 +10,7 @@ const ExpandedRow = ({data = {
 }}) => {
   return (
     <div className="bg-blue-950 shadow-md rounded-lg p-8 w-full">
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-2 gap-3">
       <div className="font-bold px-20">Motivo:</div>
       <div>{data.motivo}</div>
 

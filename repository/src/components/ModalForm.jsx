@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
 import CreatableSelect from 'react-select/creatable';
+import './ModalForm.css';
 
 function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, descripcion, valor, fecha, handleMotivoChange, handleDescripcionChange, setValor, handlePayChange, selectedPayMethod, payOptions, handleCreate, setFecha }) {
     const modalStyles = {
@@ -35,69 +36,73 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
             isOpen={isModalOpen}
             onRequestClose={closeModal}
             contentLabel="Agregar Transacción"
-            style={modalStyles}
+            className="modal-container"
+            overlayClassName="modal-overlay"
         >
-            <h2 className="text-2xl font-semibold mb-4">{edit ? "Editar Transacción" : "Agregar Nueva Transacción"}</h2>
-            <form onSubmit={agregarTransaccion} className="space-y-4">
-                <div className="flex flex-col">
-                    <label className="mb-2 font-semibold">Motivo:</label>
-                    <input 
-                        type="text" 
+            <h2 className="modal-title">
+                {edit ? "Editar Transacción" : "Agregar Nueva Transacción"}
+            </h2>
+            <form onSubmit={agregarTransaccion} className="modal-form">
+                <div className="form-group">
+                    <label className="modal-label">Motivo:</label>
+                    <input
+                        type="text"
                         value={motivo}
                         onChange={handleMotivoChange}
-                        className="border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-blue-500"
+                        className="modal-input"
                         required
                     />
                 </div>
-                <div className="flex flex-col">
-                    <label className="mb-2 font-semibold">Descripción:</label>
-                    <input 
-                        type="text" 
+                <div className="form-group">
+                    <label className="modal-label">Descripción:</label>
+                    <input
+                        type="text"
                         value={descripcion}
                         onChange={handleDescripcionChange}
-                        className="border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-blue-500"
+                        className="modal-input"
                         required
                     />
                 </div>
-                <div className="flex flex-col">
-                    <label className="mb-2 font-semibold">Valor:</label>
-                    <input 
-                        type="number" 
+                <div className="form-group">
+                    <label className="modal-label">Valor:</label>
+                    <input
+                        type="number"
                         value={valor}
                         onChange={(e) => setValor(e.target.value)}
-                        className="border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-blue-500"
+                        className="modal-input"
                         required
                     />
                 </div>
-                <div className="flex flex-col">
-                    <label className="mb-2 font-semibold">Tipo de Gasto:</label>
-                    <CreatableSelect 
-                        options={payOptions} 
+                <div className="form-group">
+                    <label className="modal-label">Tipo de Gasto:</label>
+                    <CreatableSelect
+                        options={payOptions}
                         onChange={handlePayChange}
                         onCreateOption={handleCreate}
                         value={selectedPayMethod}
+                        className="modal-select"
                     />
                 </div>
-                <div className="flex flex-col">
-                    <label className="mb-2 font-semibold">Fecha:</label>
-                    <input 
-                        type="datetime-local" 
+                <div className="form-group">
+                    <label className="modal-label">Fecha:</label>
+                    <input
+                        type="datetime-local"
                         value={fecha}
                         onChange={(e) => setFecha(e.target.value)}
-                        className="border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-blue-500"
+                        className="modal-input"
                         required
                     />
                 </div>
                 <button 
-                    type="submit"
-                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg"
+                    type="submit" 
+                    className="modal-button modal-button-submit"
                 >
                     {edit ? "Guardar Cambios" : "Agregar Transacción"}
                 </button>
             </form>
             <button 
                 onClick={closeModal}
-                className="mt-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg"
+                className="modal-button modal-button-close"
             >
                 Cerrar
             </button>

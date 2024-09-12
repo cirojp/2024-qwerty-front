@@ -1,0 +1,52 @@
+/* Contenedor principal */
+.container {
+    max-width: 100%;
+    padding: 1.5rem;
+    margin: 0 auto;
+    background-color: #f8f9fa; /* Fondo neutro */
+  }
+  
+  /* Títulos principales */
+  h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    color: #007bff; /* Azul Primario */
+    text-align: center;
+  }
+  
+  /* Caja de la tabla */
+  .bg-white {
+    background-color: #ffffff;
+    padding: 1.5rem;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Botón de agregar transacción */
+  button {
+    background-color: #28a745; /* Verde Suave */
+    color: white;
+    font-weight: bold;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #218838; /* Verde más oscuro */
+  }
+  
+  @media (min-width: 768px) {
+    h1 {
+      font-size: 3rem;
+    }
+  
+    button {
+      padding: 1rem 2rem;
+    }
+  }
+  

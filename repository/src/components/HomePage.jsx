@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import TransaccionesTable from './TransaccionesTable';
 import ModalForm from './ModalForm';
 import ActionButtons from './ActionButtons';
+import './HomePage.css';
+
 
 function HomePage() {
     const [transacciones, setTransacciones] = useState([]);
@@ -212,7 +214,8 @@ function HomePage() {
     };
 
     return (
-        <div className="container mx-auto p-6">
+        //<div className="container mx-auto p-6"}>
+        <div className="container">
             <h1 className="text-3xl font-bold mb-6">Transacciones</h1>
             <div className="bg-white shadow-md rounded-lg p-4 mb-6">
                 <TransaccionesTable

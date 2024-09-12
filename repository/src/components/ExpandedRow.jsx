@@ -1,4 +1,5 @@
 import React from "react";
+import "./ExpandedRow.css";
 
 const ExpandedRow = ({data = {
     motivo: "",
@@ -8,7 +9,7 @@ const ExpandedRow = ({data = {
     tipoGasto: "",
 }}) => {
   return (
-    <div>
+    <div className="expandable-row">
       <div>Motivo: {data.motivo}</div>
       <div>Descripcion: {data.descripcion}</div>
       <div>Valor: {data.valor}</div>

@@ -1,6 +1,7 @@
 import React from 'react';
 import DataTable from 'react-data-table-component';
 import ExpandedRow from './ExpandedRow';
+import './TransaccionesTable.css';
 
 function TransaccionesTable({ transacciones, editRow, deleteRow }) {
     const columns = [
@@ -24,13 +25,13 @@ function TransaccionesTable({ transacciones, editRow, deleteRow }) {
             cell: (row) => (
                 <div className="flex space-x-2">
                     <button 
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded"
+                        className="btn-action"
                         onClick={() => editRow(row)}
                     >
                         Editar
                     </button>
                     <button 
-                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded"
+                        className="btn-delete"
                         onClick={() => deleteRow(row.id)}
                     >
                         Eliminar
@@ -42,6 +43,7 @@ function TransaccionesTable({ transacciones, editRow, deleteRow }) {
 
     return (
         <DataTable 
+            className="data-table"
             title="Historial de Transacciones"
             columns={columns}
             data={transacciones}

@@ -1,0 +1,53 @@
+/* Contenedor de los botones de acción */
+.mt-5 {
+    margin-top: 1.25rem;
+    display: flex; /* Usar flexbox para disposición horizontal */
+    flex-wrap: wrap; /* Permitir que los botones envuelvan en pantallas pequeñas */
+    gap: 1rem; /* Espacio entre los botones */
+    justify-content: center; /* Centrar los botones horizontalmente */
+  }
+  
+  /* Estilos de los botones */
+  button {
+    background-color: #007bff; /* Azul Primario */
+    color: white;
+    font-weight: bold;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    border: none; /* Quitar borde */
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Botones al pasar el cursor */
+  button:hover {
+    background-color: #0056b3; /* Azul más oscuro */
+  }
+  
+  /* Botones adicionales */
+  button.sign-off-btn, button.delete-account-btn {
+    background-color: #dc3545; /* Rojo Suave */
+  }
+  
+  button.sign-off-btn:hover, button.delete-account-btn:hover {
+    background-color: #c82333; /* Rojo más oscuro */
+  }
+  
+  /* Botones específicos */
+  button.bg-yellow-500 {
+    background-color: #f8c104; /* Amarillo Primario */
+  }
+  
+  button.bg-yellow-500:hover {
+    background-color: #f8b600; /* Amarillo más oscuro */
+  }
+  
+  /* Ajustes para pantallas más pequeñas */
+  @media (max-width: 768px) {
+    button {
+      flex: 1 1 100%; /* Los botones ocuparán el 100% del ancho en pantallas pequeñas */
+      margin-top: 0.5rem; /* Ajustar el margen superior */
+    }
+  }
+  

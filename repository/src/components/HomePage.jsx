@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import TransaccionesTable from './TransaccionesTable';
 import ModalForm from './ModalForm';
 import ActionButtons from './ActionButtons';
+import './styles/HomePage.css';
+
 
 function HomePage() {
     const [transacciones, setTransacciones] = useState([]);
@@ -212,22 +214,36 @@ function HomePage() {
     };
 
     return (
-        <div className="container mx-auto p-6">
-            <h1 className="text-3xl font-bold mb-6">Transacciones</h1>
-            <div className="bg-white shadow-md rounded-lg p-4 mb-6">
+        //<div className="container mx-auto p-6"}>
+        <div className="container min-h-screen min-w-full max-w-full bg-indigo-950">
+            <div className="flex justify-center mb-0">
+          <div className="w-36 h-36 rounded-full overflow-hidden border-4 border-indigo-950">
+            <img 
+              src="../src/assets/logo.png" 
+              alt="Logo" 
+              className="w-full h-full object-cover"
+            />
+          </div>
+        </div>
+            {/* <h1 className="text-2xl font-bold text-center mb-6 text-gray-100">Transacciones</h1>*/}
+            <div className="tabla shadow-md rounded-lg p-0 mb-4">
+                <div className="flex justify-between items-center mb-0 px-6">
+                    <h2 className="text-2xl py-2 px-4 font-bold text-center mb-4 text-gray-100">Historial de Transacciones</h2>
+                    <button 
+                        className="bg-red-500 bg-opacity-80 text-white py-2 px-4 rounded-lg hover:bg-red-700"
+                        onClick={openModal}
+                    >
+                        Agregar Transacción
+                    </button>
+                </div>
                 <TransaccionesTable
                     transacciones={transacciones}
                     editRow={editRow}
                     deleteRow={deleteRow}
                 />
             </div>
-            <button 
-                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg"
-                onClick={openModal}
-            >
-                Agregar Transacción
-            </button>
 
+            
             <ModalForm
                 isModalOpen={isModalOpen}
                 closeModal={closeModal}

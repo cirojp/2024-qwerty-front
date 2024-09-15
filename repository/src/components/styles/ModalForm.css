@@ -1,0 +1,29 @@
+/* Styles for CreatableSelect */
+.custom-select .css-1s2u09g-control {
+  background-color: #172554; /* Background color */
+  border-color: #1e3a8a; /* Border color */
+  color: white; /* Text color */
+}
+
+.custom-select .css-1pahdxg-control {
+  background-color: #172554; /* Background color */
+  color: white; /* Text color */
+}
+
+.custom-select .css-1okebmr-indicatorSeparator {
+  display: none; /* Hide the indicator separator if needed */
+}
+
+.custom-select .css-1n7v3ny-option {
+  background-color: #172554; /* Background color for options */
+  color: white; /* Text color for options */
+}
+
+.custom-select .css-1n7v3ny-option:hover {
+  background-color: #1e3a8a; /* Background color on hover */
+  color: white; /* Text color on hover */
+}
+
+.custom-select .css-1pahdxg-control--is-focused {
+  border-color: #1e3a8a; /* Border color on focus */
+}

@@ -1,39 +1,57 @@
 import React from 'react';
-import DataTable from 'react-data-table-component';
+import DataTable, { createTheme } from 'react-data-table-component';
 import ExpandedRow from './ExpandedRow';
 
+
 function TransaccionesTable({ transacciones, editRow, deleteRow }) {
+    createTheme("dark", {
+        background: {
+            default: '#1b1c31',
+        },
+    });
+
     const columns = [
         {
-            name: "Motivo",
+            name: <span className="text-l text-center font-bold">Motivo</span>,
             selector: row => row.motivo,
+            cell: row => <div className="text-center">{row.motivo}</div>
         },
         {
-            name: "Valor",
+            name: <span className="text-l text-center font-bold">Valor ($)</span>, 
             selector: row => row.valor,
-            sortable: true
+            sortable: true,
+            cell: row => <div className="text-center">{row.valor}</div>
         },
         {
-            name: "Fecha",
+            name: <span className="text-l text-center font-bold">Fecha</span>,
             selector: row => row.fecha,
             format: row => new Date(row.fecha).toLocaleString(),
-            sortable: true
+            sortable: true,
+            cell: row => <div className="text-center">{new Date(row.fecha).toLocaleString()}</div>
         },
         {
-            name: "Acciones",
+            name: <span className="text-l text-center font-bold">Acciones</span>, 
             cell: (row) => (
-                <div className="flex space-x-2">
+                <div className="flex justify-center space-x-4">
                     <button 
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded"
+                        className="bg-indigo-600 text-white font-bold py-1 px-1 rounded hover:bg-indigo-700 transition-colors duration-300"
                         onClick={() => editRow(row)}
                     >
-                        Editar
+                        <img 
+                            src="../src/assets/edit-icon.png" 
+                            alt="Edit" 
+                            className="w-5 h-5 justify-center" 
+                        />
                     </button>
                     <button 
-                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded"
+                        className="bg-red-600 text-white font-bold py-1 px-1 rounded hover:bg-red-700 transition-colors duration-300"
                         onClick={() => deleteRow(row.id)}
                     >
-                        Eliminar
+                        <img 
+                                src="../src/assets/delete-icon.png" 
+                                alt="Delete" 
+                                className="w-5 h-5 justify-center" 
+                            />
                     </button>
                 </div>
             )
@@ -42,12 +60,14 @@ function TransaccionesTable({ transacciones, editRow, deleteRow }) {
 
     return (
         <DataTable 
-            title="Historial de Transacciones"
+            className="w-full border-collapse bg-gray-800 rounded-lg shadow-lg mb-0"
             columns={columns}
             data={transacciones}
             pagination
             expandableRows={true}
-            expandableRowsComponent={({data}) => <ExpandedRow data={data}/>}
+            expandableRowsComponent={({data}) => <ExpandedRow data={data} />}
+            theme='dark'
+            responsive
         />
     );
 }

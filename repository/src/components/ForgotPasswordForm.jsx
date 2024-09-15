@@ -22,15 +22,15 @@ function ForgotPasswordForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-6">
-      <div className="bg-white shadow-md rounded-lg p-8 max-w-md w-full">
-        <h2 className="text-2xl font-bold text-center mb-6 text-gray-700">Forgot Password</h2>
+    <div className="min-h-screen flex items-center justify-center bg-indigo-950 p-6">
+      <div className="bg-blue-950 shadow-md rounded-lg p-8 max-w-md w-full">
+        <h2 className="text-2xl font-bold text-center mb-6 text-gray-100">Forgot Password</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Email:</label>
+            <label className="block text-sm font-medium text-gray-100">Email:</label>
             <input 
               type="email" 
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" 
+              className="mt-1 block w-full p-2 border bg-blue-950 text-white border-blue-900 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
               value={email} 
               onChange={(e) => setEmail(e.target.value)} 
               required
@@ -38,11 +38,11 @@ function ForgotPasswordForm() {
           </div>
           <button 
             type="submit" 
-            className="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700"
+            className="w-full bg-red-500 bg-opacity-80 text-white py-2 px-4 rounded-lg hover:bg-red-700"
           >
             Send Reset Link
           </button>
-          {message && <p className="text-center text-gray-600 mt-4">{message}</p>}
+          {message && <p className="text-red-500 text-sm text-center">{message}</p>}
         </form>
       </div>
     </div>

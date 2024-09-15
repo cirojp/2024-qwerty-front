@@ -11,6 +11,7 @@ import {
   Route,
 } from "react-router-dom";
 import PrivateRoutes from './components/PrivateRoutes';
+import KeepSignedIn from './components/KeepSignedIn';
 
 function App() {
   return (
@@ -20,8 +21,10 @@ function App() {
           <Route exact path='/index' element={<HomePage/>} />
           <Route exact path='/change-password' element={<ChangePasswordForm/>} />
         </Route>
+        <Route element={<KeepSignedIn/>}>
+          <Route exact path='/' element={<LoginForm/>} />
+        </Route>
         <Route exact path='/reset-password' element={<ResetPasswordForm />} />
-        <Route exact path='/' element={<LoginForm/>} />
         <Route exact path="/register" element={<RegisterForm />} />
         <Route exact path='/forgot-password' element={<ForgotPasswordForm />} />
       </Routes>

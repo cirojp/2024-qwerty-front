@@ -3,7 +3,7 @@ import DataTable, { createTheme } from 'react-data-table-component';
 import ExpandedRow from './ExpandedRow';
 
 
-function TransaccionesTable({ transacciones, editRow, deleteRow }) {
+function TransaccionesTable({ transacciones, editRow, deleteRow, onTableEmpty = () =>{} }) {
     createTheme("dark", {
         background: {
             default: '#1b1c31',
@@ -57,19 +57,22 @@ function TransaccionesTable({ transacciones, editRow, deleteRow }) {
             )
         }
     ];
-
-    return (
-        <DataTable 
-            className="w-full border-collapse bg-gray-800 rounded-lg shadow-lg mb-0"
-            columns={columns}
-            data={transacciones}
-            pagination
-            expandableRows={true}
-            expandableRowsComponent={({data}) => <ExpandedRow data={data} />}
-            theme='dark'
-            responsive
-        />
-    );
+    if(transacciones[0] == null){
+        onTableEmpty();
+    }else{
+        return (
+            <DataTable 
+                className="w-full border-collapse bg-gray-800 rounded-lg shadow-lg mb-0"
+                columns={columns}
+                data={transacciones}
+                pagination
+                expandableRows={true}
+                expandableRowsComponent={({data}) => <ExpandedRow data={data} />}
+                theme='dark'
+                responsive
+            />
+        );
+    }
 }
 
 export default TransaccionesTable;

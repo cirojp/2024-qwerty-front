@@ -24,7 +24,7 @@ function ForgotPasswordForm() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-indigo-950 p-6">
       <div className="bg-blue-950 shadow-md rounded-lg p-8 max-w-md w-full">
-        <h2 className="text-2xl font-bold text-center mb-6 text-gray-100">Forgot Password</h2>
+        <h2 className="text-2xl font-bold text-center mb-6 text-gray-100">Recuperar contraseña</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-100">Email:</label>
@@ -40,10 +40,13 @@ function ForgotPasswordForm() {
             type="submit" 
             className="w-full bg-red-500 bg-opacity-80 text-white py-2 px-4 rounded-lg hover:bg-red-700"
           >
-            Send Reset Link
+            Enviar e-mail de recuperacion
           </button>
           {message && <p className="text-red-500 text-sm text-center">{message}</p>}
         </form>
+        <div className="mt-4 text-center text-gray-400">
+        Volver a <a href="/" className="text-red-500 hover:underline"> Inicio sesión</a>
+        </div>
       </div>
     </div>
   );

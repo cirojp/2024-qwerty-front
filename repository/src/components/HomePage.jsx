@@ -8,7 +8,8 @@ import './styles/HomePage.css';
 
 function HomePage() {
     const [transacciones, setTransacciones] = useState([]);
-    const [motivo, setMotivo] = useState("");  
+    const [motivo, setMotivo] = useState("");
+    const [showNoTransactions, setShowNoTransactions] = useState(false);
     const [valor, setValor] = useState("");    
     const [fecha, setFecha] = useState("");    
     const [error, setError] = useState(null);
@@ -213,6 +214,11 @@ function HomePage() {
         }
     };
 
+    const handleEmptyTable = () => {
+        console.log("NO TENGO TRANSACCIONES");
+        setShowNoTransactions(true);
+    }
+
     return (
         //<div className="container mx-auto p-6"}>
         <div className="container min-h-screen min-w-full max-w-full bg-indigo-950">
@@ -240,7 +246,14 @@ function HomePage() {
                     transacciones={transacciones}
                     editRow={editRow}
                     deleteRow={deleteRow}
+                    onTableEmpty={handleEmptyTable}
                 />
+                {showNoTransactions && <div className='flex justify-center mb-0'><button 
+                        className="bg-red-500 bg-opacity-80 text-white font-bold py-4 px-8 rounded-lg hover:bg-red-700"
+                        onClick={openModal}
+                    >
+                        Ingrese una transaccion
+                    </button></div>}
             </div>
 
             

@@ -68,7 +68,7 @@ function LoginForm() {
               type="password" 
               className="mt-1 block w-full p-2 border bg-blue-950 text-white border-blue-900 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" 
               value={password} 
-              placeholder="Password" 
+              placeholder="Contraseña" 
               onChange={(e) => setPassword(e.target.value)} 
               required
             />
@@ -79,21 +79,12 @@ function LoginForm() {
               type="submit" 
               className="w-full bg-red-500 bg-opacity-80 text-white py-2 px-4 rounded-lg hover:bg-red-700"
             >
-              Log In
+              Iniciar Sesion
             </button>
-          </div>
-          <div className="flex justify-between items-center mt-4">
-            {/*<button 
-              type="button" 
-              className="w-full bg-red-500 bg-opacity-80 text-white py-2 px-4 rounded-lg hover:bg-red-700"
-              onClick={() => navigate("/register")}
-            >
-              Sign Up
-            </button>*/}
           </div>
         </form>
         <div className="mt-4 text-center text-gray-400">
-        En caso de no estar registrado, <a href="#" className="text-red-500 hover:underline" onClick={() => navigate("/register")}>Sign Up</a>
+        En caso de no estar registrado, <a href="#" className="text-red-500 hover:underline" onClick={() => navigate("/register")}>Cree una cuenta</a>
         <br/>
           Olvidaste tu contraseña? <a href="#" className="text-red-500 hover:underline" onClick={() => navigate("/forgot-password")}>Recuperar Contraseña</a>
         </div>

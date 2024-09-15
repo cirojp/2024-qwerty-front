@@ -94,6 +94,9 @@ function ChangePasswordForm() {
                     </button>
                 </form>
                 {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+                <div className='flex justify-center pt-3'>
+                    <a href="/index" className="text-red-500 hover:underline" onClick={() => navigate("/index")}>Volver</a>
+                </div>
             </div>
         </div>
     );

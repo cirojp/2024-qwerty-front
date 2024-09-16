@@ -1,12 +1,26 @@
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function ChangePasswordForm() {
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
+    const [showNewPassword, setShowNewPassword] = useState(false);
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+    const toggleCurrentPasswordVisibility = () => {
+        setShowCurrentPassword(!showCurrentPassword);
+      };
+    const toggleNewPasswordVisibility = () => {
+        setShowNewPassword(!showNewPassword);
+    };
+    const toggleConfirmPasswordVisibility = () => {
+        setShowConfirmPassword(!showConfirmPassword);
+    }
 
     const handleChangePassword = async (e) => {
         e.preventDefault();
@@ -58,33 +72,63 @@ function ChangePasswordForm() {
                 <form onSubmit={handleChangePassword} className="space-y-4">
                     <div>
                         <label className="block text-sm font-medium text-gray-100">Contraseña Actual:</label>
-                        <input
-                            type="password"
-                            value={currentPassword}
-                            onChange={(e) => setCurrentPassword(e.target.value)}
-                            className="mt-1 block w-full p-2 border bg-blue-950 text-white border-blue-900 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                            required
-                        />
+                        <div className="relative">
+                            <input 
+                                type={showCurrentPassword ? "text" : "password"}
+                                className="mt-1 block w-full p-2 border bg-blue-950 text-white border-blue-900 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" 
+                                value={currentPassword} 
+                                placeholder="Contraseña Actual" 
+                                onChange={(e) => setCurrentPassword(e.target.value)} 
+                                required
+                            />
+                            <button
+                                type="button"
+                                onClick={toggleCurrentPasswordVisibility}
+                                className="absolute inset-y-0 right-0 flex items-center px-2"
+                             >
+                                <FontAwesomeIcon icon={showCurrentPassword ? faEyeSlash : faEye} />
+                            </button>
+                        </div>
                     </div>
                     <div>
                         <label className="block text-sm font-medium text-gray-100">Nueva Contraseña:</label>
-                        <input
-                            type="password"
-                            value={newPassword}
-                            onChange={(e) => setNewPassword(e.target.value)}
-                            className="mt-1 block w-full p-2 border bg-blue-950 text-white border-blue-900 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                            required
-                        />
+                        <div className="relative">
+                            <input 
+                                type={showNewPassword ? "text" : "password"}
+                                className="mt-1 block w-full p-2 border bg-blue-950 text-white border-blue-900 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" 
+                                value={newPassword} 
+                                placeholder="Nueva Contraseña" 
+                                onChange={(e) => setNewPassword(e.target.value)} 
+                                required
+                            />
+                            <button
+                                type="button"
+                                onClick={toggleNewPasswordVisibility}
+                                className="absolute inset-y-0 right-0 flex items-center px-2"
+                             >
+                                <FontAwesomeIcon icon={showNewPassword ? faEyeSlash : faEye} />
+                            </button>
+                        </div>
                     </div>
                     <div>
                         <label className="block text-sm font-medium text-gray-100">Confirmar Nueva Contraseña:</label>
-                        <input
-                            type="password"
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                            className="mt-1 block w-full p-2 border bg-blue-950 text-white border-blue-900 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                            required
-                        />
+                        <div className="relative">
+                            <input 
+                                type={showConfirmPassword ? "text" : "password"}
+                                className="mt-1 block w-full p-2 border bg-blue-950 text-white border-blue-900 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" 
+                                value={confirmPassword} 
+                                placeholder="Repetir Contraseña" 
+                                onChange={(e) => setConfirmPassword(e.target.value)} 
+                                required
+                            />
+                            <button
+                                type="button"
+                                onClick={toggleConfirmPasswordVisibility}
+                                className="absolute inset-y-0 right-0 flex items-center px-2"
+                             >
+                                <FontAwesomeIcon icon={showConfirmPassword ? faEyeSlash : faEye} />
+                            </button>
+                        </div>
                     </div>
                     <button
                         type="submit"

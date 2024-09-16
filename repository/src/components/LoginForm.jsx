@@ -1,3 +1,5 @@
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -6,6 +8,10 @@ function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   const onClick = async () => {
     try {
@@ -64,14 +70,23 @@ function LoginForm() {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-100">Contraseña:</label>
-            <input 
-              type="password" 
-              className="mt-1 block w-full p-2 border bg-blue-950 text-white border-blue-900 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" 
-              value={password} 
-              placeholder="Contraseña" 
-              onChange={(e) => setPassword(e.target.value)} 
-              required
-            />
+            <div className="relative">
+              <input 
+                type={showPassword ? "text" : "password"}
+                className="mt-1 block w-full p-2 border bg-blue-950 text-white border-blue-900 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" 
+                value={password} 
+                placeholder="Contraseña" 
+                onChange={(e) => setPassword(e.target.value)} 
+                required
+              />
+              <button
+                type="button"
+                onClick={togglePasswordVisibility}
+                className="absolute inset-y-0 right-0 flex items-center px-2"
+              >
+                <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+              </button>
+            </div>
           </div>
           {error && <div className="text-red-500 text-sm text-center">{error}</div>}
           <div className="flex justify-between items-center">

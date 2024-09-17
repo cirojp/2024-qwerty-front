@@ -24,11 +24,13 @@ function HomePage() {
     const [selectedPayMethod, setSelectedPayMethod] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [transaccionId, setTransaccionId] = useState(null);
+    const [modalError, setModalError] = useState("");
     const navigate = useNavigate();
 
     useEffect(() => {
         getTransacciones();
         fetchPersonalTipoGastos();
+        console.log(localStorage.getItem("token"));
     }, []);
 
     const getTransacciones = () => {
@@ -101,6 +103,10 @@ function HomePage() {
 
         try {
             if(valor <= 0){
+                setModalError("El valor debe ser mayor a 0");
+                return;
+            }else if(selectedPayMethod == null){
+                setModalError("Elegir un medio de pago");
                 return;
             }
             const response = await fetch(url, {
@@ -221,7 +227,6 @@ function HomePage() {
         console.log("NO TENGO TRANSACCIONES");
         setShowNoTransactions(true);
     }
-
     return (
         //<div className="container mx-auto p-6"}>
         <div className="container min-h-screen min-w-full max-w-full bg-indigo-950">
@@ -278,6 +283,7 @@ function HomePage() {
                 payOptions={payOptions}
                 handleCreate={handleCreate}
                 setFecha={setFecha}
+                error={modalError}
             />
 
             <ActionButtons

@@ -3,7 +3,7 @@ import Modal from 'react-modal';
 import CreatableSelect from 'react-select/creatable';
 import './styles/ModalForm.css';
 
-function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, descripcion, valor, fecha, handleMotivoChange, handleDescripcionChange, setValor, handlePayChange, selectedPayMethod, payOptions, handleCreate, setFecha }) {
+function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, descripcion, valor, fecha, handleMotivoChange, handleDescripcionChange, setValor, handlePayChange, selectedPayMethod, payOptions, handleCreate, setFecha, error}) {
     const customStyles = {
         overlay: {
             position: 'fixed',
@@ -132,6 +132,7 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
                         required
                     />
                 </div>
+                {error && <div className="text-red-500 text-sm text-center">{error}</div>}
                 <div className="flex gap-2 mt-2">
                     <button 
                         type="submit" 

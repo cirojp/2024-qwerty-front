@@ -41,10 +41,10 @@ function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-indigo-950 p-6">
-      <div className="bg-blue-950 shadow-md rounded-lg p-8 max-w-md w-full">
+    <div className="min-h-screen flex items-center justify-center bg-black p-6">
+      <div className="bg-gray-950 shadow-md rounded-lg p-8 max-w-md w-full">
       <div className="flex justify-center mb-6">
-          <div className="w-36 h-36 rounded-full overflow-hidden border-4 border-indigo-950">
+          <div className="w-36 h-36 rounded-full overflow-hidden border-4 border-yellow-600">
             <img 
               src="../src/assets/logo.png" 
               alt="Logo" 
@@ -61,7 +61,7 @@ function LoginForm() {
             <label className="block text-sm font-medium text-gray-100">Email:</label>
             <input 
               type="email" 
-              className="mt-1 block w-full p-2 border bg-blue-950 text-white border-blue-900 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" 
+              className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500" 
               value={email} 
               placeholder="Email" 
               onChange={(e) => setEmail(e.target.value)} 
@@ -73,7 +73,7 @@ function LoginForm() {
             <div className="relative">
               <input 
                 type={showPassword ? "text" : "password"}
-                className="mt-1 block w-full p-2 border bg-blue-950 text-white border-blue-900 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" 
+                className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500" 
                 value={password} 
                 placeholder="Contraseña" 
                 onChange={(e) => setPassword(e.target.value)} 
@@ -82,7 +82,7 @@ function LoginForm() {
               <button
                 type="button"
                 onClick={togglePasswordVisibility}
-                className="absolute inset-y-0 right-0 flex items-center px-2"
+                className="absolute inset-y-0 right-0 flex items-center px-2 bg-yellow-600"
               >
                 <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
               </button>
@@ -92,16 +92,16 @@ function LoginForm() {
           <div className="flex justify-between items-center">
             <button 
               type="submit" 
-              className="w-full bg-red-500 bg-opacity-80 text-white py-2 px-4 rounded-lg hover:bg-red-700"
+              className="w-full bg-yellow-500 bg-opacity-80 text-gray-950 py-2 px-4 rounded-lg hover:bg-red-700"
             >
               Iniciar Sesion
             </button>
           </div>
         </form>
         <div className="mt-4 text-center text-gray-400">
-        En caso de no estar registrado, <a href="#" className="text-red-500 hover:underline" onClick={() => navigate("/register")}>Cree una cuenta</a>
+        En caso de no estar registrado, <a href="#" className="text-yellow-500 hover:underline" onClick={() => navigate("/register")}>Cree una cuenta</a>
         <br/>
-          Olvidaste tu contraseña? <a href="#" className="text-red-500 hover:underline" onClick={() => navigate("/forgot-password")}>Recuperar Contraseña</a>
+          Olvidaste tu contraseña? <a href="#" className="text-yellow-500 hover:underline" onClick={() => navigate("/forgot-password")}>Recuperar Contraseña</a>
         </div>
       </div>
     </div>

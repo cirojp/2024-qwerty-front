@@ -3,7 +3,7 @@ import DataTable, { createTheme } from 'react-data-table-component';
 import ExpandedRow from './ExpandedRow';
 
 
-function TransaccionesTable({ transacciones, editRow, deleteRow, onTableEmpty = () =>{} }) {
+function TransaccionesTable({ transacciones, editRow, deleteRow, onTableEmpty = () =>{}, onTransactions = () => {}}) {
     createTheme("dark", {
         background: {
             default: '#1b1c31',
@@ -60,6 +60,7 @@ function TransaccionesTable({ transacciones, editRow, deleteRow, onTableEmpty = 
     if(transacciones[0] == null){
         onTableEmpty();
     }else{
+        onTransactions();
         return (
             <DataTable 
                 className="w-full border-collapse bg-gray-800 rounded-lg shadow-lg mb-0"

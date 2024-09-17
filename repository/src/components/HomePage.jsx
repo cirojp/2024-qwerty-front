@@ -100,6 +100,9 @@ function HomePage() {
         const method = edit ? "PUT" : "POST";
 
         try {
+            if(valor <= 0){
+                return;
+            }
             const response = await fetch(url, {
                 method: method,
                 headers: {
@@ -247,6 +250,7 @@ function HomePage() {
                     editRow={editRow}
                     deleteRow={deleteRow}
                     onTableEmpty={handleEmptyTable}
+                    onTransactions={() => setShowNoTransactions(false)}
                 />
                 {showNoTransactions && <div className='flex justify-center mb-0'><button 
                         className="bg-red-500 bg-opacity-80 text-white font-bold py-4 px-8 rounded-lg hover:bg-red-700"

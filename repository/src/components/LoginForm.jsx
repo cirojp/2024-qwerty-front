@@ -82,7 +82,7 @@ function LoginForm() {
               <button
                 type="button"
                 onClick={togglePasswordVisibility}
-                className="absolute inset-y-0 right-0 flex items-center px-2 bg-yellow-600"
+                className="absolute inset-y-0 right-0 flex items-center px-2 hover:bg-yellow-700"
               >
                 <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
               </button>
@@ -92,7 +92,7 @@ function LoginForm() {
           <div className="flex justify-between items-center">
             <button 
               type="submit" 
-              className="w-full bg-yellow-500 bg-opacity-80 text-gray-950 py-2 px-4 rounded-lg hover:bg-red-700"
+              className="w-full bg-yellow-500 bg-opacity-80 text-gray-950 py-2 px-4 rounded-lg hover:bg-yellow-700"
             >
               Iniciar Sesion
             </button>

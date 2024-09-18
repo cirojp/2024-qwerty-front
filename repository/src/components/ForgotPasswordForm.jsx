@@ -27,15 +27,15 @@ function ForgotPasswordForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-indigo-950 p-6">
-      <div className="bg-blue-950 shadow-md rounded-lg p-8 max-w-md w-full">
+    <div className="min-h-screen flex items-center justify-center bg-black p-6">
+      <div className="bg-gray-950 shadow-md rounded-lg p-8 max-w-md w-full">
         <h2 className="text-2xl font-bold text-center mb-6 text-gray-100">Recuperar contraseña</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-100">Email:</label>
             <input 
               type="email" 
-              className="mt-1 block w-full p-2 border bg-blue-950 text-white border-blue-900 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+              className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
               value={email} 
               onChange={(e) => setEmail(e.target.value)} 
               required
@@ -43,14 +43,14 @@ function ForgotPasswordForm() {
           </div>
           <button 
             type="submit" 
-            className="w-full bg-red-500 bg-opacity-80 text-white py-2 px-4 rounded-lg hover:bg-red-700"
+            className="w-full bg-yellow-500 bg-opacity-80 text-gray-950 py-2 px-4 rounded-lg hover:bg-yellow-700"
           >
             Enviar e-mail de recuperacion
           </button>
           {message && <p className={messageColor}>{message}</p>}
         </form>
         <div className="mt-4 text-center text-gray-400">
-        Volver a <a href="/" className="text-red-500 hover:underline"> Inicio sesión</a>
+        Volver a <a href="/" className="text-yellow-500 hover:underline"> Inicio sesión</a>
         </div>
       </div>
     </div>

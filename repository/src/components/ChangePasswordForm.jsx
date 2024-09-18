@@ -57,10 +57,10 @@ function ChangePasswordForm() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-indigo-950 p-6">
-            <div className="bg-blue-950 shadow-md rounded-lg p-8 max-w-md w-full">
+        <div className="min-h-screen flex items-center justify-center bg-black p-6">
+            <div className="bg-gray-950 shadow-md rounded-lg p-8 max-w-md w-full">
                 <div className="flex justify-center mb-0">
-                    <div className="w-36 h-36 rounded-full overflow-hidden border-4 border-indigo-950">
+                    <div className="w-36 h-36 rounded-full overflow-hidden border-4 border-gray-900">
                         <img 
                         src="../src/assets/logo.png" 
                         alt="Logo" 
@@ -75,7 +75,7 @@ function ChangePasswordForm() {
                         <div className="relative">
                             <input 
                                 type={showCurrentPassword ? "text" : "password"}
-                                className="mt-1 block w-full p-2 border bg-blue-950 text-white border-blue-900 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" 
+                                className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500" 
                                 value={currentPassword} 
                                 placeholder="Contraseña Actual" 
                                 onChange={(e) => setCurrentPassword(e.target.value)} 
@@ -95,7 +95,7 @@ function ChangePasswordForm() {
                         <div className="relative">
                             <input 
                                 type={showNewPassword ? "text" : "password"}
-                                className="mt-1 block w-full p-2 border bg-blue-950 text-white border-blue-900 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" 
+                                className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500" 
                                 value={newPassword} 
                                 placeholder="Nueva Contraseña" 
                                 onChange={(e) => setNewPassword(e.target.value)} 
@@ -115,7 +115,7 @@ function ChangePasswordForm() {
                         <div className="relative">
                             <input 
                                 type={showConfirmPassword ? "text" : "password"}
-                                className="mt-1 block w-full p-2 border bg-blue-950 text-white border-blue-900 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" 
+                                className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500" 
                                 value={confirmPassword} 
                                 placeholder="Repetir Contraseña" 
                                 onChange={(e) => setConfirmPassword(e.target.value)} 
@@ -124,7 +124,7 @@ function ChangePasswordForm() {
                             <button
                                 type="button"
                                 onClick={toggleConfirmPasswordVisibility}
-                                className="absolute inset-y-0 right-0 flex items-center px-2"
+                                className=" "
                              >
                                 <FontAwesomeIcon icon={showConfirmPassword ? faEyeSlash : faEye} />
                             </button>
@@ -132,14 +132,14 @@ function ChangePasswordForm() {
                     </div>
                     <button
                         type="submit"
-                        className="w-full bg-red-500 bg-opacity-80 text-white py-2 px-4 rounded-lg hover:bg-red-700"
+                        className="w-full bg-yellow-500 bg-opacity-80 text-gray-950 py-2 px-4 rounded-lg hover:bg-yellow-700"
                     >
                         Cambiar Contraseña
                     </button>
                 </form>
                 {error && <p className="text-red-500 text-sm text-center">{error}</p>}
                 <div className='flex justify-center pt-3'>
-                    <a href="/index" className="text-red-500 hover:underline" onClick={() => navigate("/index")}>Volver</a>
+                    <a href="/index" className="text-yellow-500 hover:underline" onClick={() => navigate("/index")}>Volver</a>
                 </div>
             </div>
         </div>

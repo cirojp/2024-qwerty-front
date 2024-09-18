@@ -229,9 +229,9 @@ function HomePage() {
     }
     return (
         //<div className="container mx-auto p-6"}>
-        <div className="container min-h-screen min-w-full max-w-full bg-indigo-950">
+        <div className="container min-h-screen min-w-full max-w-full bg-black">
             <div className="flex justify-center mb-0">
-          <div className="w-36 h-36 rounded-full overflow-hidden border-4 border-indigo-950">
+          <div className="w-36 h-36 rounded-full overflow-hidden border-4 border-gray-950">
             <img 
               src="../src/assets/logo.png" 
               alt="Logo" 
@@ -244,7 +244,7 @@ function HomePage() {
                 <div className="flex justify-between items-center mb-0 px-6">
                     <h2 className="text-2xl py-2 px-4 font-bold text-center mb-4 text-gray-100">Historial de Transacciones</h2>
                     <button 
-                        className="bg-red-500 bg-opacity-80 text-white py-2 px-4 rounded-lg hover:bg-red-700"
+                        className="bg-yellow-500 bg-opacity-80 text-gray-900 py-2 px-4 rounded-lg hover:bg-red-700"
                         onClick={openModal}
                     >
                         Agregar Transacción
@@ -258,7 +258,7 @@ function HomePage() {
                     onTransactions={() => setShowNoTransactions(false)}
                 />
                 {showNoTransactions && <div className='flex justify-center mb-0'><button 
-                        className="bg-red-500 bg-opacity-80 text-white font-bold py-4 px-8 rounded-lg hover:bg-red-700"
+                        className="bg-yellow-500 bg-opacity-80 text-gray-950 font-extrabold py-6 px-16 rounded-lg hover:bg-yellow-700"
                         onClick={openModal}
                     >
                         Ingrese una transaccion

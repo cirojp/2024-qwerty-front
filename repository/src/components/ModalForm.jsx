@@ -18,7 +18,6 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
             alignItems: 'center',
         },
         content: {
-            backgroundColor: '#172554',
             padding: '2rem',
             borderRadius: '0.75rem',
             width: '90vw',
@@ -33,18 +32,17 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
     const customSelectStyles = {
         control: (provided) => ({
           ...provided,
-          backgroundColor: '#172554',
-          borderColor: '#1e3a8a',
+          backgroundColor: "#111827",
           color: 'white',
         }),
         menu: (provided) => ({
           ...provided,
-          backgroundColor: '#172554',
+          backgroundColor: '#111827',
         }),
         option: (provided, state) => ({
           ...provided,
-          backgroundColor: state.isSelected ? '#1e3a8a' : '#172554',
-          color: 'white',
+          backgroundColor: state.isSelected ? '#eab308' : '#111827',
+          color: state.isSelected ? 'black': 'white',
         }),
         singleValue: (provided) => ({
           ...provided,
@@ -75,7 +73,7 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
             onRequestClose={closeModal}
             contentLabel="Agregar Transacción"
             style={customStyles}
-            className="bg-blue-900 shadow-lg shadow-blue-900/50 p-4 rounded-lg"
+            className="bg-gray-950 shadow-lg p-4 rounded-lg"
         >
             <h2 className="text-2xl font-bold text-center mb-1 text-gray-100">
                 {edit ? "Editar Transacción" : "Agregar Nueva Transacción"}
@@ -87,7 +85,7 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
                         type="text"
                         value={motivo}
                         onChange={handleMotivoChange}
-                        className="mt-1 block w-full p-2 border bg-blue-950 text-white border-blue-900 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
                         required
                     />
                 </div>
@@ -97,7 +95,7 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
                         type="text"
                         value={descripcion}
                         onChange={handleDescripcionChange}
-                        className="mt-1 block w-full p-2 border bg-blue-950 text-white border-blue-900 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
                         required
                     />
                 </div>
@@ -107,7 +105,7 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
                         type="number"
                         value={valor}
                         onChange={(e) => setValor(e.target.value)}
-                        className="mt-1 block w-full p-2 border bg-blue-950 text-white border-blue-900 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
                         required
                     />
                 </div>
@@ -118,7 +116,7 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
                         onChange={handlePayChange}
                         onCreateOption={handleCreate}
                         value={selectedPayMethod}
-                        className="custom-select mt-1 block w-full border bg-blue-950 text-white border-blue-900 rounded-md shadow-sm"
+                        className="custom-select mt-1 block w-full border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm"
                         styles={customSelectStyles}
                     />
                 </div>
@@ -128,7 +126,7 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
                         type="datetime-local"
                         value={fecha}
                         onChange={(e) => setFecha(e.target.value)}
-                        className="mt-1 block w-full p-2 border bg-blue-950 text-white border-blue-900 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
                         required
                     />
                 </div>
@@ -136,7 +134,7 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
                 <div className="flex gap-2 mt-2">
                     <button 
                         type="submit" 
-                        className="flex-1 bg-blue-500 text-white font-bold py-3 px-4 rounded hover:bg-blue-600 transition-colors duration-300"
+                        className="flex-1 bg-yellow-500 bg-opacity-80 font-bold text-gray-950 py-2 px-4 rounded-lg hover:bg-yellow-700"
                     >
                         {edit ? "Guardar Cambios" : "Agregar Transacción"}
                     </button>

@@ -57,8 +57,8 @@ function RegisterForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-indigo-950 p-6">
-      <div className="bg-blue-950 shadow-md rounded-lg p-8 max-w-md w-full">
+    <div className="min-h-screen flex items-center justify-center bg-black p-6">
+      <div className="bg-gray-950 shadow-md rounded-lg p-8 max-w-md w-full">
         <h2 className="text-2xl font-bold text-center mb-6 text-gray-100">BIENVENIDO</h2>
         <p className="text-center text-gray-100 mb-6">Crea una nueva cuenta</p>
         <form onSubmit={onRegister} className="space-y-4">
@@ -66,7 +66,7 @@ function RegisterForm() {
             <label className="block text-sm font-medium text-gray-100">Email:</label>
             <input
               type="email"
-              className="mt-1 block w-full p-2 border bg-blue-950 text-white border-blue-900 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+              className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
               value={email}
               placeholder="Email"
               onChange={(e) => setEmail(e.target.value)}
@@ -78,7 +78,7 @@ function RegisterForm() {
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
-                className="mt-1 block w-full p-2 border bg-blue-950 text-white border-blue-900 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
                 value={password}
                 placeholder="Contraseña"
                 onChange={(e) => setPassword(e.target.value)}
@@ -87,7 +87,7 @@ function RegisterForm() {
               <button
                 type="button"
                 onClick={togglePasswordVisibility}
-                className="absolute inset-y-0 right-0 flex items-center px-2"
+                className="absolute inset-y-0 right-0 flex items-center px-2 bg-yellow-600 hover:bg-yellow-700"
               >
                 <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
               </button>
@@ -108,14 +108,14 @@ function RegisterForm() {
           <div className="flex justify-between items-center">
             <button
               type="submit"
-              className="w-full bg-red-500 bg-opacity-80 text-white py-2 px-4 rounded-lg hover:bg-red-700"
+              className="w-full bg-yellow-500 bg-opacity-80 text-gray-950 py-2 px-4 rounded-lg hover:bg-yellow-700"
             >
               Crear Cuenta
             </button>
           </div>
         </form>
         <div className="mt-4 text-center text-gray-400">
-        ¿Ya tienes una cuenta?<a href="/" className="text-red-500 hover:underline"> Inicia sesión</a>
+        ¿Ya tienes una cuenta? <a href="/" className="text-yellow-500 hover:underline">Inicia sesión</a>
         </div>
       </div>
     </div>

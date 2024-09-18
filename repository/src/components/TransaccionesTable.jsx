@@ -6,8 +6,9 @@ import ExpandedRow from './ExpandedRow';
 function TransaccionesTable({ transacciones, editRow, deleteRow, onTableEmpty = () =>{}, onTransactions = () => {}}) {
     createTheme("dark", {
         background: {
-            default: '#1b1c31',
+            default: '#1E2126',
         },
+        
     });
 
     const columns = [

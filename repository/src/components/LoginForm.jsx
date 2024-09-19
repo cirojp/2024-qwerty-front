@@ -84,7 +84,7 @@ function LoginForm() {
                 onClick={togglePasswordVisibility}
                 className="absolute inset-y-0 right-0 flex items-center px-2 hover:bg-yellow-700"
               >
-                <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+                <FontAwesomeIcon color="#F8C104" icon={showPassword ? faEyeSlash : faEye} />
               </button>
             </div>
           </div>

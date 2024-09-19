@@ -130,6 +130,7 @@ function HomePage() {
                     updatedTransacciones.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
                     setTransacciones(updatedTransacciones);
                 }
+                setModalError("");
                 closeModal();
             } else {
                 setError("Error al agregar o actualizar la transacción");

@@ -35,7 +35,7 @@ function TransaccionesTable({ transacciones, editRow, deleteRow, onTableEmpty = 
             cell: (row) => (
                 <div className="flex justify-center space-x-4">
                     <button 
-                        className="bg-indigo-600 text-white font-bold py-1 px-1 rounded hover:bg-indigo-700 transition-colors duration-300"
+                        className="bg-yellow-500 text-white font-bold py-1 px-1 rounded hover:bg-yellow-600 transition-colors duration-300"
                         onClick={() => editRow(row)}
                     >
                         <img 

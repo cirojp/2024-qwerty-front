@@ -1,6 +1,8 @@
 import React from 'react';
 import DataTable, { createTheme } from 'react-data-table-component';
 import ExpandedRow from './ExpandedRow';
+import deleteIcon from "../assets/delete-icon.png";
+import editIcon from "../assets/edit-icon.png";
 
 
 function TransaccionesTable({ transacciones, editRow, deleteRow, onTableEmpty = () =>{}, onTransactions = () => {}}) {
@@ -39,7 +41,7 @@ function TransaccionesTable({ transacciones, editRow, deleteRow, onTableEmpty = 
                         onClick={() => editRow(row)}
                     >
                         <img 
-                            src="../src/assets/edit-icon.png" 
+                            src={editIcon} 
                             alt="Edit" 
                             className="w-5 h-5 justify-center" 
                         />
@@ -49,7 +51,7 @@ function TransaccionesTable({ transacciones, editRow, deleteRow, onTableEmpty = 
                         onClick={() => deleteRow(row.id)}
                     >
                         <img 
-                                src="../src/assets/delete-icon.png" 
+                                src={deleteIcon} 
                                 alt="Delete" 
                                 className="w-5 h-5 justify-center" 
                             />

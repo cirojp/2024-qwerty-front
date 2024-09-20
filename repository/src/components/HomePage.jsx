@@ -35,7 +35,7 @@ function HomePage() {
 
     const getTransacciones = () => {
         const token = localStorage.getItem("token");
-        fetch("http://localhost:8080/api/transacciones/user", {
+        fetch("https://two024-qwerty-back-2.onrender.com/api/transacciones/user", {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${token}`
@@ -49,7 +49,7 @@ function HomePage() {
     const fetchPersonalTipoGastos = async () => {
         const token = localStorage.getItem("token");
         try {
-            const response = await fetch("http://localhost:8080/api/personal-tipo-gasto", {
+            const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/personal-tipo-gasto", {
                 headers: {
                     "Authorization": `Bearer ${token}`
                 }
@@ -96,8 +96,8 @@ function HomePage() {
         const token = localStorage.getItem("token");
 
         const url = edit 
-            ? `http://localhost:8080/api/transacciones/${transaccionId}` 
-            : "http://localhost:8080/api/transacciones";
+            ? `https://two024-qwerty-back-2.onrender.com/api/transacciones/${transaccionId}` 
+            : "https://two024-qwerty-back-2.onrender.com/api/transacciones";
         
         const method = edit ? "PUT" : "POST";
 
@@ -143,7 +143,7 @@ function HomePage() {
     const deleteRow = async (id) => {
         const token = localStorage.getItem("token");
         try {
-            const response = await fetch(`http://localhost:8080/api/transacciones/${id}`, {
+            const response = await fetch(`https://two024-qwerty-back-2.onrender.com/api/transacciones/${id}`, {
                 method: "DELETE",
                 headers: {
                     "Authorization": `Bearer ${token}`
@@ -177,7 +177,7 @@ function HomePage() {
         const token = localStorage.getItem("token");
 
         try {
-            const response = await fetch("http://localhost:8080/api/personal-tipo-gasto", {
+            const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/personal-tipo-gasto", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -206,7 +206,7 @@ function HomePage() {
     const deleteAccount = async () => {
         const token = localStorage.getItem("token");
         try {
-            const response = await fetch(`http://localhost:8080/api/auth`, {
+            const response = await fetch(`https://two024-qwerty-back-2.onrender.com/api/auth`, {
                 method: "DELETE",
                 headers: {
                     "Authorization": `Bearer ${token}`

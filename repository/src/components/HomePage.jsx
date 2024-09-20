@@ -4,6 +4,7 @@ import TransaccionesTable from './TransaccionesTable';
 import ModalForm from './ModalForm';
 import ActionButtons from './ActionButtons';
 import './styles/HomePage.css';
+import Image from 'next/image'
 
 
 function HomePage() {
@@ -233,7 +234,7 @@ function HomePage() {
         <div className="container min-h-screen min-w-full max-w-full bg-black">
             <div className="flex justify-center mb-0">
           <div className="w-36 h-36 rounded-full overflow-hidden border-4 border-gray-950">
-            <img 
+            <Image 
               src="\src\assets\logo.png" 
               alt="Logo" 
               className="w-full h-full object-cover"

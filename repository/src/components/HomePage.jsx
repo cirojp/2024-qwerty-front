@@ -4,7 +4,7 @@ import TransaccionesTable from './TransaccionesTable';
 import ModalForm from './ModalForm';
 import ActionButtons from './ActionButtons';
 import './styles/HomePage.css';
-import logo from '../../public/logo.png';
+import logo from '../public/logo.png';
 
 
 function HomePage() {

@@ -5,6 +5,8 @@ import ModalForm from './ModalForm';
 import ActionButtons from './ActionButtons';
 import './styles/HomePage.css';
 //import logo from "../assets/logo.png";
+const logo = new URL('../assets/logo.png', import.meta.url).href;
+
 
 
 function HomePage() {
@@ -235,7 +237,7 @@ function HomePage() {
             <div className="flex justify-center mb-0">
           <div className="w-36 h-36 rounded-full overflow-hidden border-4 border-gray-950">
             <img 
-              src="/logo.png" 
+              src={logo} 
               alt="Logo" 
               className="w-full h-full object-cover"
             />

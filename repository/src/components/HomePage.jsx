@@ -4,9 +4,7 @@ import TransaccionesTable from './TransaccionesTable';
 import ModalForm from './ModalForm';
 import ActionButtons from './ActionButtons';
 import './styles/HomePage.css';
-//import logo from "../assets/logo.png";
-const logo = new URL('../assets/logo.png', import.meta.url).href;
-
+import logo from "../assets/logo.png";
 
 
 function HomePage() {
@@ -239,7 +237,7 @@ function HomePage() {
             <img 
               src={logo} 
               alt="Logo" 
-              //className="w-full h-full object-cover"
+              className="w-full h-full object-cover"
             />
           </div>
         </div>

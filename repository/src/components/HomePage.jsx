@@ -234,7 +234,7 @@ function HomePage() {
         <div className="container min-h-screen min-w-full max-w-full bg-black">
             <div className="flex justify-center mb-0">
           <div className="w-36 h-36 rounded-full overflow-hidden border-4 border-gray-950">
-            <Image 
+            <img 
               src={logo} 
               alt="Logo" 
               className="w-full h-full object-cover"

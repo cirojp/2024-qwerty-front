@@ -1,0 +1,25 @@
+/* Estilo para la fila expandida */
+.expandable-row {
+    padding: 1rem;
+    background-color: #e9ecef; /* Celeste Claro */
+    border: 1px solid #dee2e6;
+    margin-top: 1rem;
+    border-radius: 0.5rem;
+  }
+  
+  .expandable-row div {
+    margin-bottom: 0.5rem;
+    color: #343a40; /* Gris Oscuro */
+    font-weight: 500;
+  }
+  
+  .expandable-row div:last-child {
+    margin-bottom: 0;
+  }
+  
+  @media (min-width: 768px) {
+    .expandable-row div {
+      font-size: 1rem;
+    }
+  }
+  

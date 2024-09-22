@@ -90,35 +90,16 @@ function ResetPasswordForm() {
           </div>
           <button 
             type="submit" 
-            className="w-full bg-red-500 bg-opacity-80 text-white py-2 px-4 rounded-lg hover:bg-red-700"
+            className="w-full bg-red-500 bg-opacity-80 text-white py-2 px-4 rounded-lg hover:bg-red-700 flex justify-center items-center"
             disabled={loading}
           >
             {loading ? (
-              <span className="flex items-center justify-center">
-                <svg
-                  className="animate-spin h-5 w-5 mr-3 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  />
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 0116 0 8 8 0 01-16 0z"
-                  />
-                </svg>
-                Cargando...
-              </span>
+              <>
+                 <div className="loading-circle border-4 border-t-yellow-600 border-gray-200 rounded-full w-6 h-6 animate-spin mr-2"></div>
+                 Cargando...
+              </>
             ) : (
-              "Reset Password"
+              "Restablecer Contraseña"
             )}
           </button>
           {message && <p className="text-center text-gray-100 mt-4">{message}</p>}

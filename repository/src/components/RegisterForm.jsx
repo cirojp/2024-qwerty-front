@@ -110,7 +110,6 @@ function RegisterForm() {
               barra vertical, barra inclinada o barra invertida.</li>
             </ul>
           {error && <div className="text-red-500 text-sm text-center">{error}</div>}
-          <div className="flex justify-between items-center">
             <button
               type="submit"
               className="w-full bg-yellow-500 bg-opacity-80 text-gray-950 py-2 px-4 rounded-lg hover:bg-yellow-700flex justify-center items-center"
@@ -119,12 +118,12 @@ function RegisterForm() {
               {loading ? (
                   <>
                       <div className="loading-circle border-4 border-t-yellow-600 border-gray-200 rounded-full w-6 h-6 animate-spin mr-2"></div>
+                      Cargando...
                   </>
               ) : (
                 "Crear Cuenta"
               )}
             </button>
-          </div>
         </form>
         <div className="mt-4 text-center text-gray-400">
         ¿Ya tienes una cuenta? <a href="/" className="text-yellow-500 hover:underline">Inicia sesión</a>

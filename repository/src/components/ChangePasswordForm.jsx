@@ -101,6 +101,7 @@ function ChangePasswordForm() {
                                 onChange={(e) => setNewPassword(e.target.value)} 
                                 required
                             />
+                            
                             <button
                                 type="button"
                                 onClick={toggleNewPasswordVisibility}
@@ -124,12 +125,20 @@ function ChangePasswordForm() {
                             <button
                                 type="button"
                                 onClick={toggleConfirmPasswordVisibility}
-                                className=" "
+                                className="absolute inset-y-0 right-0 flex items-center px-2 "
                              >
                                 <FontAwesomeIcon icon={showConfirmPassword ? faEyeSlash : faEye} />
                             </button>
                         </div>
                     </div>
+                    <ul className="text-gray-400 text-sm text-left">
+                        <li>Al menos 8 caracteres</li>
+                        <li>Una mayuscula y minuscula</li>
+                        <li>Un número</li>
+                        <li>Un carácter especial</li>
+                        <li>No puede contener comillas simples, dobles, 
+                        barra vertical, barra inclinada o barra invertida.</li>
+                    </ul>
                     <button
                         type="submit"
                         className="w-full bg-yellow-500 bg-opacity-80 text-gray-950 py-2 px-4 rounded-lg hover:bg-yellow-700"

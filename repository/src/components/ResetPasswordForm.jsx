@@ -9,6 +9,7 @@ function ResetPasswordForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState("");
   const { search } = useLocation();
+  const [loading, setLoading] = useState(false);
   const queryParams = new URLSearchParams(search);
   const token = queryParams.get('token');
   const navigate = useNavigate(); 
@@ -32,18 +33,21 @@ function ResetPasswordForm() {
       setMessage("La contraseña debe tener al menos 8 caracteres, una mayuscula y minuscula, un número, un carácter especial y no puede contener comillas simples, dobles, barra vertical, barra inclinada o barra invertida.");
       return;
     }else{
+      setLoading(true);
       try {
         const response = await fetch(`https://two024-qwerty-back-2.onrender.com/api/auth/reset-password?token=${token}&newPassword=${newPassword}`, {
           method: "POST"
         });
         if (response.ok) {
-          setMessage("Password reset successfully.");
+          setMessage("Contraseña restablecida con éxito.");
           setTimeout(() => navigate('/'), 2000);
         } else {
-          setMessage("Error resetting password.");
+          setMessage("Error al restablecer la contraseña.");
         }
       } catch (err) {
-        setMessage("An error occurred.");
+        setMessage("Ocurrió un error.");
+      } finally {
+        setLoading(false); 
       }
     }
   };
@@ -87,8 +91,35 @@ function ResetPasswordForm() {
           <button 
             type="submit" 
             className="w-full bg-red-500 bg-opacity-80 text-white py-2 px-4 rounded-lg hover:bg-red-700"
+            disabled={loading}
           >
-            Reset Password
+            {loading ? (
+              <span className="flex items-center justify-center">
+                <svg
+                  className="animate-spin h-5 w-5 mr-3 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 0116 0 8 8 0 01-16 0z"
+                  />
+                </svg>
+                Cargando...
+              </span>
+            ) : (
+              "Reset Password"
+            )}
           </button>
           {message && <p className="text-center text-gray-100 mt-4">{message}</p>}
         </form>

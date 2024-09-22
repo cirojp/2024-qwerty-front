@@ -5,24 +5,28 @@ function ForgotPasswordForm() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [messageColor, setMessageColor] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage("Esperando respuesta...");
-    setMessageColor("text-yellow-500 text-sm text-center");
+    setLoading(true);
     try {
       const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/auth/forgot-password?email=" + email, {
         method: "POST"
       });
+      
       if (response.ok) {
-        setMessage("Email sent successfully. Please check your inbox.");
+        setMessage("Email enviado con éxito. Por favor revisa tu bandeja de entrada.");
         setMessageColor("text-green-600 text-sm text-center");
       } else {
-        setMessage("Error sending email.");
+        setMessage("Error al enviar el email.");
         setMessageColor("text-red-500 text-sm text-center");
       }
     } catch (err) {
-      setMessage("An error occurred.");
+      setMessage("Ocurrió un error.");
+      setMessageColor("text-red-500 text-sm text-center");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -44,8 +48,35 @@ function ForgotPasswordForm() {
           <button 
             type="submit" 
             className="w-full bg-yellow-500 bg-opacity-80 text-gray-950 py-2 px-4 rounded-lg hover:bg-yellow-700"
+            disabled={loading}
           >
-            Enviar e-mail de recuperacion
+            {loading ? (
+              <span className="flex items-center justify-center">
+                <svg
+                  className="animate-spin h-5 w-5 mr-3 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 0116 0 8 8 0 01-16 0z"
+                  />
+                </svg>
+                Cargando...
+              </span>
+            ) : (
+              "Enviar e-mail de recuperación"
+            )}
           </button>
           {message && <p className={messageColor}>{message}</p>}
         </form>

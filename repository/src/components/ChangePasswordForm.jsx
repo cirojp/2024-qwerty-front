@@ -11,6 +11,7 @@ function ChangePasswordForm() {
     const [showCurrentPassword, setShowCurrentPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const toggleCurrentPasswordVisibility = () => {
         setShowCurrentPassword(!showCurrentPassword);
@@ -31,6 +32,7 @@ function ChangePasswordForm() {
         }
 
         const token = localStorage.getItem("token");
+        setLoading(true); 
 
         try {
             const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/users/change-password", {
@@ -53,6 +55,8 @@ function ChangePasswordForm() {
             }
         } catch (err) {
             setError("Ocurrió un error. Intenta nuevamente.");
+        } finally {
+            setLoading(false); 
         }
     };
 
@@ -133,8 +137,19 @@ function ChangePasswordForm() {
                     <button
                         type="submit"
                         className="w-full bg-yellow-500 bg-opacity-80 text-gray-950 py-2 px-4 rounded-lg hover:bg-yellow-700"
+                        disabled={loading}
                     >
-                        Cambiar Contraseña
+                       {loading ? (
+                            <span className="flex items-center justify-center">
+                                <svg className="animate-spin h-5 w-5 mr-3 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                    <path className="opacity-75" fill="currentColor" d="M4 12c0-1.1.9-2 2-2h12c1.1 0 2 .9 2 2s-.9 2-2 2H6c-1.1 0-2-.9-2-2z"></path>
+                                </svg>
+                                Cargando...
+                            </span>
+                        ) : (
+                            "Cambiar Contraseña"
+                        )}
                     </button>
                 </form>
                 {error && <p className="text-red-500 text-sm text-center">{error}</p>}

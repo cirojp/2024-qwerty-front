@@ -9,6 +9,7 @@ function RegisterForm() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -23,9 +24,11 @@ function RegisterForm() {
 
   const onRegister = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     if (!validatePassword(password)) {
       setError("La contraseña debe tener al menos 8 caracteres, una mayuscula y minuscula, un número, un carácter especial y no puede contener comillas simples, dobles, barra vertical, barra inclinada o barra invertida.");
+      setLoading(false);
       return;
     }
 
@@ -42,7 +45,7 @@ function RegisterForm() {
       });
 
       if (response.ok) {
-        navigate("/"); // Redirige al login después del registro exitoso
+        navigate("/"); 
       } else {
         if (response.status === 409) {
           setError("Email ya en uso. Intente iniciar sesión o utilizar otro e-mail.");
@@ -53,6 +56,8 @@ function RegisterForm() {
     } catch (err) {
       console.error("Error during registration:", err);
       setError("Ocurrió un error. Intenta nuevamente.");
+    } finally {
+      setLoading(false); 
     }
   };
 
@@ -109,8 +114,35 @@ function RegisterForm() {
             <button
               type="submit"
               className="w-full bg-yellow-500 bg-opacity-80 text-gray-950 py-2 px-4 rounded-lg hover:bg-yellow-700"
+              disabled={loading}
             >
-              Crear Cuenta
+             {loading ? (
+                <span className="flex items-center justify-center">
+                  <svg
+                    className="animate-spin h-5 w-5 mr-3 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 0116 0 8 8 0 01-16 0z"
+                    />
+                  </svg>
+                  Cargando...
+                </span>
+              ) : (
+                "Crear Cuenta"
+              )}
             </button>
           </div>
         </form>

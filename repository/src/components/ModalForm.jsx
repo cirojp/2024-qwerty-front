@@ -74,15 +74,24 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
       ]);
       const [catGasto, setCatGasto] = useState("");
       const [selectedCategory, setSelectedCategory] = useState({value: "", label: ""});
+      const [isLoading, setIsLoading] = useState(false);
       const handleCategoryChange = (value) => {
         setCatGasto(value ? value.label : "");
         setSelectedCategory(value);
       }
-      const sendTransaccion = (e) => {
-        agregarTransaccion(e, catGasto);
-        setSelectedCategory({value: "", label: ""});
-        setCatGasto("");
-      }
+      const sendTransaccion = async (e) => {
+        e.preventDefault();
+        setIsLoading(true); // Activamos el spinner al enviar
+        try {
+            await agregarTransaccion(e, catGasto); // Espera a que se complete la transacción
+            setSelectedCategory({ value: "", label: "" });
+            setCatGasto("");
+        } catch (error) {
+            console.error("Error al agregar transacción:", error);
+        } finally {
+            setIsLoading(false); // Desactivamos el spinner al finalizar
+        }
+    };
       const closeWindow = () =>{
         closeModal();
         setSelectedCategory({value: "", label: ""});
@@ -165,10 +174,21 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
                 {error && <div className="text-red-500 text-sm text-center">{error}</div>}
                 <div className="flex gap-2 mt-2">
                     <button 
-                        type="submit" 
+                        type="submit"
+                        disabled={isLoading} 
                         className="flex-1 bg-yellow-500 bg-opacity-80 font-bold text-gray-950 py-2 px-4 rounded-lg hover:bg-yellow-700"
                     >
-                        {edit ? "Guardar Cambios" : "Agregar Transacción"}
+                        {isLoading ? (
+                            <div className="flex items-center justify-center">
+                                <svg className="animate-spin h-5 w-5 text-gray-950" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                                </svg>
+                                <span className="ml-2">Cargando...</span>
+                            </div>
+                        ) : (
+                            edit ? "Guardar Cambios" : "Agregar Transacción"
+                        )}
                     </button>
                     <button 
                         onClick={closeWindow}

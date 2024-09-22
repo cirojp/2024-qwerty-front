@@ -23,6 +23,9 @@ const ExpandedRow = ({data = {
       <div className="font-bold px-20">Tipo de Gasto:</div>
       <div>{data.tipoGasto}</div>
 
+      <div className="font-bold px-20">Categoria</div>
+      <div>{data.categoria}</div>
+
       <div className="font-bold px-20">Fecha:</div>
       <div>{data.fecha}</div>
     </div>

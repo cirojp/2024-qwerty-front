@@ -65,8 +65,29 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
           color: 'white',
         }),
       };
-      
-
+      const [payCategories, setPayCategories] = useState([
+        {value: "impuestos", label: "Impuestos y Servicios"},
+        {value: "entretenimiento", label: "Entretenimiento y Ocio"},
+        {value: "hogar", label: "Hogar y Mercado"},
+        {value: "antojos", label: "Antojos"},
+        {value: "electro", label: "Electrodomesticos"},
+      ]);
+      const [catGasto, setCatGasto] = useState("");
+      const [selectedCategory, setSelectedCategory] = useState({value: "", label: ""});
+      const handleCategoryChange = (value) => {
+        setCatGasto(value ? value.label : "");
+        setSelectedCategory(value);
+      }
+      const sendTransaccion = (e) => {
+        agregarTransaccion(e, catGasto);
+        setSelectedCategory({value: "", label: ""});
+        setCatGasto("");
+      }
+      const closeWindow = () =>{
+        closeModal();
+        setSelectedCategory({value: "", label: ""});
+        setCatGasto("");
+      };
     return (
         <Modal
             isOpen={isModalOpen}
@@ -78,7 +99,7 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
             <h2 className="text-2xl font-bold text-center mb-1 text-gray-100">
                 {edit ? "Editar Transacción" : "Agregar Nueva Transacción"}
             </h2>
-            <form onSubmit={agregarTransaccion} className="flex flex-col gap-3">
+            <form onSubmit={sendTransaccion} className="flex flex-col gap-3">
                 <div>
                     <label className="text-center text-gray-100 mb-6">Motivo:</label>
                     <input
@@ -121,6 +142,17 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
                     />
                 </div>
                 <div>
+                    <label className="text-center text-gray-100 mb-6">Categoria:</label>
+                    <CreatableSelect
+                        options={payCategories}
+                        onChange={handleCategoryChange}
+                        onCreateOption={()=> console.log("ACA VAA ALFO")}
+                        value={selectedCategory}
+                        className="custom-select mt-1 block w-full border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm"
+                        styles={customSelectStyles}
+                    />
+                </div>
+                <div>
                     <label className="text-center text-gray-100 mb-6">Fecha:</label>
                     <input
                         type="datetime-local"
@@ -139,7 +171,7 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
                         {edit ? "Guardar Cambios" : "Agregar Transacción"}
                     </button>
                     <button 
-                        onClick={closeModal}
+                        onClick={closeWindow}
                         className="flex-1 bg-red-500 text-white font-bold py-3 px-4 rounded hover:bg-red-600 transition-colors duration-300"
                     >
                         Cerrar

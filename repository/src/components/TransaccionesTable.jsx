@@ -28,9 +28,9 @@ function TransaccionesTable({ transacciones, editRow, deleteRow, onTableEmpty = 
         {
             name: <span className="text-l text-center font-bold">Fecha</span>,
             selector: row => row.fecha,
-            format: row => new Date(row.fecha).toLocaleString(),
+            format: row => new Date(row.fecha).toLocaleDateString(),
             sortable: true,
-            cell: row => <div className="text-center">{new Date(row.fecha).toLocaleString()}</div>
+            cell: row => <div className="text-center">{new Date(row.fecha).toLocaleDateString()}</div>
         },
         {
             name: <span className="text-l text-center font-bold">Acciones</span>, 

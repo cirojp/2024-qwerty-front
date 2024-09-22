@@ -155,7 +155,7 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
                 <div>
                     <label className="text-center text-gray-100 mb-6">Fecha:</label>
                     <input
-                        type="datetime-local"
+                        type="date"
                         value={fecha}
                         onChange={(e) => setFecha(e.target.value)}
                         className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"

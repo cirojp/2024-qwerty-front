@@ -92,14 +92,14 @@ function HomePage() {
         openModal();
     };
 
-    const agregarTransaccion = async (e) => {
+    const agregarTransaccion = async (e, categoria) => {
         e.preventDefault();
         const token = localStorage.getItem("token");
 
         const url = edit 
-            ? `https://two024-qwerty-back-2.onrender.com/api/transacciones/${transaccionId}` 
-            : "https://two024-qwerty-back-2.onrender.com/api/transacciones";
-        
+        ? `https://two024-qwerty-back-2.onrender.com/api/transacciones/${transaccionId}` 
+        : "https://two024-qwerty-back-2.onrender.com/api/transacciones";
+    
         const method = edit ? "PUT" : "POST";
 
         try {
@@ -116,7 +116,7 @@ function HomePage() {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 },
-                body: JSON.stringify({ motivo, descripcion, valor, tipoGasto, fecha })
+                body: JSON.stringify({ motivo, descripcion, valor, tipoGasto, fecha, categoria})
             });
 
             if (response.ok) {
@@ -134,10 +134,10 @@ function HomePage() {
                 setModalError("");
                 closeModal();
             } else {
-                setError("Error al agregar o actualizar la transacción");
+                setModalError("Error al agregar o actualizar la transacción");
             }
         } catch (err) {
-            setError("Ocurrió un error. Intenta nuevamente.");
+            setModalError("Ocurrió un error. Intenta nuevamente.");
         }
     };
 
@@ -225,10 +225,6 @@ function HomePage() {
         }
     };
 
-    const handleEmptyTable = () => {
-        console.log("NO TENGO TRANSACCIONES");
-        setShowNoTransactions(true);
-    }
     return (
         //<div className="container mx-auto p-6"}>
         <div className="container min-h-screen min-w-full max-w-full bg-black">
@@ -256,7 +252,7 @@ function HomePage() {
                     transacciones={transacciones}
                     editRow={editRow}
                     deleteRow={deleteRow}
-                    onTableEmpty={handleEmptyTable}
+                    onTableEmpty={() => setShowNoTransactions(true)}
                     onTransactions={() => setShowNoTransactions(false)}
                 />
                 {showNoTransactions && <div className='flex justify-center mb-0'><button 

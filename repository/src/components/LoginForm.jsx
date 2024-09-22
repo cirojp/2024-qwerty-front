@@ -9,12 +9,14 @@ function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
   const onClick = async () => {
+    setIsLoading(true);
     try {
       const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/auth/login", {
         method: "POST",
@@ -25,19 +27,24 @@ function LoginForm() {
           email: email,
           password: password,
         }),
-      });
+        
+      })
+      ;
 
       if (response.ok) {
         const token = await response.text();
         console.log("Token recibido:", token);
         localStorage.setItem("token", token);
+        setIsLoading(false);
         navigate("/index");
       } else {
         setError("Credenciales inválidas");
+        setIsLoading(false);
       }
     } catch (err) {
       console.error("Error durante el login:", err);
       setError("Ocurrió un error. Intenta nuevamente.");
+      setIsLoading(false);
     }
   };
 
@@ -93,9 +100,17 @@ function LoginForm() {
           <div className="flex justify-between items-center">
             <button 
               type="submit" 
-              className="w-full bg-yellow-500 bg-opacity-80 text-gray-950 py-2 px-4 rounded-lg hover:bg-yellow-700"
+              disabled={isLoading}
+              className="w-full bg-yellow-500 bg-opacity-80 text-gray-950 py-2 px-4 rounded-lg hover:bg-yellow-700 flex justify-center items-center"
             >
-              Iniciar Sesion
+              {isLoading ? (
+                <>
+                  <div className="loading-circle border-4 border-t-yellow-600 border-gray-200 rounded-full w-6 h-6 animate-spin mr-2"></div>
+                  Cargando...
+                </>
+              ) : (
+                "Iniciar Sesión"
+              )}
             </button>
           </div>
         </form>

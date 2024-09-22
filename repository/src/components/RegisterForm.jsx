@@ -114,13 +114,12 @@ function RegisterForm() {
             <button
               type="submit"
               className="w-full bg-yellow-500 bg-opacity-80 text-gray-950 py-2 px-4 rounded-lg hover:bg-yellow-700flex justify-center items-center"
-                        disabled={loading}
-                    >
-                       {loading ? (
-                            <>
-                                <div className="loading-circle border-4 border-t-yellow-600 border-gray-200 rounded-full w-6 h-6 animate-spin mr-2"></div>
-                                Cargando...
-                            </>
+              disabled={loading}
+            >
+              {loading ? (
+                  <>
+                      <div className="loading-circle border-4 border-t-yellow-600 border-gray-200 rounded-full w-6 h-6 animate-spin mr-2"></div>
+                  </>
               ) : (
                 "Crear Cuenta"
               )}

@@ -51,7 +51,7 @@ const ModalCategoria = ({ isOpen, onRequestClose, onCreateCategory }) => {
             isOpen={isOpen}
             onRequestClose={onRequestClose}
             contentLabel="Crear Categoría"
-            className="bg-gray-900 text-white p-5 rounded-lg shadow-lg z-index: 1003"
+            className="bg-gray-900 text-white p-5 rounded-lg shadow-lg z-[1003]"
         >
             <h2 className="text-2xl font-bold mb-4">Crear Nueva Categoría</h2>
             <input

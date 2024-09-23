@@ -234,13 +234,19 @@ function HomePage() {
         const token = localStorage.getItem("token");
 
         try {
+            //hasta hacer iconPath hardcodeo esto
+            const inputValueTest = {
+                nombre: inputValue.nombre,
+                iconPath: "/ruta/al/icono.png" 
+              };
             const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/personal-categoria", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 },
-                body: JSON.stringify(inputValue)
+                //body: JSON.stringify(inputValue)
+                body: JSON.stringify(inputValueTest)
             });
 
             if (response.ok) {

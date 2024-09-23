@@ -12,7 +12,7 @@ const ModalCategoria = ({ isOpen, onRequestClose, onCreateCategory }) => {
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.75)',
+            backgroundColor: white,
             zIndex: 1002,
             display: 'flex',
             justifyContent: 'center',

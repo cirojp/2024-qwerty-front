@@ -5,6 +5,7 @@ import deleteIcon from "../assets/delete-icon.png";
 import editIcon from "../assets/edit-icon.png";
 
 
+
 function TransaccionesTable({ transacciones, editRow, deleteRow, onTableEmpty = () =>{}, onTransactions = () => {}}) {
     createTheme("dark", {
         background: {
@@ -26,11 +27,17 @@ function TransaccionesTable({ transacciones, editRow, deleteRow, onTableEmpty = 
             cell: row => <div className="text-center">{row.valor}</div>
         },
         {
+            name:<span className='text-l text-center font-bold'>Categoria</span>,
+            selector: row => row.categoria,
+            sortable: true,
+            cell: row => <div className="text-center">{row.categoria}</div>
+        },
+        {
             name: <span className="text-l text-center font-bold">Fecha</span>,
             selector: row => row.fecha,
-            format: row => new Date(row.fecha).toLocaleDateString(),
+            format: row => new Date(row.fecha).toJSON().slice(0,10),
             sortable: true,
-            cell: row => <div className="text-center">{new Date(row.fecha).toLocaleDateString()}</div>
+            cell: row => <div className="text-center">{new Date(row.fecha).toJSON().slice(0,10)}</div>
         },
         {
             name: <span className="text-l text-center font-bold">Acciones</span>, 

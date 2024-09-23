@@ -65,6 +65,7 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
           color: 'white',
         }),
       };
+      const [modalError, setModalError] = useState(error);
       const [payCategories, setPayCategories] = useState([
         {value: "impuestos", label: "Impuestos y Servicios"},
         {value: "entretenimiento", label: "Entretenimiento y Ocio"},
@@ -82,8 +83,13 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
       const sendTransaccion = async (e) => {
         e.preventDefault();
         setIsLoading(true); // Activamos el spinner al enviar
+        console.log(selectedCategory);
         try {
-            await agregarTransaccion(e, catGasto); // Espera a que se complete la transacción
+            if(selectedCategory.value == ""){
+                setModalError("Ingrese una categoria");
+            }else{
+                await agregarTransaccion(e, catGasto); // Espera a que se complete la transacción
+            }
             setSelectedCategory({ value: "", label: "" });
             setCatGasto("");
         } catch (error) {
@@ -171,7 +177,7 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
                         required
                     />
                 </div>
-                {error && <div className="text-red-500 text-sm text-center">{error}</div>}
+                {modalError && <div className="text-red-500 text-sm text-center">{modalError}</div>}
                 <div className="flex gap-2 mt-2">
                     <button 
                         type="submit"

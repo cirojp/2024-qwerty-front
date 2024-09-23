@@ -7,6 +7,7 @@ import './styles/HomePage.css';
 import logo from "../assets/logo.png";
 
 
+
 function HomePage() {
     const [transacciones, setTransacciones] = useState([]);
     const [motivo, setMotivo] = useState("");
@@ -198,33 +199,6 @@ function HomePage() {
             console.error("Error al agregar el tipo de gasto personalizado:", error);
         }
     };
-
-    const signOff = () => {
-        localStorage.removeItem("token");
-        navigate('/');
-    };
-
-    const deleteAccount = async () => {
-        const token = localStorage.getItem("token");
-        try {
-            const response = await fetch(`https://two024-qwerty-back-2.onrender.com/api/auth`, {
-                method: "DELETE",
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                }
-            });
-    
-            if (response.ok) {
-                localStorage.removeItem("token");
-                navigate("/");
-            } else {
-                setError("Error al eliminar la cuenta");
-            }
-        } catch (err) {
-            setError("Ocurrió un error. Intenta nuevamente.");
-        }
-    };
-
     return (
         //<div className="container mx-auto p-6"}>
         <div className="container min-h-screen min-w-full max-w-full bg-black">
@@ -283,12 +257,14 @@ function HomePage() {
                 setFecha={setFecha}
                 error={modalError}
             />
-
-            <ActionButtons
-                navigate={navigate}
-                signOff={signOff}
-                deleteAccount={deleteAccount}
-            />
+            <div className="mt-5 flex flex-col md:flex-row justify-end space-y-4 md:space-y-0 md:space-x-4">
+                <button 
+                    className="w-full md:w-auto bg-yellow-500 bg-opacity-80 text-gray-950 text-sm py-2 px-4 rounded-lg hover:bg-yellow-700"
+                    onClick={() => navigate('/profile')}
+                >
+                    Mi Cuenta
+                </button>
+            </div>
         </div>
     );
 }

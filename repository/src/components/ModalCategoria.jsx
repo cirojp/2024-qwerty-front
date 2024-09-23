@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
 
+import icono1 from '../assets/iconosCategorias/icono1.png';
+import icono2 from '../assets/iconosCategorias/icono2.png';
+
 const ModalCategoria = ({ isOpen, onRequestClose, onCreateCategory }) => {
     const [categoriaNombre, setCategoriaNombre] = useState('');
     const [iconoSeleccionado, setIconoSeleccionado] = useState('');
@@ -13,6 +16,10 @@ const ModalCategoria = ({ isOpen, onRequestClose, onCreateCategory }) => {
             onRequestClose();
         }
     };
+    const iconos = [
+        { src: icono1, alt: 'Icono 1' },
+        { src: icono2, alt: 'Icono 2' },
+    ];
 
     return (
         <Modal
@@ -30,13 +37,13 @@ const ModalCategoria = ({ isOpen, onRequestClose, onCreateCategory }) => {
                 className="input-categoria"
             />
             <div className="selector-iconos">
-                {['icono1.png', 'icono2.png'].map((icono) => (
+                {iconos.map((icono, index) => (
                     <img
-                        key={icono}
-                        src={require(`../assets/iconosCategorias/${icono}`)}
-                        alt={icono}
-                        onClick={() => setIconoSeleccionado(icono)}
-                        className={`icono ${iconoSeleccionado === icono ? 'selected' : ''}`}
+                        key={index}
+                        src={icono.src}
+                        alt={icono.alt}
+                        onClick={() => setIconoSeleccionado(icono.src)}
+                        className={`icono ${iconoSeleccionado === icono.src ? 'selected' : ''}`}
                     />
                 ))}
             </div>

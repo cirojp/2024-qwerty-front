@@ -51,31 +51,42 @@ const ModalCategoria = ({ isOpen, onRequestClose, onCreateCategory }) => {
             isOpen={isOpen}
             onRequestClose={onRequestClose}
             contentLabel="Crear Categoría"
-            className="modal-categoria"
-            style={customStyles}
+            className="bg-gray-900 text-white p-5 rounded-lg shadow-lg"
         >
-            <h2 className="text-2xl font-bold">Crear Nueva Categoría</h2>
+            <h2 className="text-2xl font-bold mb-4">Crear Nueva Categoría</h2>
             <input
                 type="text"
                 placeholder="Nombre de la categoría"
                 value={categoriaNombre}
                 onChange={(e) => setCategoriaNombre(e.target.value)}
-                className="input-categoria"
+                className="mt-1 block w-full p-2 border border-gray-600 bg-gray-800 text-white rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
             />
-            <label className="mt-4">Selecciona un icono:</label>
-            <div className="iconos-container">
+            <label className="mt-4 block">Selecciona un icono:</label>
+            <div className="grid grid-cols-3 gap-4 mt-2">
                 {iconos.map((icono) => (
                     <div
                         key={icono.alt}
-                        className={`icono-item ${iconoSeleccionado === icono.value ? 'selected' : ''}`}
+                        className={`p-2 border rounded-md cursor-pointer transition duration-200 ease-in-out ${
+                            iconoSeleccionado === icono.value ? 'border-yellow-500' : 'border-transparent'
+                        } hover:border-yellow-500`}
                         onClick={() => setIconoSeleccionado(icono.value)}
                     >
-                        <img src={icono.src} alt={icono.alt} className="icono-img" />
+                        <img src={icono.src} alt={icono.alt} className="w-16 h-16" />
                     </div>
                 ))}
             </div>
-            <button onClick={handleCreateCategory} className="btn-crear-categoria">Crear Categoría</button>
-            <button onClick={onRequestClose} className="btn-cerrar">Cerrar</button>
+            <button
+                onClick={handleCreateCategory}
+                className="mt-4 bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-600 transition duration-300"
+            >
+                Crear Categoría
+            </button>
+            <button
+                onClick={onRequestClose}
+                className="mt-2 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-600 transition duration-300"
+            >
+                Cerrar
+            </button>
         </Modal>
     );
 };

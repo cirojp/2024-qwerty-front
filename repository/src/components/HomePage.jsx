@@ -230,19 +230,17 @@ function HomePage() {
             console.error("Error al agregar el tipo de gasto personalizado:", error);
         }
     };
-    const handleCreateCat = async (categoria) => {
+    const handleCreateCat = async (nombre, icono) => {
         const token = localStorage.getItem("token");
-        console.log("toy aca");
-        console.log(categoria);
-        if (!categoria.nombre || !categoria.icono) {
+        if (!nombre || !icono) {
             console.error("Nombre y icono son obligatorios");
             return;
         }
     
         try {
             const inputValue = {
-                nombre: categoria.nombre,
-                iconPath: categoria.icono || 'ruta/predeterminada/icono.png', // Valor predeterminado si icono es vacío
+                nombre: nombre,
+                iconPath: icono || 'ruta/predeterminada/icono.png', // Valor predeterminado si icono es vacío
             };
             const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/personal-categoria", {
                 method: "POST",

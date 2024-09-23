@@ -223,10 +223,11 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
             <ModalCategoria 
                 isOpen={isModalCategoriaOpen} 
                 onRequestClose={closeModalCategoria} 
-                onCreateCategory={(newCategory) => {
+                /*onCreateCategory={(newCategory) => {
                     handleCreateCat(newCategory);
                     closeModalCategoria();
-                }} 
+                }} */
+                handleCreateCat={handleCreateCat}
             />
         </Modal>
     );

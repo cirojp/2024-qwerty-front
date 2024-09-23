@@ -4,7 +4,7 @@ import Modal from 'react-modal';
 import icono1 from '../assets/iconosCategorias/icono1.png';
 import icono2 from '../assets/iconosCategorias/icono2.png';
 
-const ModalCategoria = ({ isOpen, onRequestClose, onCreateCategory }) => {
+const ModalCategoria = ({ isOpen, onRequestClose, handleCreateCat }) => {
     const customStyles = {
         overlay: {
             position: 'fixed',
@@ -26,14 +26,14 @@ const ModalCategoria = ({ isOpen, onRequestClose, onCreateCategory }) => {
     const [categoriaNombre, setCategoriaNombre] = useState('');
     const [iconoSeleccionado, setIconoSeleccionado] = useState('');
 
-    const handleCreateCategory = () => {
+    /*const handleCreateCategory = () => {
         if (categoriaNombre && iconoSeleccionado) {
             onCreateCategory({ label: categoriaNombre, value: categoriaNombre, icon: iconoSeleccionado });
             setCategoriaNombre('');
             setIconoSeleccionado('');
             onRequestClose();
         }
-    };
+    };*/
 
     const iconos = [
         { src: icono1, alt: 'Icono 1' },
@@ -69,7 +69,7 @@ const ModalCategoria = ({ isOpen, onRequestClose, onCreateCategory }) => {
                 ))}
             </div>
             <button
-                onClick={handleCreateCategory}
+                onClick={handleCreateCat(categoriaNombre, iconoSeleccionado)}
                 className="mt-4 bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-600 transition duration-300"
             >
                 Crear Categoría

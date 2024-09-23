@@ -5,6 +5,31 @@ import icono1 from '../assets/iconosCategorias/icono1.png';
 import icono2 from '../assets/iconosCategorias/icono2.png';
 
 const ModalCategoria = ({ isOpen, onRequestClose, onCreateCategory }) => {
+    const customStyles = {
+        overlay: {
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.75)',
+            zIndex: 1002,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+        },
+        content: {
+            padding: '2rem',
+            borderRadius: '0.75rem',
+            width: '90vw',
+            maxWidth: '500px',
+            margin: 'auto',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1.5rem',
+            zIndex: 1003,
+        },
+    };
     const [categoriaNombre, setCategoriaNombre] = useState('');
     const [iconoSeleccionado, setIconoSeleccionado] = useState('');
 
@@ -27,6 +52,7 @@ const ModalCategoria = ({ isOpen, onRequestClose, onCreateCategory }) => {
             onRequestClose={onRequestClose}
             contentLabel="Crear Categoría"
             className="modal-categoria"
+            style={customStyles}
         >
             <h2 className="text-2xl font-bold">Crear Nueva Categoría</h2>
             <input

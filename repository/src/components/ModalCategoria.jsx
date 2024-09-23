@@ -63,21 +63,17 @@ const ModalCategoria = ({ isOpen, onRequestClose, onCreateCategory }) => {
                 className="input-categoria"
             />
             <label className="mt-4">Selecciona un icono:</label>
-            <select
-                value={iconoSeleccionado}
-                onChange={(e) => {
-                    const selectedIcon = iconos.find(icono => icono.value === e.target.value);
-                    setIconoSeleccionado(selectedIcon ? selectedIcon.src : '');
-                }}
-                className="select-icono"
-            >
-                <option value="" disabled>-- Selecciona un icono --</option>
-                {iconos.map((icono, index) => (
-                    <option key={index} value={icono.value}>
-                        {icono.alt}
-                    </option>
+            <div className="iconos-container">
+                {iconos.map((icono) => (
+                    <div
+                        key={icono.alt}
+                        className={`icono-item ${iconoSeleccionado === icono.value ? 'selected' : ''}`}
+                        onClick={() => setIconoSeleccionado(icono.value)}
+                    >
+                        <img src={icono.src} alt={icono.alt} className="icono-img" />
+                    </div>
                 ))}
-            </select>
+            </div>
             <button onClick={handleCreateCategory} className="btn-crear-categoria">Crear Categoría</button>
             <button onClick={onRequestClose} className="btn-cerrar">Cerrar</button>
         </Modal>

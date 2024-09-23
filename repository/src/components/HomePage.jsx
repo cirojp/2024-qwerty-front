@@ -236,7 +236,7 @@ function HomePage() {
         try {
             //hasta hacer iconPath hardcodeo esto
             const inputValueTest = {
-                nombre: inputValue.nombre,
+                nombre: "inputValue.nombre",
                 iconPath: "/ruta/al/icono.png" 
               };
             const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/personal-categoria", {

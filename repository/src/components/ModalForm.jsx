@@ -93,7 +93,7 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
             if(selectedCategory.value == ""){
                 setModalError("Ingrese una categoria");
             }else{
-                await agregarTransaccion(e, selectedCategory); // Espera a que se complete la transacción
+                await agregarTransaccion(e, selectedCategory.value); // Espera a que se complete la transacción
             }
             /*setSelectedCategory({ value: "", label: "" });
             setCatGasto("");*/

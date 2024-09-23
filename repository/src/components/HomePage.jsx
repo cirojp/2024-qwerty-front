@@ -18,6 +18,7 @@ function HomePage() {
     const [edit, setEdit] = useState(false);
     const [descripcion, setDescripcion] = useState("");
     const [tipoGasto, setTipoGasto] = useState("");
+    const [categoria, setCategoria] = useState("");
     const [payOptions, setPayOptions] = useState([
         { value: "credito", label: "Tarjeta de credito" },
         { value: "debito", label: "Tarjeta de debito" },
@@ -31,6 +32,7 @@ function HomePage() {
         {value: "electro", label: "Electrodomesticos"},
       ]);
     const [selectedPayMethod, setSelectedPayMethod] = useState(null);
+    const [selectedCategory, setSelectedCategory] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [transaccionId, setTransaccionId] = useState(null);
     const [modalError, setModalError] = useState("");
@@ -199,11 +201,12 @@ function HomePage() {
     const handleDescripcionChange = (e) => {
         setDescripcion(e.target.value);
     };
-    const handleCategoryChange = (e) => {
-        setPayCategories(e.target.value);
+    const handleCategoryChange  = (value) => {
+        setCategoria(value ? value.value : "");
+        setSelectedCategory(value);
     };
 
-    const handleCreate = async (inputValue) => {
+    const handleCreateTP = async (inputValue) => {
         const token = localStorage.getItem("token");
 
         try {
@@ -225,6 +228,30 @@ function HomePage() {
             }
         } catch (error) {
             console.error("Error al agregar el tipo de gasto personalizado:", error);
+        }
+    };
+    const handleCreateCat = async (inputValue) => {
+        const token = localStorage.getItem("token");
+
+        try {
+            const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/personal-categoria", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify(inputValue)
+            });
+
+            if (response.ok) {
+                const newCategoria = await response.json();
+                const newOption = { label: newCategoria.nombre, value: newCategoria.nombre };
+                setPayCategories(prevOptions => [...prevOptions, newOption]);
+                setSelectedCategory(newOption);
+                setCategoria(newCategoria.nombre);
+            }
+        } catch (error) {
+            console.error("Error al agregar categoria personalizada:", error);
         }
     };
     return (
@@ -283,7 +310,8 @@ function HomePage() {
                 payCategories={payCategories}
                 handleCategoryChange={handleCategoryChange}
                 payOptions={payOptions}
-                handleCreate={handleCreate}
+                handleCreateTP={handleCreateTP}
+                handleCreateCat={handleCreateCat}
                 setFecha={setFecha}
                 error={modalError}
             />

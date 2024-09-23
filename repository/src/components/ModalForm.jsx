@@ -3,7 +3,7 @@ import Modal from 'react-modal';
 import CreatableSelect from 'react-select/creatable';
 import './styles/ModalForm.css';
 
-function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, descripcion, valor, fecha, handleMotivoChange, handleDescripcionChange, setValor, handlePayChange, selectedPayMethod, selectedPayMethod, payCategories, payOptions, handleCreate, setFecha, error}) {
+function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, descripcion, valor, fecha, handleMotivoChange, handleDescripcionChange, setValor, handlePayChange, selectedPayMethod, selectedPayMethod, payCategories, handleCategoryChange, payOptions, handleCreateTP, handleCreateCat, setFecha, error}) {
     const customStyles = {
         overlay: {
             position: 'fixed',
@@ -66,25 +66,24 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
         }),
       };
       const [modalError, setModalError] = useState(error);
-      const [catGasto, setCatGasto] = useState("");
-      const [selectedCategory, setSelectedCategory] = useState({value: "", label: ""});
+      /*const [catGasto, setCatGasto] = useState("");
+      const [selectedCategory, setSelectedCategory] = useState({value: "", label: ""});*/
       const [isLoading, setIsLoading] = useState(false);
-      const handleCategoryChange = (value) => {
+      /*const handleCategoryChange = (value) => {
         setCatGasto(value ? value.label : "");
         setSelectedCategory(value);
-      }
+      }*/
       const sendTransaccion = async (e) => {
         e.preventDefault();
         setIsLoading(true); // Activamos el spinner al enviar
-        console.log(selectedCategory);
         try {
             if(selectedCategory.value == ""){
                 setModalError("Ingrese una categoria");
             }else{
                 await agregarTransaccion(e, catGasto); // Espera a que se complete la transacción
             }
-            setSelectedCategory({ value: "", label: "" });
-            setCatGasto("");
+            /*setSelectedCategory({ value: "", label: "" });
+            setCatGasto("");*/
         } catch (error) {
             console.error("Error al agregar transacción:", error);
         } finally {
@@ -93,28 +92,10 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
     };
       const closeWindow = () =>{
         closeModal();
-        setSelectedCategory({value: "", label: ""});
-        setCatGasto("");
+        /*setSelectedCategory({value: "", label: ""});
+        setCatGasto("");*/
       };
 
-      const fetchPersonalCategorias = async () => {
-        const token = localStorage.getItem("token");
-        try {
-            const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/personal-categoria", {
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                }
-            });
-    
-            if (response.ok) {
-                const data = await response.json();
-                const customOptions = data.map(cat => ({ label: cat.nombre, value: cat.nombre }));
-                setPayCategories([...payCategories, ...customOptions]);
-            }
-        } catch (error) {
-            console.error("Error al obtener las categorías personalizadas:", error);
-        }
-    };
     return (
         <Modal
             isOpen={isModalOpen}
@@ -162,7 +143,7 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
                     <CreatableSelect
                         options={payOptions}
                         onChange={handlePayChange}
-                        onCreateOption={handleCreate}
+                        onCreateOption={handleCreateTP}
                         value={selectedPayMethod}
                         className="custom-select mt-1 block w-full border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm"
                         styles={customSelectStyles}
@@ -174,6 +155,7 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
                         options={payCategories}
                         onChange={handleCategoryChange}
                         value={selectedCategory}
+                        onCreateOption={handleCreateCat}
                         className="custom-select mt-1 block w-full border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm"
                         styles={customSelectStyles}
                     />

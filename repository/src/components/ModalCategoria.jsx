@@ -22,17 +22,19 @@ const ModalCategoria = ({ isOpen, onRequestClose, onCreateCategory }) => {
             zIndex: 1003,
         },
     };
+
     const [categoriaNombre, setCategoriaNombre] = useState('');
     const [iconoSeleccionado, setIconoSeleccionado] = useState('');
 
     const handleCreateCategory = () => {
         if (categoriaNombre && iconoSeleccionado) {
-            onCreateCategory(categoriaNombre, iconoSeleccionado);
+            onCreateCategory({ label: categoriaNombre, value: categoriaNombre, icon: iconoSeleccionado });
             setCategoriaNombre('');
             setIconoSeleccionado('');
             onRequestClose();
         }
     };
+
     const iconos = [
         { src: icono1, alt: 'Icono 1' },
         { src: icono2, alt: 'Icono 2' },
@@ -59,17 +61,15 @@ const ModalCategoria = ({ isOpen, onRequestClose, onCreateCategory }) => {
                 {iconos.map((icono) => (
                     <div
                         key={icono.alt}
-                        className={`p-2 border rounded-md cursor-pointer transition duration-200 ease-in-out ${
-                            iconoSeleccionado === icono.value ? 'border-yellow-500' : 'border-transparent'
-                        } hover:border-yellow-500`}
-                        onClick={() => setIconoSeleccionado(icono.value)} // Cambia el valor del icono seleccionado
+                        className={`p-2 border rounded-md cursor-pointer transition duration-200 ease-in-out ${iconoSeleccionado === icono.src ? 'border-yellow-500' : 'border-transparent'} hover:border-yellow-500`}
+                        onClick={() => setIconoSeleccionado(icono.src)}
                     >
                         <img src={icono.src} alt={icono.alt} className="w-16 h-16" />
                     </div>
                 ))}
             </div>
             <button
-                onClick={handleCreateCategory} // Llama a la función al hacer clic
+                onClick={handleCreateCategory}
                 className="mt-4 bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-600 transition duration-300"
             >
                 Crear Categoría

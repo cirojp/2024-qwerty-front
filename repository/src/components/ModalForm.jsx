@@ -173,6 +173,7 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
                             className="custom-select mt-1 block w-full border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm"
                             styles={customSelectStyles}
                         />
+                        {modalError && <p className="text-red-500">{modalError}</p>}
                         <button
                             type="button"
                             onClick={openModalCategoria}
@@ -222,7 +223,10 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
             <ModalCategoria 
                 isOpen={isModalCategoriaOpen} 
                 onRequestClose={closeModalCategoria} 
-                onCreateCategory={handleCreateCat} 
+                onCreateCategory={(newCategory) => {
+                    handleCreateCat(newCategory);
+                    closeModalCategoria();
+                }} 
             />
         </Modal>
     );

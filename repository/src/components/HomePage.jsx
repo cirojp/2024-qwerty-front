@@ -232,34 +232,41 @@ function HomePage() {
     };
     const handleCreateCat = async (nombre, icono) => {
         const token = localStorage.getItem("token");
-
+    
+        if (!nombre || !icono) {
+            console.error("Nombre y icono son obligatorios");
+            return;
+        }
+    
         try {
-            //hasta hacer iconPath hardcodeo esto
             const inputValue = {
                 nombre: nombre,
-                iconPath: icono 
-              };
+                iconPath: icono || 'ruta/predeterminada/icono.png', // Valor predeterminado si icono es vacío
+            };
             const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/personal-categoria", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 },
-                //body: JSON.stringify(inputValue)
                 body: JSON.stringify(inputValue)
             });
-
+    
             if (response.ok) {
                 const newCategoria = await response.json();
                 const newOption = { label: newCategoria.nombre, value: newCategoria.nombre };
                 setPayCategories(prevOptions => [...prevOptions, newOption]);
                 setSelectedCategory(newOption);
                 setCategoria(newCategoria.nombre);
+            } else {
+                const errorMessage = await response.text();
+                console.error("Error al agregar categoria:", errorMessage);
             }
         } catch (error) {
             console.error("Error al agregar categoria personalizada:", error);
         }
     };
+    
     return (
         //<div className="container mx-auto p-6"}>
         <div className="container min-h-screen min-w-full max-w-full bg-black">

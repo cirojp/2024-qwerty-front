@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Modal from 'react-modal';
 import CreatableSelect from 'react-select/creatable';
 import './styles/ModalForm.css';
+import ModalCategoria from './ModalCategoria'; 
 
 function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, descripcion, valor, fecha, handleMotivoChange, handleDescripcionChange, setValor, handlePayChange, selectedPayMethod, selectedCategory, payCategories, handleCategoryChange, payOptions, handleCreateTP, handleCreateCat, setFecha, error}) {
     const customStyles = {
@@ -73,6 +74,18 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
         setCatGasto(value ? value.label : "");
         setSelectedCategory(value);
       }*/
+      const [isModalCategoriaOpen, setIsModalCategoriaOpen] = useState(false);
+      const openModalCategoria = () => {
+        setIsModalCategoriaOpen(true);
+        };
+
+      const closeModalCategoria = () => {
+            setIsModalCategoriaOpen(false);
+        };
+        /*const handleCreateCategory = (nombre, icono) => {
+            handleCreateCat({ label: nombre, value: nombre, icon: icono });
+        };*/
+
       const sendTransaccion = async (e) => {
         e.preventDefault();
         setIsLoading(true); // Activamos el spinner al enviar
@@ -80,7 +93,7 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
             if(selectedCategory.value == ""){
                 setModalError("Ingrese una categoria");
             }else{
-                await agregarTransaccion(e, catGasto); // Espera a que se complete la transacción
+                await agregarTransaccion(e, selectedCategory); // Espera a que se complete la transacción
             }
             /*setSelectedCategory({ value: "", label: "" });
             setCatGasto("");*/
@@ -151,14 +164,23 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
                 </div>
                 <div>
                     <label className="text-center text-gray-100 mb-6">Categoria:</label>
-                    <CreatableSelect
-                        options={payCategories}
-                        onChange={handleCategoryChange}
-                        value={selectedCategory}
-                        onCreateOption={handleCreateCat}
-                        className="custom-select mt-1 block w-full border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm"
-                        styles={customSelectStyles}
-                    />
+                    <div className="flex items-center">
+                        <CreatableSelect
+                            options={payCategories}
+                            onChange={handleCategoryChange}
+                            value={selectedCategory}
+                            onCreateOption={handleCreateCat}
+                            className="custom-select mt-1 block w-full border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm"
+                            styles={customSelectStyles}
+                        />
+                        <button
+                            type="button"
+                            onClick={openModalCategoria}
+                            className="ml-2 bg-blue-500 text-white py-1 px-2 rounded"
+                        >
+                            +
+                        </button>
+                    </div>
                 </div>
                 <div>
                     <label className="text-center text-gray-100 mb-6">Fecha:</label>
@@ -197,7 +219,11 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
                     </button>
                 </div>
             </form>
-            
+            <ModalCategoria 
+                isOpen={isModalCategoriaOpen} 
+                onRequestClose={closeModalCategoria} 
+                onCreateCategory={handleCreateCat} 
+            />
         </Modal>
     );
 }

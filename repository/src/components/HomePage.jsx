@@ -230,14 +230,14 @@ function HomePage() {
             console.error("Error al agregar el tipo de gasto personalizado:", error);
         }
     };
-    const handleCreateCat = async (inputValue) => {
+    const handleCreateCat = async (nombre, icono) => {
         const token = localStorage.getItem("token");
 
         try {
             //hasta hacer iconPath hardcodeo esto
-            const inputValueTest = {
-                nombre: "inputValue.nombre",
-                iconPath: "/ruta/al/icono.png" 
+            const inputValue = {
+                nombre: nombre,
+                iconPath: icono 
               };
             const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/personal-categoria", {
                 method: "POST",
@@ -246,7 +246,7 @@ function HomePage() {
                     "Authorization": `Bearer ${token}`
                 },
                 //body: JSON.stringify(inputValue)
-                body: JSON.stringify(inputValueTest)
+                body: JSON.stringify(inputValue)
             });
 
             if (response.ok) {

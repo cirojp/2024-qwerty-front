@@ -3,7 +3,7 @@ import Modal from 'react-modal';
 import CreatableSelect from 'react-select/creatable';
 import './styles/ModalForm.css';
 
-function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, descripcion, valor, fecha, handleMotivoChange, handleDescripcionChange, setValor, handlePayChange, selectedPayMethod, selectedPayMethod, payCategories, handleCategoryChange, payOptions, handleCreateTP, handleCreateCat, setFecha, error}) {
+function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, descripcion, valor, fecha, handleMotivoChange, handleDescripcionChange, setValor, handlePayChange, selectedPayMethod, selectedCategory, payCategories, handleCategoryChange, payOptions, handleCreateTP, handleCreateCat, setFecha, error}) {
     const customStyles = {
         overlay: {
             position: 'fixed',

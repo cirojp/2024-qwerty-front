@@ -307,6 +307,7 @@ function HomePage() {
                 setValor={setValor}
                 handlePayChange={handlePayChange}
                 selectedPayMethod={selectedPayMethod}
+                selectedCategory={selectedCategory}
                 payCategories={payCategories}
                 handleCategoryChange={handleCategoryChange}
                 payOptions={payOptions}

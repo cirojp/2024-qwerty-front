@@ -19,14 +19,6 @@ const ModalCategoria = ({ isOpen, onRequestClose, onCreateCategory }) => {
             alignItems: 'center',
         },
         content: {
-            padding: '2rem',
-            borderRadius: '0.75rem',
-            width: '90vw',
-            maxWidth: '500px',
-            margin: 'auto',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '1.5rem',
             zIndex: 1003,
         },
     };

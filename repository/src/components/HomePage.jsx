@@ -23,6 +23,13 @@ function HomePage() {
         { value: "debito", label: "Tarjeta de debito" },
         { value: "efectivo", label: "Efectivo" }
     ]);
+    const [payCategories, setPayCategories] = useState([
+        {value: "impuestos", label: "Impuestos y Servicios"},
+        {value: "entretenimiento", label: "Entretenimiento y Ocio"},
+        {value: "hogar", label: "Hogar y Mercado"},
+        {value: "antojos", label: "Antojos"},
+        {value: "electro", label: "Electrodomesticos"},
+      ]);
     const [selectedPayMethod, setSelectedPayMethod] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [transaccionId, setTransaccionId] = useState(null);
@@ -32,7 +39,7 @@ function HomePage() {
     useEffect(() => {
         getTransacciones();
         fetchPersonalTipoGastos();
-        console.log(localStorage.getItem("token"));
+        fetchPersonalCategorias();
     }, []);
 
     const getTransacciones = () => {
@@ -64,6 +71,24 @@ function HomePage() {
             }
         } catch (error) {
             console.error("Error al obtener los tipos de gasto personalizados:", error);
+        }
+    };
+    const fetchPersonalCategorias = async () => {
+        const token = localStorage.getItem("token");
+        try {
+            const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/personal-categoria", {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
+    
+            if (response.ok) {
+                const data = await response.json();
+                const customOptions = data.map(cat => ({ label: cat.nombre, value: cat.nombre }));
+                setPayCategories([...payCategories, ...customOptions]);
+            }
+        } catch (error) {
+            console.error("Error al obtener las categorías personalizadas:", error);
         }
     };
 
@@ -174,6 +199,9 @@ function HomePage() {
     const handleDescripcionChange = (e) => {
         setDescripcion(e.target.value);
     };
+    const handleCategoryChange = (e) => {
+        setPayCategories(e.target.value);
+    };
 
     const handleCreate = async (inputValue) => {
         const token = localStorage.getItem("token");
@@ -252,6 +280,8 @@ function HomePage() {
                 setValor={setValor}
                 handlePayChange={handlePayChange}
                 selectedPayMethod={selectedPayMethod}
+                payCategories={payCategories}
+                handleCategoryChange={handleCategoryChange}
                 payOptions={payOptions}
                 handleCreate={handleCreate}
                 setFecha={setFecha}

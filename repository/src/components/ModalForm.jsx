@@ -3,7 +3,7 @@ import Modal from 'react-modal';
 import CreatableSelect from 'react-select/creatable';
 import './styles/ModalForm.css';
 
-function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, descripcion, valor, fecha, handleMotivoChange, handleDescripcionChange, setValor, handlePayChange, selectedPayMethod, payOptions, handleCreate, setFecha, error}) {
+function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, descripcion, valor, fecha, handleMotivoChange, handleDescripcionChange, setValor, handlePayChange, selectedPayMethod, selectedPayMethod, payCategories, payOptions, handleCreate, setFecha, error}) {
     const customStyles = {
         overlay: {
             position: 'fixed',
@@ -66,13 +66,6 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
         }),
       };
       const [modalError, setModalError] = useState(error);
-      const [payCategories, setPayCategories] = useState([
-        {value: "impuestos", label: "Impuestos y Servicios"},
-        {value: "entretenimiento", label: "Entretenimiento y Ocio"},
-        {value: "hogar", label: "Hogar y Mercado"},
-        {value: "antojos", label: "Antojos"},
-        {value: "electro", label: "Electrodomesticos"},
-      ]);
       const [catGasto, setCatGasto] = useState("");
       const [selectedCategory, setSelectedCategory] = useState({value: "", label: ""});
       const [isLoading, setIsLoading] = useState(false);
@@ -103,6 +96,25 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
         setSelectedCategory({value: "", label: ""});
         setCatGasto("");
       };
+
+      const fetchPersonalCategorias = async () => {
+        const token = localStorage.getItem("token");
+        try {
+            const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/personal-categoria", {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
+    
+            if (response.ok) {
+                const data = await response.json();
+                const customOptions = data.map(cat => ({ label: cat.nombre, value: cat.nombre }));
+                setPayCategories([...payCategories, ...customOptions]);
+            }
+        } catch (error) {
+            console.error("Error al obtener las categorías personalizadas:", error);
+        }
+    };
     return (
         <Modal
             isOpen={isModalOpen}
@@ -161,7 +173,6 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
                     <CreatableSelect
                         options={payCategories}
                         onChange={handleCategoryChange}
-                        onCreateOption={()=> console.log("ACA VAA ALFO")}
                         value={selectedCategory}
                         className="custom-select mt-1 block w-full border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm"
                         styles={customSelectStyles}

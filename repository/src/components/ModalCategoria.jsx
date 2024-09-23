@@ -51,8 +51,7 @@ const ModalCategoria = ({ isOpen, onRequestClose, onCreateCategory }) => {
             isOpen={isOpen}
             onRequestClose={onRequestClose}
             contentLabel="Crear Categoría"
-            className="bg-gray-900 text-white p-5 rounded-lg shadow-lg"
-            style={customStyles}
+            className="bg-gray-900 text-white p-5 rounded-lg shadow-lg z-index: 1003"
         >
             <h2 className="text-2xl font-bold mb-4">Crear Nueva Categoría</h2>
             <input
@@ -70,14 +69,14 @@ const ModalCategoria = ({ isOpen, onRequestClose, onCreateCategory }) => {
                         className={`p-2 border rounded-md cursor-pointer transition duration-200 ease-in-out ${
                             iconoSeleccionado === icono.value ? 'border-yellow-500' : 'border-transparent'
                         } hover:border-yellow-500`}
-                        onClick={() => setIconoSeleccionado(icono.value)}
+                        onClick={() => setIconoSeleccionado(icono.value)} // Cambia el valor del icono seleccionado
                     >
                         <img src={icono.src} alt={icono.alt} className="w-16 h-16" />
                     </div>
                 ))}
             </div>
             <button
-                onClick={handleCreateCategory}
+                onClick={handleCreateCategory} // Llama a la función al hacer clic
                 className="mt-4 bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-600 transition duration-300"
             >
                 Crear Categoría

@@ -175,7 +175,7 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
                         {modalError && <p className="text-red-500">{modalError}</p>}
                         <button
                             type="button"
-                            onClick={openModalCategoria}
+                            onClick={() => openModalCategoria()}
                             className="ml-2 bg-blue-500 text-white py-1 px-2 rounded"
                         >
                             +

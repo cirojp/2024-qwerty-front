@@ -236,7 +236,7 @@ function HomePage() {
             console.error("Nombre y icono son obligatorios");
             return;
         }
-    
+        icono = icono.split('/').pop();
         try {
             const inputValue = {
                 nombre: nombre,

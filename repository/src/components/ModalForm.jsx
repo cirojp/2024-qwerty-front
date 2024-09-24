@@ -165,7 +165,7 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
                 <div>
                     <label className="text-center text-gray-100 mb-6">Categoria:</label>
                     <div className="flex items-center">
-                        <Select
+                        <CreatableSelect
                             options={payCategories}
                             onChange={handleCategoryChange}
                             value={selectedCategory}

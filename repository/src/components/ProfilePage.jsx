@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import ActionButtons from './ActionButtons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBlender, faCandyCane, faFileInvoiceDollar, faHouse, faTicket } from '@fortawesome/free-solid-svg-icons';
+import icon1 from '../assets/iconosCategorias/icon1.png';
+import icon2 from '../assets/iconosCategorias/icon2.png';
 
 function ProfilePage() {
     const defaultCategories = [
@@ -13,6 +15,10 @@ function ProfilePage() {
     ];
 
     const [payCategories, setPayCategories] = useState(defaultCategories); 
+    const iconMap = {
+        'icon1.png': icon1,
+        'icon2.png': icon2,
+    };
 
     const fetchPersonalCategorias = async () => {
         const token = localStorage.getItem("token");
@@ -32,37 +38,10 @@ function ProfilePage() {
             console.error("Error al obtener las categorías personalizadas:", error);
         }
     };
-////////////////////
-    const images = require.context('../assets/iconosCategorias', false, /\.(png|jpe?g|svg)$/);
-
-    const getImage = (iconName) => {
-        try {
-            return images(`./${iconName}`);
-        } catch (error) {
-            console.error("Error al cargar la imagen:", error);
-            return null;
-        }
-    };
-    //////////////////////////
     useEffect(() => {
         fetchPersonalCategorias();
     }, []);
   return (
-        /*<div className="container min-h-screen min-w-full max-w-full bg-black">
-            <div className='text-white font-bold'>Mi Cuenta</div>
-            <ActionButtons />
-            <div className='text-white'>
-                <div className='text-bold text-yellow-500 text-xl mb-3 underline'>Mis Categorias</div>
-                <ul>
-                    {payCategories.map((category) => (
-                        <li key={category.value} className="flex items-center mb-2">
-                            <img src={`../assets/iconosCategorias/${category.iconPath}`} alt={category.label} className="w-6 h-6 mr-2" />
-                            {category.label}
-                        </li>
-                    ))}
-                </ul>
-            </div>
-        </div>*/
         <div className="container min-h-screen min-w-full max-w-full bg-black">
             <div className='text-white font-bold'>Mi Cuenta</div>
             <ActionButtons />
@@ -70,9 +49,9 @@ function ProfilePage() {
                 <div className='text-bold text-yellow-500 text-xl mb-3 underline'>Mis Categorias</div>
                 <ul>
                     {payCategories.map((category) => (
-                        <li key={category.value}>
-                            <img src={getImage(category.iconPath)} alt={category.label} className="w-6 h-6 mr-2" />
-                            {category.value}
+                        <li key={category.value} className="flex items-center mb-2">
+                            <img src={iconMap[category.iconPath]} alt={category.label} className="w-6 h-6 mr-2" />
+                            {category.label}
                         </li>
                     ))}
                 </ul>

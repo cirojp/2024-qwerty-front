@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react'
 import ActionButtons from './ActionButtons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBlender, faCandyCane, faFileInvoiceDollar, faHouse, faTicket } from '@fortawesome/free-solid-svg-icons';
-//import icon1 from '../assets/iconosCategorias/icon1.png';
-//import icon2 from '../assets/iconosCategorias/icon2.png';
-import editIcon from "../assets/iconosCategorias/edit-icon.png";
+import editIcon from "../assets/iconosCategorias/icon1.png";
+import editIcon from "../assets/iconosCategorias/icon2.png";
 
 function ProfilePage() {
     const defaultCategories = [
@@ -14,7 +13,10 @@ function ProfilePage() {
         { value: "Antojos", label: "Antojos", iconPath: "icon1.png" },
         { value: "Electro", label: "Electrodomesticos", iconPath: "icon2.png" }
     ];
-
+    const iconMap = {
+        'icon1.png': icon1,
+        'icon2.png': icon2,
+    };
     const [payCategories, setPayCategories] = useState(defaultCategories); 
 
     const fetchPersonalCategorias = async () => {
@@ -47,8 +49,7 @@ function ProfilePage() {
                 <ul>
                     {payCategories.map((category) => (
                         <li key={category.value} className="flex items-center mb-2">
-                            <img src={`../assets/iconosCategorias/${category.iconPath}`} alt={category.label} className="w-6 h-6 mr-2" />
-
+                            <img src={iconMap[category.iconPath]} alt={category.label} className="w-6 h-6 mr-2" />
                             {category.label}
                         </li>
                     ))}

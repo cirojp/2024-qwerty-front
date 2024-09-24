@@ -3,19 +3,18 @@ import ActionButtons from './ActionButtons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBlender, faCandyCane, faFileInvoiceDollar, faHouse, faTicket } from '@fortawesome/free-solid-svg-icons';
 import icon1 from "../assets/iconosCategorias/edit-icon.png";
-import icon2 from "../assets/iconosCategorias/edit-icon.png";
+
 
 function ProfilePage() {
     const defaultCategories = [
-        { value: "Impuestos y Servicios", label: "Impuestos y Servicios", iconPath: "icon1.png" },
-        { value: "Entretenimiento y Ocio", label: "Entretenimiento y Ocio", iconPath: "icon2.png" },
-        { value: "Hogar y Mercado", label: "Hogar y Mercado", iconPath: "icon2.png" },
-        { value: "Antojos", label: "Antojos", iconPath: "icon1.png" },
-        { value: "Electro", label: "Electrodomesticos", iconPath: "icon2.png" }
+        { value: "Impuestos y Servicios", label: "Impuestos y Servicios", iconPath: "edit-icon.png" },
+        { value: "Entretenimiento y Ocio", label: "Entretenimiento y Ocio", iconPath: "edit-icon.png" },
+        { value: "Hogar y Mercado", label: "Hogar y Mercado", iconPath: "edit-icon.png" },
+        { value: "Antojos", label: "Antojos", iconPath: "edit-icon.png" },
+        { value: "Electro", label: "Electrodomesticos", iconPath: "edit-icon.png" }
     ];
     const iconMap = {
-        'icon1.png': icon1,
-        'icon2.png': icon2,
+        'edit-icon.png': icon1,
     };
     const [payCategories, setPayCategories] = useState(defaultCategories); 
 

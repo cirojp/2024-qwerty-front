@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import ActionButtons from './ActionButtons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBlender, faCandyCane, faFileInvoiceDollar, faHouse, faTicket } from '@fortawesome/free-solid-svg-icons';
-import icono1 from '../assets/iconosCategorias/icono1.png';
+import icono from '../assets/iconosCategorias/icono1.png';
 import icono2 from '../assets/iconosCategorias/icono2.png';
 
 
@@ -49,7 +49,7 @@ function ProfilePage() {
                 <ul>
                     {payCategories.map((category) => (
                         <li key={category.value} className="flex items-center mb-2">
-                            <img src={"../assets/iconosCategorias/edit-icon.png"} alt={category.label} className="w-6 h-6 mr-2" />
+                            <img src={icono} alt={category.label} className="w-6 h-6 mr-2" />
 
                             {category.label}
                         </li>

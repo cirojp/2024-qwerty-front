@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import ActionButtons from './ActionButtons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBlender, faCandyCane, faFileInvoiceDollar, faHouse, faTicket } from '@fortawesome/free-solid-svg-icons';
+import icon1 from '../assets/iconosCategorias/icon1.png';
+import icon2 from '../assets/iconosCategorias/icon2.png';
 
 function ProfilePage() {
     const defaultCategories = [

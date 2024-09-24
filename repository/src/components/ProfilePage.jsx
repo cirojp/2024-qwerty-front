@@ -5,11 +5,11 @@ import { faBlender, faCandyCane, faFileInvoiceDollar, faHouse, faTicket } from '
 
 function ProfilePage() {
     const defaultCategories = [
-        { value: "Impuestos y Servicios", label: "Impuestos y Servicios" },
-        { value: "Entretenimiento y Ocio", label: "Entretenimiento y Ocio" },
-        { value: "Hogar y Mercado", label: "Hogar y Mercado" },
-        { value: "Antojos", label: "Antojos" },
-        { value: "Electro", label: "Electrodomesticos" }
+        { value: "Impuestos y Servicios", label: "Impuestos y Servicios", iconPath: "icon1.png" },
+        { value: "Entretenimiento y Ocio", label: "Entretenimiento y Ocio", iconPath: "icon2.png" },
+        { value: "Hogar y Mercado", label: "Hogar y Mercado", iconPath: "icon2.png" },
+        { value: "Antojos", label: "Antojos", iconPath: "icon1.png" },
+        { value: "Electro", label: "Electrodomesticos", iconPath: "icon2.png" }
     ];
 
     const [payCategories, setPayCategories] = useState(defaultCategories); 
@@ -25,7 +25,7 @@ function ProfilePage() {
     
             if (response.ok) {
                 const data = await response.json();
-                const customOptions = data.map(cat => ({ label: cat.nombre, value: cat.nombre }));
+                const customOptions = data.map(cat => ({ label: cat.nombre, value: cat.nombre, iconPath: cat.iconPath }));
                 setPayCategories(prevCategories => [...prevCategories, ...customOptions]);
             }
         } catch (error) {
@@ -36,35 +36,21 @@ function ProfilePage() {
         fetchPersonalCategorias();
     }, []);
   return (
-    /*<div className="container min-h-screen min-w-full max-w-full bg-black">
-        <div className='text-white font-bold'>Mi Cuenta</div>
-        <ActionButtons/>
-        <div className='text-white'>
-            <div className='text-bold text-yellow-500 text-xl mb-3 underline'>Mis Categorias</div>
-            <ul>
-                {presetCats.map((category) => (
-                    <li key={category.value}>
-                        <FontAwesomeIcon icon={category.icon} className='mr-2'/>
-                        {category.value}
-                    </li>
-                ))}
-            </ul>
+        <div className="container min-h-screen min-w-full max-w-full bg-black">
+            <div className='text-white font-bold'>Mi Cuenta</div>
+            <ActionButtons />
+            <div className='text-white'>
+                <div className='text-bold text-yellow-500 text-xl mb-3 underline'>Mis Categorias</div>
+                <ul>
+                    {payCategories.map((category) => (
+                        <li key={category.value} className="flex items-center mb-2">
+                            <img src={`../assets/iconosCategorias/${category.iconPath}`} alt={category.label} className="w-6 h-6 mr-2" />
+                            {category.label}
+                        </li>
+                    ))}
+                </ul>
+            </div>
         </div>
-    </div>*/
-    <div className="container min-h-screen min-w-full max-w-full bg-black">
-        <div className='text-white font-bold'>Mi Cuenta</div>
-        <ActionButtons />
-        <div className='text-white'>
-            <div className='text-bold text-yellow-500 text-xl mb-3 underline'>Mis Categorias</div>
-            <ul>
-                {payCategories.map((category) => (
-                    <li key={category.value}>
-                        {category.value}
-                    </li>
-                ))}
-            </ul>
-        </div>
-    </div>
   )
 }
 

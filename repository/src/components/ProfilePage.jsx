@@ -49,7 +49,7 @@ function ProfilePage() {
                 <ul>
                     {payCategories.map((category) => (
                         <li key={category.value} className="flex items-center mb-2">
-                            <img src={'../assets/iconosCategorias/icono2.png'} alt={category.label} className="w-6 h-6 mr-2" />
+                            <img src={'../assets/iconosCategorias/edit-icon.png'} alt={category.label} className="w-6 h-6 mr-2" />
 
                             {category.label}
                         </li>

@@ -25,6 +25,7 @@ const ModalCategoria = ({ isOpen, onRequestClose, handleCreateCat }) => {
 
     const [categoriaNombre, setCategoriaNombre] = useState('');
     const [iconoSeleccionado, setIconoSeleccionado] = useState('');
+    const [error, setError] = useState('');
 
     /*const handleCreateCategory = () => {
         if (categoriaNombre && iconoSeleccionado) {
@@ -36,9 +37,16 @@ const ModalCategoria = ({ isOpen, onRequestClose, handleCreateCat }) => {
     };*/
 
     const handleSubmit = () => {
+        if (!categoriaNombre || !iconoSeleccionado) {
+            setError("Debes ingresar un nombre y seleccionar un icono.");
+            return;
+        }
         handleCreateCat(categoriaNombre, iconoSeleccionado);
+        setCategoriaNombre('');
+        setIconoSeleccionado('');
+        setError('');
         onRequestClose();
-    }
+    };
 
     const iconos = [
         { src: icono1, alt: 'Icono 1' },
@@ -61,6 +69,7 @@ const ModalCategoria = ({ isOpen, onRequestClose, handleCreateCat }) => {
                 onChange={(e) => setCategoriaNombre(e.target.value)}
                 className="mt-1 block w-full p-2 border border-gray-600 bg-gray-800 text-white rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
             />
+            {error && <p className="text-red-500">{error}</p>}
             <label className="mt-4 block">Selecciona un icono:</label>
             <div className="grid grid-cols-3 gap-4 mt-2">
                 {iconos.map((icono) => (
@@ -74,7 +83,7 @@ const ModalCategoria = ({ isOpen, onRequestClose, handleCreateCat }) => {
                 ))}
             </div>
             <button
-                onClick={handleCreateCat(categoriaNombre, iconoSeleccionado)}
+                onClick={handleSubmit}
                 className="mt-4 bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-600 transition duration-300"
             >
                 Crear Categoría

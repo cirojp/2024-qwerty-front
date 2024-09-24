@@ -15,7 +15,7 @@ function ProfilePage() {
         { value: "Electro", label: "Electrodomesticos", iconPath: "edit-icon.png" }
     ];
     const iconMap = {
-        'edit-icon.png': icon1,
+        'edit-icon.png': icono,
     };
     const [payCategories, setPayCategories] = useState(defaultCategories); 
 

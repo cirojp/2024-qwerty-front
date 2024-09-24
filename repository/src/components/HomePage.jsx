@@ -336,7 +336,9 @@ function HomePage() {
                     Mi Cuenta
                 </button>
             </div>
+            <ActionButtons />
         </div>
+        
     );
 }
 

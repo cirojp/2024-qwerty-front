@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import ActionButtons from './ActionButtons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBlender, faCandyCane, faFileInvoiceDollar, faHouse, faTicket } from '@fortawesome/free-solid-svg-icons';
-import icono from "../assets/edit-icon.png";
+import icono from "../assets/iconosCategorias/edit-icon.png";
 //import icono2 from '../assets/iconosCategorias/icono2.png';
 
 

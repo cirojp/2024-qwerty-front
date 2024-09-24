@@ -25,11 +25,11 @@ function HomePage() {
         { value: "efectivo", label: "Efectivo" }
     ]);
     const [payCategories, setPayCategories] = useState([
-        {value: "impuestos", label: "Impuestos y Servicios"},
-        {value: "entretenimiento", label: "Entretenimiento y Ocio"},
-        {value: "hogar", label: "Hogar y Mercado"},
-        {value: "antojos", label: "Antojos"},
-        {value: "electro", label: "Electrodomesticos"},
+        {value: "Impuestos y Servicios", label: "Impuestos y Servicios"},
+        {value: "Entretenimiento y Ocio", label: "Entretenimiento y Ocio"},
+        {value: "Hogar y Mercado", label: "Hogar y Mercado"},
+        {value: "Antojos", label: "Antojos"},
+        {value: "Electro", label: "Electrodomesticos"},
       ]);
     const [selectedPayMethod, setSelectedPayMethod] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState(null);

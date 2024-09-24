@@ -74,7 +74,7 @@ const ModalCategoria = ({ isOpen, onRequestClose, handleCreateCat }) => {
                 ))}
             </div>
             <button
-                onClick={handleSubmit()}
+                onClick={handleCreateCat(categoriaNombre, iconoSeleccionado)}
                 className="mt-4 bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-600 transition duration-300"
             >
                 Crear Categoría

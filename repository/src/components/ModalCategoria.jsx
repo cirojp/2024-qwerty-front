@@ -35,6 +35,11 @@ const ModalCategoria = ({ isOpen, onRequestClose, handleCreateCat }) => {
         }
     };*/
 
+    const handleSubmit = () => {
+        handleCreateCat(categoriaNombre, iconoSeleccionado);
+        onRequestClose();
+    }
+
     const iconos = [
         { src: icono1, alt: 'Icono 1' },
         { src: icono2, alt: 'Icono 2' },
@@ -69,7 +74,7 @@ const ModalCategoria = ({ isOpen, onRequestClose, handleCreateCat }) => {
                 ))}
             </div>
             <button
-                onClick={handleCreateCat(categoriaNombre, iconoSeleccionado)}
+                onClick={handleSubmit()}
                 className="mt-4 bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-600 transition duration-300"
             >
                 Crear Categoría

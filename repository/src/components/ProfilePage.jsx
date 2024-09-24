@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react'
 import ActionButtons from './ActionButtons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBlender, faCandyCane, faFileInvoiceDollar, faHouse, faTicket } from '@fortawesome/free-solid-svg-icons';
-//import icono from "../assets/iconosCategorias/edit-icon1.png";
-//import icono2 from '../assets/iconosCategorias/icono2.png';
 
 
 function ProfilePage() {
@@ -21,9 +19,6 @@ function ProfilePage() {
         { value: "Antojos", label: "Antojos", iconPath: "faCandyCane" },
         { value: "Electro", label: "Electrodomesticos", iconPath: "faBlender" }
     ];
-    /*const iconMap = {
-        'edit-icon1.png': icono,
-    };*/
     const [payCategories, setPayCategories] = useState(defaultCategories); 
 
     const fetchPersonalCategorias = async () => {
@@ -34,12 +29,6 @@ function ProfilePage() {
                     "Authorization": `Bearer ${token}`
                 }
             });
-            /*const response = await fetch("http://localhost:8080/api/personal-categoria", {
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                }
-            });*/
-    
             if (response.ok) {
                 const data = await response.json();
                 const customOptions = data.map(cat => ({ label: cat.nombre, value: cat.nombre, iconPath: cat.iconPath }));
@@ -53,21 +42,6 @@ function ProfilePage() {
         fetchPersonalCategorias();
     }, []);
   return (
-        /*<div className="container min-h-screen min-w-full max-w-full bg-black">
-            <div className='text-white font-bold'>Mi Cuenta</div>
-            <ActionButtons />
-            <div className='text-white'>
-                <div className='text-bold text-yellow-500 text-xl mb-3 underline'>Mis Categorias</div>
-                <ul>
-                    {payCategories.map((category) => (
-                        <li key={category.value} className="flex items-center mb-2">
-                            <FontAwesomeIcon icon={category.iconPath} className='mr-2'/>
-                            {category.label}
-                        </li>
-                    ))}
-                </ul>
-            </div>
-        </div>*/
         <div className="container min-h-screen min-w-full max-w-full bg-black">
             <div className='text-white font-bold'>Mi Cuenta</div>
             <ActionButtons />
@@ -76,7 +50,6 @@ function ProfilePage() {
                 <ul>
                     {payCategories.map((category) => (
                         <li key={category.value} className="flex items-center mb-2">
-                            {/* Aquí se usa el icono mapeado */}
                             <FontAwesomeIcon icon={iconMap[category.iconPath]} className='mr-2' />
                             {category.label}
                         </li>

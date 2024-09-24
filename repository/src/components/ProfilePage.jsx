@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react'
 import ActionButtons from './ActionButtons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBlender, faCandyCane, faFileInvoiceDollar, faHouse, faTicket } from '@fortawesome/free-solid-svg-icons';
-import icon1 from "../assets/iconosCategorias/icon1.png";
-import icon2 from "../assets/iconosCategorias/icon2.png";
+//import icon1 from "../assets/iconosCategorias/icon1.png";
+//import icon2 from "../assets/iconosCategorias/icon2.png";
+import editIcon from "../assets/iconosCategorias/edit-icon.png";
 
 function ProfilePage() {
     const defaultCategories = [
@@ -14,8 +15,8 @@ function ProfilePage() {
         { value: "Electro", label: "Electrodomesticos", iconPath: "icon2.png" }
     ];
     const iconMap = {
-        'icon1.png': icon1,
-        'icon2.png': icon2,
+        'icon1.png': editIcon,
+        'icon2.png': editIcon,
     };
     const [payCategories, setPayCategories] = useState(defaultCategories); 
 

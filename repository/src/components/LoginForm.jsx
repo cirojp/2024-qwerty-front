@@ -28,8 +28,19 @@ function LoginForm() {
           password: password,
         }),
         
-      })
-      ;
+      });
+      /*const response = await fetch("http://localhost:8080/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          email: email,
+          password: password,
+        }),
+        
+      });
+      */
 
       if (response.ok) {
         const token = await response.text();

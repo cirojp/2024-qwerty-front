@@ -8,11 +8,11 @@ import icono from "../assets/iconosCategorias/edit-icon1.png";
 
 function ProfilePage() {
     const defaultCategories = [
-        { value: "Impuestos y Servicios", label: "Impuestos y Servicios", iconPath: "edit-icon1.png" },
-        { value: "Entretenimiento y Ocio", label: "Entretenimiento y Ocio", iconPath: "edit-icon1.png" },
-        { value: "Hogar y Mercado", label: "Hogar y Mercado", iconPath: "edit-icon1.png" },
-        { value: "Antojos", label: "Antojos", iconPath: "edit-icon1.png" },
-        { value: "Electro", label: "Electrodomesticos", iconPath: "edit-icon1.png" }
+        { value: "Impuestos y Servicios", label: "Impuestos y Servicios", iconPath: faFileInvoiceDollar },
+        { value: "Entretenimiento y Ocio", label: "Entretenimiento y Ocio", iconPath: faTicket },
+        { value: "Hogar y Mercado", label: "Hogar y Mercado", iconPath: faHouse },
+        { value: "Antojos", label: "Antojos", iconPath: faCandyCane },
+        { value: "Electro", label: "Electrodomesticos", iconPath: faBlender }
     ];
     const iconMap = {
         'edit-icon1.png': icono,
@@ -27,6 +27,11 @@ function ProfilePage() {
                     "Authorization": `Bearer ${token}`
                 }
             });
+            /*const response = await fetch("http://localhost:8080/api/personal-categoria", {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });*/
     
             if (response.ok) {
                 const data = await response.json();
@@ -49,8 +54,7 @@ function ProfilePage() {
                 <ul>
                     {payCategories.map((category) => (
                         <li key={category.value} className="flex items-center mb-2">
-                            <img src={icono} alt={category.label} className="w-6 h-6 mr-2" />
-
+                            <FontAwesomeIcon icon={category.iconPath} className='mr-2'/>
                             {category.label}
                         </li>
                     ))}

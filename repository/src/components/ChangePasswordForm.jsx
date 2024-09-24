@@ -46,6 +46,18 @@ function ChangePasswordForm() {
                     newPassword
                 })
             });
+            /*const response = await fetch("http://localhost:8080/api/users/change-password", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    currentPassword,
+                    newPassword
+                })
+            });*/
+
 
             if (response.ok) {
                 alert("Contraseña cambiada con éxito");

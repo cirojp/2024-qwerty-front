@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBook, faCameraAlt, faCameraRetro, faCar, faHeart, faImage, faMugHot, faMusic, faStar, faUser } from '@fortawesome/free-solid-svg-icons';
+
 
 import icono1 from '../assets/iconosCategorias/icono1.png';
 import icono2 from '../assets/iconosCategorias/icono2.png';
@@ -49,8 +52,16 @@ const ModalCategoria = ({ isOpen, onRequestClose, handleCreateCat }) => {
     };
 
     const iconos = [
-        { src: icono1, alt: 'Icono 1' },
-        { src: icono2, alt: 'Icono 2' },
+        { src: icono1, alt: 'Icono 1', faIcon: faUser},
+        { src: icono2, alt: 'Icono 2', faIcon: faImage},
+        { src: icono2, alt: 'Icono 3', faIcon: faStar},
+        { src: icono2, alt: 'Icono 4', faIcon: faMusic},
+        { src: icono2, alt: 'Icono 5', faIcon: faHeart},
+        { src: icono2, alt: 'Icono 6', faIcon: faCameraRetro},
+        { src: icono2, alt: 'Icono 7', faIcon: faCar},
+        { src: icono2, alt: 'Icono 8', faIcon: faMugHot},
+        { src: icono2, alt: 'Icono 9', faIcon: faBook},
+        
     ];
 
     return (
@@ -78,7 +89,7 @@ const ModalCategoria = ({ isOpen, onRequestClose, handleCreateCat }) => {
                         className={`p-2 border rounded-md cursor-pointer transition duration-200 ease-in-out ${iconoSeleccionado === icono.src ? 'border-yellow-500' : 'border-transparent'} hover:border-yellow-500`}
                         onClick={() => setIconoSeleccionado(icono.src)}
                     >
-                        <img src={icono.src} alt={icono.alt} className="w-16 h-16" />
+                        <FontAwesomeIcon icon={icono.faIcon} className='fa-3x'/>
                     </div>
                 ))}
             </div>

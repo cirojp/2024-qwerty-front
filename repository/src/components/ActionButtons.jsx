@@ -18,6 +18,12 @@ function ActionButtons() {
                     "Authorization": `Bearer ${token}`
                 }
             });
+            /*const response = await fetch(`http://localhost:8080/api/auth`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });*/
     
             if (response.ok) {
                 localStorage.removeItem("token");

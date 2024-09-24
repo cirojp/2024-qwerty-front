@@ -52,6 +52,12 @@ function HomePage() {
                 "Authorization": `Bearer ${token}`
             }
         })
+        /*fetch("http://localhost:8080/api/transacciones/user", {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        }) */
         .then(response => response.json())
         .then(data => setTransacciones(data))
         .catch(err => console.log(err));
@@ -65,6 +71,11 @@ function HomePage() {
                     "Authorization": `Bearer ${token}`
                 }
             });
+            /*const response = await fetch("http://localhost:8080/api/personal-tipo-gasto", {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });*/
 
             if (response.ok) {
                 const data = await response.json();
@@ -83,6 +94,11 @@ function HomePage() {
                     "Authorization": `Bearer ${token}`
                 }
             });
+            /*const response = await fetch("http://localhost:8080/api/personal-categoria", {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });*/
     
             if (response.ok) {
                 const data = await response.json();
@@ -127,6 +143,10 @@ function HomePage() {
         const url = edit 
         ? `https://two024-qwerty-back-2.onrender.com/api/transacciones/${transaccionId}` 
         : "https://two024-qwerty-back-2.onrender.com/api/transacciones";
+        /*const url = edit 
+        ? `http://localhost:8080/api/transacciones/${transaccionId}` 
+        : "http://localhost:8080/api/transacciones";*/
+
     
         const method = edit ? "PUT" : "POST";
 
@@ -178,6 +198,12 @@ function HomePage() {
                     "Authorization": `Bearer ${token}`
                 }
             });
+            /*const response = await fetch(`http://localhost:8080/api/transacciones/${id}`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });*/
     
             if (response.ok) {
                 setTransacciones(transacciones.filter(t => t.id !== id));
@@ -218,6 +244,14 @@ function HomePage() {
                 },
                 body: JSON.stringify(inputValue)
             });
+            /*const response = await fetch("http://localhost:8080/api/personal-tipo-gasto", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify(inputValue)
+            });*/
 
             if (response.ok) {
                 const newTipoGasto = await response.json();
@@ -250,6 +284,14 @@ function HomePage() {
                 },
                 body: JSON.stringify(inputValue)
             });
+            /*const response = await fetch("http://localhost:8080/api/personal-categoria", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify(inputValue)
+            });*/
     
             if (response.ok) {
                 const newCategoria = await response.json();

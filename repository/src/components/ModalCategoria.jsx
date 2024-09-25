@@ -52,15 +52,15 @@ const ModalCategoria = ({ isOpen, onRequestClose, handleCreateCat }) => {
     };
 
     const iconos = [
-        { src: icono1, alt: 'Icono 1', faIcon: faUser},
-        { src: icono2, alt: 'Icono 2', faIcon: faImage},
-        { src: icono2, alt: 'Icono 3', faIcon: faStar},
-        { src: icono2, alt: 'Icono 4', faIcon: faMusic},
-        { src: icono2, alt: 'Icono 5', faIcon: faHeart},
-        { src: icono2, alt: 'Icono 6', faIcon: faCameraRetro},
-        { src: icono2, alt: 'Icono 7', faIcon: faCar},
-        { src: icono2, alt: 'Icono 8', faIcon: faMugHot},
-        { src: icono2, alt: 'Icono 9', faIcon: faBook},
+        { alt: 'faUser', faIcon: faUser},
+        { alt: 'faImage', faIcon: faImage},
+        { alt: 'faStar', faIcon: faStar},
+        { alt: 'faMusic', faIcon: faMusic},
+        { alt: 'faHeart', faIcon: faHeart},
+        { alt: 'faCameraRetro', faIcon: faCameraRetro},
+        { alt: 'faCar', faIcon: faCar},
+        { alt: 'faMugHot', faIcon: faMugHot},
+        { alt: 'faBook', faIcon: faBook},
         
     ];
 
@@ -86,8 +86,8 @@ const ModalCategoria = ({ isOpen, onRequestClose, handleCreateCat }) => {
                 {iconos.map((icono) => (
                     <div
                         key={icono.alt}
-                        className={`p-2 border rounded-md cursor-pointer transition duration-200 ease-in-out ${iconoSeleccionado === icono.src ? 'border-yellow-500' : 'border-transparent'} hover:border-yellow-500`}
-                        onClick={() => setIconoSeleccionado(icono.src)}
+                        className={`p-2 border rounded-md cursor-pointer transition duration-200 ease-in-out ${iconoSeleccionado === icono.alt ? 'border-yellow-500' : 'border-transparent'} hover:border-yellow-500`}
+                        onClick={() => setIconoSeleccionado(icono.alt)}
                     >
                         <FontAwesomeIcon icon={icono.faIcon} className='fa-3x'/>
                     </div>

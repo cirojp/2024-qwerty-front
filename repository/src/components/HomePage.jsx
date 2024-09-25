@@ -270,11 +270,10 @@ function HomePage() {
             console.error("Nombre y icono son obligatorios");
             return;
         }
-        icono = icono.split('/').pop();
         try {
             const inputValue = {
                 nombre: nombre,
-                iconPath: icono || 'ruta/predeterminada/icono.png', // Valor predeterminado si icono es vacío
+                iconPath: icono 
             };
             const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/personal-categoria", {
                 method: "POST",

@@ -354,7 +354,7 @@ function HomePage() {
                     <label htmlFor="categorias" className="mb-2 text-lg font-medium text-gray-700">
                         Selecciona una categoría:
                     </label>
-                    <select
+                    <Select
                         id="categorias"
                         value={categoriaSeleccionada}
                         onChange={handleChange}
@@ -363,7 +363,7 @@ function HomePage() {
                         {categoriasConTodas.map(cat => (
                             <option key={cat.value} value={cat.value}>{cat.label}</option>
                         ))}
-                    </select>
+                    </Select>
                 </div>
                 <TransaccionesTable
                     transacciones={transacciones}

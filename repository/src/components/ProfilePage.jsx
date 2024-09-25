@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import ActionButtons from './ActionButtons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBlender, faCandyCane, faFileInvoiceDollar, faHouse, faTicket } from '@fortawesome/free-solid-svg-icons';
+import { faBook, faCameraAlt, faCameraRetro, faCar, faHeart, faImage, faMugHot, faMusic, faStar, faUser } from '@fortawesome/free-solid-svg-icons';
 
 
 function ProfilePage() {
@@ -11,13 +12,23 @@ function ProfilePage() {
         faFileInvoiceDollar: faFileInvoiceDollar,
         faHouse: faHouse,
         faTicket: faTicket,
+        faBook: faBook,
+        faCameraAlt: faCameraAlt,
+        faCameraRetro: faCameraRetro,
+        faCar: faCar,
+        faHeart: faHeart,
+        faImage: faImage,
+        faMugHot: faMugHot,
+        faMusic: faMusic,
+        faStar: faStar,
+        faUser: faUser,
     };
     const defaultCategories = [
         { value: "Impuestos y Servicios", label: "Impuestos y Servicios", iconPath: "faFileInvoiceDollar" },
         { value: "Entretenimiento y Ocio", label: "Entretenimiento y Ocio", iconPath: "faTicket" },
         { value: "Hogar y Mercado", label: "Hogar y Mercado", iconPath: "faHouse" },
         { value: "Antojos", label: "Antojos", iconPath: "faCandyCane" },
-        { value: "Electro", label: "Electrodomesticos", iconPath: "faBlender" }
+        { value: "Electrodomesticos", label: "Electrodomesticos", iconPath: "faBlender" }
     ];
     const [payCategories, setPayCategories] = useState(defaultCategories); 
 

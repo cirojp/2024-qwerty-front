@@ -46,20 +46,20 @@ function ProfilePage() {
     const handleDelete = async(categoryValue) => {
         const filteredCategories = payCategories.filter(category => category.value == categoryValue);
         const token = localStorage.getItem("token");
-        console.log(token);
-        const nombre =  filteredCategories[0].label;
-        const iconPath =  filteredCategories[0].iconPath;
+        const inputValue = {
+            nombre: filteredCategories[0].label,
+            iconPath: filteredCategories[0].iconPath
+        };
         try {
-            const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/personal-categoria", {
+            const response = await fetch("http://127.0.0.1:8080/api/personal-categoria", {
                 method: "DELETE",
                 headers: {
+                    "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 },
-                body: JSON.stringify({nombre, iconPath})
+                body: JSON.stringify(inputValue)
             });
             if(response.ok){
-                setPayCategories([]);
-                fetchPersonalCategorias();
                 console.log(`Categoría eliminada: ${categoryValue}`);
             }
         }catch(err){

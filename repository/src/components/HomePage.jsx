@@ -5,7 +5,6 @@ import ModalForm from './ModalForm';
 import ActionButtons from './ActionButtons';
 import './styles/HomePage.css';
 import logo from "../assets/logo.png";
-import Select from 'react-select'
 
 
 
@@ -354,7 +353,7 @@ function HomePage() {
                     <label htmlFor="categorias" className="mb-2 text-lg font-medium text-gray-700">
                         Selecciona una categoría:
                     </label>
-                    <Select
+                    <elect
                         id="categorias"
                         value={categoriaSeleccionada}
                         onChange={handleChange}
@@ -363,7 +362,7 @@ function HomePage() {
                         {categoriasConTodas.map(cat => (
                             <option key={cat.value} value={cat.value}>{cat.label}</option>
                         ))}
-                    </Select>
+                    </select>
                 </div>
                 <TransaccionesTable
                     transacciones={transacciones}

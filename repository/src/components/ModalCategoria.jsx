@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBook, faCameraAlt, faCameraRetro, faCar, faHeart, faImage, faMugHot, faMusic, faStar, faUser } from '@fortawesome/free-solid-svg-icons';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+import { library } from '@fortawesome/fontawesome-svg-core'
 
-
-import icono1 from '../assets/iconosCategorias/icono1.png';
-import icono2 from '../assets/iconosCategorias/icono2.png';
 
 const ModalCategoria = ({ isOpen, onRequestClose, handleCreateCat }) => {
+    library.add(fas);
     const customStyles = {
         overlay: {
             position: 'fixed',
@@ -52,15 +51,15 @@ const ModalCategoria = ({ isOpen, onRequestClose, handleCreateCat }) => {
     };
 
     const iconos = [
-        { alt: 'faUser', faIcon: faUser},
-        { alt: 'faImage', faIcon: faImage},
-        { alt: 'faStar', faIcon: faStar},
-        { alt: 'faMusic', faIcon: faMusic},
-        { alt: 'faHeart', faIcon: faHeart},
-        { alt: 'faCameraRetro', faIcon: faCameraRetro},
-        { alt: 'faCar', faIcon: faCar},
-        { alt: 'faMugHot', faIcon: faMugHot},
-        { alt: 'faBook', faIcon: faBook},
+        { alt: 'faUser', faIcon: "fa-solid fa-user"},
+        { alt: 'faImage', faIcon: "fa-solid fa-image"},
+        { alt: 'faStar', faIcon: "fa-solid fa-star"},
+        { alt: 'faMusic', faIcon: "fa-solid fa-music"},
+        { alt: 'faHeart', faIcon: "fa-solid fa-heart"},
+        { alt: 'faCameraRetro', faIcon: "fa-solid fa-camera-retro"},
+        { alt: 'faCar', faIcon: "fa-solid fa-car"},
+        { alt: 'faMugHot', faIcon: "fa-solid fa-mug-hot"},
+        { alt: 'faBook', faIcon: "fa-solid fa-book"},
         
     ];
 
@@ -86,8 +85,8 @@ const ModalCategoria = ({ isOpen, onRequestClose, handleCreateCat }) => {
                 {iconos.map((icono) => (
                     <div
                         key={icono.alt}
-                        className={`p-2 border rounded-md cursor-pointer transition duration-200 ease-in-out ${iconoSeleccionado === icono.alt ? 'border-yellow-500' : 'border-transparent'} hover:border-yellow-500`}
-                        onClick={() => setIconoSeleccionado(icono.alt)}
+                        className={`p-2 border rounded-md cursor-pointer transition duration-200 ease-in-out ${iconoSeleccionado === icono.faIcon ? 'border-yellow-500' : 'border-transparent'} hover:border-yellow-500`}
+                        onClick={() => setIconoSeleccionado(icono.faIcon)}
                     >
                         <FontAwesomeIcon icon={icono.faIcon} className='fa-3x'/>
                     </div>

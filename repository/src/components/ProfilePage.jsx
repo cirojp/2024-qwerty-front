@@ -1,34 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import ActionButtons from './ActionButtons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBlender, faCandyCane, faFileInvoiceDollar, faHouse, faTicket } from '@fortawesome/free-solid-svg-icons';
-import { faBook, faCameraAlt, faCameraRetro, faCar, faHeart, faImage, faMugHot, faMusic, faStar, faUser } from '@fortawesome/free-solid-svg-icons';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+import { library } from '@fortawesome/fontawesome-svg-core'
 
 
+/*
+    No se porque busca dos veces las categorias, y si actualizas sigue sumando
+ */
 function ProfilePage() {
-    const iconMap = {
-        faBlender: faBlender,
-        faCandyCane: faCandyCane,
-        faFileInvoiceDollar: faFileInvoiceDollar,
-        faHouse: faHouse,
-        faTicket: faTicket,
-        faBook: faBook,
-        faCameraAlt: faCameraAlt,
-        faCameraRetro: faCameraRetro,
-        faCar: faCar,
-        faHeart: faHeart,
-        faImage: faImage,
-        faMugHot: faMugHot,
-        faMusic: faMusic,
-        faStar: faStar,
-        faUser: faUser,
-    };
+    library.add(fas);
     const defaultCategories = [
-        { value: "Impuestos y Servicios", label: "Impuestos y Servicios", iconPath: "faFileInvoiceDollar" },
-        { value: "Entretenimiento y Ocio", label: "Entretenimiento y Ocio", iconPath: "faTicket" },
-        { value: "Hogar y Mercado", label: "Hogar y Mercado", iconPath: "faHouse" },
-        { value: "Antojos", label: "Antojos", iconPath: "faCandyCane" },
-        { value: "Electrodomesticos", label: "Electrodomesticos", iconPath: "faBlender" }
+        { value: "Impuestos y Servicios", label: "Impuestos y Servicios", iconPath: "fa-solid fa-file-invoice-dollar", textColor: 'mr-2 text-yellow-500'},
+        { value: "Entretenimiento y Ocio", label: "Entretenimiento y Ocio", iconPath: "fa-solid fa-ticket", textColor: 'mr-2 text-yellow-500'},
+        { value: "Hogar y Mercado", label: "Hogar y Mercado", iconPath: "fa-solid fa-house", textColor: 'mr-2 text-yellow-500'},
+        { value: "Antojos", label: "Antojos", iconPath: "fa-solid fa-candy-cane", textColor: 'mr-2 text-yellow-500'},
+        { value: "Electrodomesticos", label: "Electrodomesticos", iconPath: "fa-solid fa-blender", textColor: 'mr-2 text-yellow-500'}
     ];
     const [payCategories, setPayCategories] = useState(defaultCategories); 
 
@@ -42,7 +29,7 @@ function ProfilePage() {
             });
             if (response.ok) {
                 const data = await response.json();
-                const customOptions = data.map(cat => ({ label: cat.nombre, value: cat.nombre, iconPath: cat.iconPath }));
+                const customOptions = data.map(cat => ({ label: cat.nombre, value: cat.nombre, iconPath: cat.iconPath, textColor: 'mr-2 text-white'}));
                 setPayCategories(prevCategories => [...prevCategories, ...customOptions]);
             }
         } catch (error) {
@@ -61,8 +48,8 @@ function ProfilePage() {
                 <ul>
                     {payCategories.map((category) => (
                         <li key={category.value} className="flex items-center mb-2">
-                            <FontAwesomeIcon icon={iconMap[category.iconPath]} className='mr-2' />
-                            {category.label}
+                            <FontAwesomeIcon icon={category.iconPath} className={category.textColor} />
+                            <div className={category.textColor}>{category.label}</div>
                         </li>
                     ))}
                 </ul>

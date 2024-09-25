@@ -353,7 +353,7 @@ function HomePage() {
                     <label htmlFor="categorias" className="mb-2 text-lg font-medium text-gray-700">
                         Selecciona una categoría:
                     </label>
-                    <elect
+                    <select
                         id="categorias"
                         value={categoriaSeleccionada}
                         onChange={handleChange}

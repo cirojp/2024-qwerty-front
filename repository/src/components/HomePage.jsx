@@ -46,10 +46,11 @@ function HomePage() {
         fetchPersonalTipoGastos();
         fetchPersonalCategorias();
     }, []);
-    /*useEffect(() => {
-        const aux = ['Todas', ...payCategories];
-        setCategoriasConTodas(aux) ;
-    }, [payCategories]);*/
+    useEffect(() => {
+        if (payCategories.length > 0) {
+            setCategoriasConTodas([{ value: "Todas", label: "Todas" }, ...payCategories]);
+        }
+    }, [payCategories]);
 
     const getTransacciones = () => {
         const token = localStorage.getItem("token");
@@ -351,10 +352,8 @@ function HomePage() {
                         onChange={handleChange}
                         className="block w-64 px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >
-                        {categoriasConTodas.map((categoria, index) => (
-                        <option key={index} value={categoria}>
-                            {categoria}
-                        </option>
+                        {categoriasConTodas.map(cat => (
+                            <option key={cat.value} value={cat.value}>{cat.label}</option>
                         ))}
                     </select>
                 </div>

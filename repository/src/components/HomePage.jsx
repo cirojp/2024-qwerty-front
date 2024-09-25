@@ -52,23 +52,50 @@ function HomePage() {
         }
     }, [payCategories]);
 
-    const getTransacciones = () => {
+    const getTransacciones = async(filtrado = "Todas") => { //valor si no se le pasa nada es ""
         const token = localStorage.getItem("token");
-        fetch("https://two024-qwerty-back-2.onrender.com/api/transacciones/user", {
-            method: "GET",
-            headers: {
-                "Authorization": `Bearer ${token}`
+        try {
+            if(filtrado == "Todas") {
+                fetch("https://two024-qwerty-back-2.onrender.com/api/transacciones/user", {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+                /*fetch("http://localhost:8080/api/transacciones/user", {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                }) */
+                /*.then(response => response.json())
+                .then(data => setTransacciones(data))
+                .catch(err => console.log(err)); */
+            } else {
+                fetch(`https://two024-qwerty-back-2.onrender.com/api/transacciones/user/filter?categoria=${filtrado}`, {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
             }
-        })
-        /*fetch("http://localhost:8080/api/transacciones/user", {
-            method: "GET",
-            headers: {
-                "Authorization": `Bearer ${token}`
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status}`);
             }
-        }) */
-        .then(response => response.json())
-        .then(data => setTransacciones(data))
-        .catch(err => console.log(err));
+                /*fetch("http://localhost:8080/api/transacciones/user", {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                }) */
+            const data = await response.json();
+            setTransacciones(data);
+            /*.then(response => response.json())
+            .then(data => setTransacciones(data))
+            .catch(err => console.log(err)); */
+            } catch (err) {
+                console.error("Error fetching transactions:", err);
+            }
     };
 
     const fetchPersonalTipoGastos = async () => {

@@ -46,10 +46,10 @@ function HomePage() {
         fetchPersonalTipoGastos();
         fetchPersonalCategorias();
     }, []);
-    useEffect(() => {
+    /*useEffect(() => {
         const aux = ['Todas', ...payCategories];
         setCategoriasConTodas(aux) ;
-    }, [payCategories]);
+    }, [payCategories]);*/
 
     const getTransacciones = () => {
         const token = localStorage.getItem("token");

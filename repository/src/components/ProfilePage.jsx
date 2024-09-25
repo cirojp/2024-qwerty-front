@@ -3,6 +3,7 @@ import ActionButtons from './ActionButtons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
+import ModalCategoria from './ModalCategoria';
 
 function ProfilePage() {
     library.add(fas);
@@ -14,7 +15,9 @@ function ProfilePage() {
         { value: "Electrodomesticos", label: "Electrodomesticos", iconPath: "fa-solid fa-blender", textColor: 'mr-2 text-yellow-500'}
     ];
     
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [payCategories, setPayCategories] = useState(defaultCategories);
+    const [editCategory, setEditCategory] = useState({});
 
     const fetchPersonalCategorias = async () => {
         const token = localStorage.getItem("token");
@@ -38,11 +41,37 @@ function ProfilePage() {
         fetchPersonalCategorias();
     }, []);
 
-    const handleEdit = (categoryValue) => {
-        console.log(`Editar categoría: ${categoryValue}`);
+    const handleEdit = async(categoryValue, newName, newIcon) => {
+        console.log(categoryValue);
+        const filteredCategories = payCategories.filter(category => category.value == categoryValue.value);
+        const token = localStorage.getItem("token");
+        const inputValue = {
+            nombre: filteredCategories[0].label,
+            iconPath: filteredCategories[0].iconPath
+        };
+        const newValue = {
+            nombre: newName,
+            iconPath: newIcon
+        };
+        try {
+            const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/personal-categoria/" + inputValue.nombre, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify(newValue)
+            });
+            if(response.ok){
+                console.log(`Categoría editada: ${categoryValue}`);
+                setPayCategories([]);
+                await fetchPersonalCategorias();
+            }
+        }catch(err){
+            console.log(err);
+        }
     };
 
-    // Función para eliminar una categoría
     const handleDelete = async(categoryValue) => {
         const filteredCategories = payCategories.filter(category => category.value == categoryValue);
         const token = localStorage.getItem("token");
@@ -95,7 +124,10 @@ function ProfilePage() {
                             <div>
                                 <button 
                                     className="ml-4 text-blue-500 hover:text-blue-700"
-                                    onClick={() => handleEdit(category.value)}
+                                    onClick={() => {
+                                        setEditCategory(category);
+                                        setIsModalOpen(!isModalOpen);
+                                    }}
                                 >
                                     Editar
                                 </button>
@@ -110,6 +142,7 @@ function ProfilePage() {
                     ))}
                 </ul>
             </div>
+            <ModalCategoria isOpen={isModalOpen} edit={true} onRequestClose={() => setIsModalOpen(!isModalOpen)} handleEditCat={(nom, icon) => handleEdit(editCategory, nom, icon)} editCat={editCategory}/>
         </div>
     );
 }

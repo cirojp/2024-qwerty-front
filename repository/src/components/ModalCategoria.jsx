@@ -1,11 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core'
 
 
-const ModalCategoria = ({ isOpen, onRequestClose, handleCreateCat }) => {
+const ModalCategoria = ({ 
+    isOpen = false, 
+    onRequestClose = () =>{},
+    handleCreateCat = () => {},
+    handleEditCat = () => {},
+    edit=false,
+    editCat = {}
+}) => {
     library.add(fas);
     const customStyles = {
         overlay: {
@@ -38,16 +45,32 @@ const ModalCategoria = ({ isOpen, onRequestClose, handleCreateCat }) => {
         }
     };*/
 
+    useEffect(() => {
+        if(edit){
+            console.log(editCat);
+            setCategoriaNombre(editCat.value);
+            setIconoSeleccionado(editCat.iconPath || '');
+        }
+    },[editCat]);
+
     const handleSubmit = () => {
         if (!categoriaNombre || !iconoSeleccionado) {
             setError("Debes ingresar un nombre y seleccionar un icono.");
             return;
         }
-        handleCreateCat(categoriaNombre, iconoSeleccionado);
-        setCategoriaNombre('');
-        setIconoSeleccionado('');
-        setError('');
-        onRequestClose();
+        if(!edit){
+            handleCreateCat(categoriaNombre, iconoSeleccionado);
+            setCategoriaNombre('');
+            setIconoSeleccionado('');
+            setError('');
+            onRequestClose();
+        }else{
+            handleEditCat(categoriaNombre, iconoSeleccionado);
+            setCategoriaNombre('');
+            setIconoSeleccionado('');
+            setError('');
+            onRequestClose();
+        }
     };
 
     const iconos = [
@@ -71,7 +94,7 @@ const ModalCategoria = ({ isOpen, onRequestClose, handleCreateCat }) => {
             className="bg-gray-900 text-white p-5 rounded-lg shadow-lg"
             style={customStyles}
         >
-            <h2 className="text-2xl font-bold mb-4">Crear Nueva Categoría</h2>
+            {edit ? <h2 className="text-2xl font-bold mb-4">Editar Categoría</h2>:<h2 className="text-2xl font-bold mb-4">Crear Nueva Categoría</h2>}
             <input
                 type="text"
                 placeholder="Nombre de la categoría"

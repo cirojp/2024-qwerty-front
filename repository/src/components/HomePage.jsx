@@ -324,7 +324,6 @@ function HomePage() {
     const handleChange = (event) => {
         let cat = event.target.value
         setCategoriaSeleccionada(cat);
-        //aca voy a tener que poner lo que actualice las transacciones
         getTransacciones(cat)
       };
     
@@ -373,12 +372,19 @@ function HomePage() {
                     onTableEmpty={() => setShowNoTransactions(true)}
                     onTransactions={() => setShowNoTransactions(false)}
                 />
-                {showNoTransactions && <div className='flex justify-center mb-0'><button 
-                        className="bg-yellow-500 bg-opacity-80 text-gray-950 font-extrabold py-6 px-16 rounded-lg hover:bg-yellow-700"
-                        onClick={openModal}
-                    >
-                        Ingrese una transaccion
-                    </button></div>}
+                {showNoTransactions && (
+                    <div className='flex flex-col justify-center mb-0 items-center'>
+                        {categoriaSeleccionada !== "Todas" && (
+                            <p className="text-red-500 font-bold mb-4">Su filtro no coincide con ninguna transacción</p>
+                        )}
+                        <button 
+                            className="bg-yellow-500 bg-opacity-80 text-gray-950 font-extrabold py-6 px-16 rounded-lg hover:bg-yellow-700"
+                            onClick={openModal}
+                        >
+                            Ingrese una transacción
+                        </button>
+                    </div>
+                )}
             </div>
 
             

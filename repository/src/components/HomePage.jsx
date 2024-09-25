@@ -5,6 +5,7 @@ import ModalForm from './ModalForm';
 import ActionButtons from './ActionButtons';
 import './styles/HomePage.css';
 import logo from "../assets/logo.png";
+import { Select } from "react-select";
 
 
 
@@ -36,6 +37,7 @@ function HomePage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [transaccionId, setTransaccionId] = useState(null);
     const [modalError, setModalError] = useState("");
+    const [filterCategories, setFilterCategories] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -43,6 +45,11 @@ function HomePage() {
         fetchPersonalTipoGastos();
         fetchPersonalCategorias();
     }, []);
+    useEffect(() => {
+        if (payCategories.length > 0) {
+            fetchFilterCategorias(); 
+        }
+    }, [payCategories]);
 
     const getTransacciones = () => {
         const token = localStorage.getItem("token");
@@ -108,6 +115,14 @@ function HomePage() {
         } catch (error) {
             console.error("Error al obtener las categorías personalizadas:", error);
         }
+    };
+    const fetchFilterCategorias = () => {
+        setFilterCategories(['All', ...payCategories]);
+    };    
+    const handleCategorySelect = (value) => {
+        console.log("Categoría seleccionada:", value); // Aquí puedes hacer lo que necesites con la selección
+        //setSelectedCategory(value);
+        //setCategoria(value ? value.value : ""); // Actualiza el estado de categoría
     };
 
     const openModal = () => setIsModalOpen(true);
@@ -329,6 +344,16 @@ function HomePage() {
                     >
                         Agregar Transacción
                     </button>
+                </div>
+                <div className="mb-4 px-6">
+                <select onChange={handleCategorySelect}>
+                    {filterCategories.map((categoria, index) => (
+                        <option key={index} value={categoria}>
+                            {categoria}
+                        </option>
+                    ))}
+                </select>
+
                 </div>
                 <TransaccionesTable
                     transacciones={transacciones}

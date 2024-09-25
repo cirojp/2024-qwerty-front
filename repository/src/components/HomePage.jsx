@@ -137,6 +137,7 @@ function HomePage() {
         setValor("");
         setSelectedPayMethod(null);
         setFecha("");
+        setSelectedCategory(null);
     };
 
     const editRow = (row) => {

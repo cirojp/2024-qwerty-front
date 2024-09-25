@@ -322,8 +322,10 @@ function HomePage() {
         }
     };
     const handleChange = (event) => {
-        setCategoriaSeleccionada(event.target.value);
+        let cat = event.target.value
+        setCategoriaSeleccionada(cat);
         //aca voy a tener que poner lo que actualice las transacciones
+        getTransacciones(cat)
       };
     
     return (

@@ -51,7 +51,7 @@ function ProfilePage() {
             iconPath: filteredCategories[0].iconPath
         };
         try {
-            const response = await fetch("http://127.0.0.1:8080/api/personal-categoria", {
+            const response = await fetch("http://two024-qwerty-back-2.onrender.com/api/personal-categoria", {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
@@ -63,7 +63,7 @@ function ProfilePage() {
                 console.log(`Categoría eliminada: ${categoryValue}`);
             }
         }catch(err){
-            throw new Error();
+            console.log(err);
         }
     };
 

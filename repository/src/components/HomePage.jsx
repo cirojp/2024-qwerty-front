@@ -47,7 +47,8 @@ function HomePage() {
         fetchPersonalCategorias();
     }, []);
     useEffect(() => {
-        categoriasConTodas = ['Todas', ...payCategories];
+        const aux = ['Todas', ...payCategories];
+        setCategoriasConTodas(aux) ;
     }, [payCategories]);
 
     const getTransacciones = () => {

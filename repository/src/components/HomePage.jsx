@@ -322,15 +322,15 @@ function HomePage() {
     
     return (
         <div className="container min-h-screen min-w-full max-w-full bg-black">
-        <div className="flex justify-center mb-0">
-          <div className="w-36 h-36 rounded-full overflow-hidden border-4 border-gray-950">
+        <div /*className="flex justify-center mb-0"*/>
+        <div className="flex justify-between items-center">
+          <div className="w-36 h-36 rounded-full overflow-hidden border-4 border-gray-950 mx-auto">
             <img 
               src={logo} 
               alt="Logo" 
               className="w-full h-full object-cover"
             />
           </div>
-        </div>
         <div className="mt-5 flex flex-col md:flex-row justify-end space-y-4 md:space-y-0 md:space-x-4">
                 <button 
                     className="w-full md:w-auto bg-yellow-500 bg-opacity-80 text-gray-950 text-sm py-2 px-4 rounded-lg hover:bg-yellow-700"
@@ -339,6 +339,7 @@ function HomePage() {
                     Mi Cuenta
                 </button>
             </div>
+            </div></div>
             <div className="tabla shadow-md rounded-lg p-0 mb-4">
                 <div className="flex justify-between items-center mb-0 px-6">
                     <h2 className="text-2xl py-2 px-4 font-bold text-center mb-4 text-gray-100">Historial de Transacciones</h2>

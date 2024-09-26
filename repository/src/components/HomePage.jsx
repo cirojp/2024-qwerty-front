@@ -340,7 +340,7 @@ function HomePage() {
                     >
                         Agregar Transacción
                     </button>
-                    <div className="flex flex-col items-center justify-center h-screen">
+                    <div className="flex flex-col justify-center">
                     <label htmlFor="categorias" className="mb-2 text-lg font-medium text-gray-700">
                         Filtrar por categoría:
                     </label>

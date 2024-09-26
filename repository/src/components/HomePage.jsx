@@ -322,7 +322,6 @@ function HomePage() {
       };
     
     return (
-        //<div className="container mx-auto p-6"}>
         <div className="container min-h-screen min-w-full max-w-full bg-black">
             <div className="flex justify-center mb-0">
           <div className="w-36 h-36 rounded-full overflow-hidden border-4 border-gray-950">
@@ -333,7 +332,6 @@ function HomePage() {
             />
           </div>
         </div>
-            {/* <h1 className="text-2xl font-bold text-center mb-6 text-gray-100">Transacciones</h1>*/}
             <div className="tabla shadow-md rounded-lg p-0 mb-4">
                 <div className="flex justify-between items-center mb-0 px-6">
                     <h2 className="text-2xl py-2 px-4 font-bold text-center mb-4 text-gray-100">Historial de Transacciones</h2>
@@ -343,10 +341,9 @@ function HomePage() {
                     >
                         Agregar Transacción
                     </button>
-                </div>
-                <div className="flex flex-col items-center">
+                    <div className="flex flex-col items-center">
                     <label htmlFor="categorias" className="mb-2 text-lg font-medium text-gray-700">
-                        Selecciona una categoría:
+                        Filtrar por categoría:
                     </label>
                     <select
                         id="categorias"
@@ -358,6 +355,7 @@ function HomePage() {
                             <option key={cat.value} value={cat.value}>{cat.label}</option>
                         ))}
                     </select>
+                </div>
                 </div>
                 <TransaccionesTable
                     transacciones={transacciones}

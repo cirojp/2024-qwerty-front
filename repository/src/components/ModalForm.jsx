@@ -149,7 +149,7 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
                         onChange={handlePayChange}
                         onCreateOption={handleCreateTP}
                         value={selectedPayMethod}
-                        className="custom-select mt-1 block w-full border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm"
+                        className="custom-select mt-1 block w-full border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm border-transparent"
                         styles={customSelectStyles}
                     />
                 </div>
@@ -160,7 +160,7 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
                             options={payCategories}
                             onChange={handleCategoryChange}
                             value={selectedCategory}
-                            className="custom-select mt-1 block w-full border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm"
+                            className="custom-select mt-1 block w-full border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm border-transparent"
                             styles={customSelectStyles}
                         />
                         {modalError && <p className="text-red-500">{modalError}</p>}

@@ -18,6 +18,7 @@ function ProfilePage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [payCategories, setPayCategories] = useState(defaultCategories);
     const [editCategory, setEditCategory] = useState({});
+    const [isEditMode, setIsEditMode] = useState(false);  // Nuevo estado para controlar el modo (editar/agregar)
 
     const fetchPersonalCategorias = async () => {
         const token = localStorage.getItem("token");
@@ -43,7 +44,7 @@ function ProfilePage() {
 
     const handleEdit = async(categoryValue, newName, newIcon) => {
         console.log(categoryValue);
-        const filteredCategories = payCategories.filter(category => category.value == categoryValue.value);
+        const filteredCategories = payCategories.filter(category => category.value === categoryValue.value);
         const token = localStorage.getItem("token");
         const inputValue = {
             nombre: filteredCategories[0].label,
@@ -73,7 +74,7 @@ function ProfilePage() {
     };
 
     const handleDelete = async(categoryValue) => {
-        const filteredCategories = payCategories.filter(category => category.value == categoryValue);
+        const filteredCategories = payCategories.filter(category => category.value === categoryValue);
         const token = localStorage.getItem("token");
         const inputValue = {
             nombre: filteredCategories[0].label,
@@ -90,6 +91,31 @@ function ProfilePage() {
             });
             if(response.ok){
                 console.log(`Categoría eliminada: ${categoryValue}`);
+                setPayCategories([]);
+                await fetchPersonalCategorias();
+            }
+        }catch(err){
+            console.log(err);
+        }
+    };
+
+    const handleAddCategory = async(newName, newIcon) => {
+        const token = localStorage.getItem("token");
+        const newValue = {
+            nombre: newName,
+            iconPath: newIcon
+        };
+        try {
+            const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/personal-categoria", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify(newValue)
+            });
+            if(response.ok){
+                console.log(`Categoría agregada: ${newName}`);
                 setPayCategories([]);
                 await fetchPersonalCategorias();
             }
@@ -126,7 +152,8 @@ function ProfilePage() {
                                     className="ml-4 text-blue-500 hover:text-blue-700"
                                     onClick={() => {
                                         setEditCategory(category);
-                                        setIsModalOpen(!isModalOpen);
+                                        setIsEditMode(true);  // Modo editar
+                                        setIsModalOpen(true);
                                     }}
                                 >
                                     Editar
@@ -141,8 +168,26 @@ function ProfilePage() {
                         </li>
                     ))}
                 </ul>
+                {/* Botón para agregar una nueva categoría */}
+                <button 
+                    className="mt-4 px-3 py-3 bg-yellow-500 text-black hover:bg-yellow-700"
+                    onClick={() => {
+                        setEditCategory({});  // Limpiar la categoría seleccionada
+                        setIsEditMode(false);  // Modo agregar
+                        setIsModalOpen(true);
+                    }}
+                >
+                    Agregar Categoría
+                </button>
             </div>
-            <ModalCategoria isOpen={isModalOpen} edit={true} onRequestClose={() => setIsModalOpen(!isModalOpen)} handleEditCat={(nom, icon) => handleEdit(editCategory, nom, icon)} editCat={editCategory}/>
+            <ModalCategoria 
+                isOpen={isModalOpen} 
+                edit={isEditMode} 
+                onRequestClose={() => setIsModalOpen(!isModalOpen)} 
+                handleEditCat={(nom, icon) => isEditMode ? handleEdit(editCategory, nom, icon) : handleAddCategory(nom, icon)} 
+                editCat={editCategory}
+                handleCreateCat={handleAddCategory}
+            />
         </div>
     );
 }

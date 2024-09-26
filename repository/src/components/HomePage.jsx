@@ -322,7 +322,7 @@ function HomePage() {
     
     return (
         <div className="container min-h-screen min-w-full max-w-full bg-black">
-            <div className="flex justify-center mb-0">
+        <div className="flex justify-center mb-0">
           <div className="w-36 h-36 rounded-full overflow-hidden border-4 border-gray-950">
             <img 
               src={logo} 
@@ -331,6 +331,14 @@ function HomePage() {
             />
           </div>
         </div>
+        <div className="mt-5 flex flex-col md:flex-row justify-end space-y-4 md:space-y-0 md:space-x-4">
+                <button 
+                    className="w-full md:w-auto bg-yellow-500 bg-opacity-80 text-gray-950 text-sm py-2 px-4 rounded-lg hover:bg-yellow-700"
+                    onClick={() => navigate('/profile')}
+                >
+                    Mi Cuenta
+                </button>
+            </div>
             <div className="tabla shadow-md rounded-lg p-0 mb-4">
                 <div className="flex justify-between items-center mb-0 px-6">
                     <h2 className="text-2xl py-2 px-4 font-bold text-center mb-4 text-gray-100">Historial de Transacciones</h2>
@@ -341,20 +349,20 @@ function HomePage() {
                         Agregar Transacción
                     </button>
                     <div className="flex flex-col justify-center">
-                    <label htmlFor="categorias" className="mb-2 text-lg font-medium text-gray-700">
-                        Filtrar por categoría:
-                    </label>
-                    <select
-                        id="categorias"
-                        value={categoriaSeleccionada}
-                        onChange={handleChange}
-                        className="block w-64 px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    >
-                        {categoriasConTodas.map(cat => (
-                            <option key={cat.value} value={cat.value}>{cat.label}</option>
-                        ))}
-                    </select>
-                </div>
+                        <label htmlFor="categorias" className="mb-2 text-lg font-medium text-gray-700">
+                            Filtrar por categoría:
+                        </label>
+                        <select
+                            id="categorias"
+                            value={categoriaSeleccionada}
+                            onChange={handleChange}
+                            className="block w-64 px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        >
+                            {categoriasConTodas.map(cat => (
+                                <option key={cat.value} value={cat.value}>{cat.label}</option>
+                            ))}
+                        </select>
+                    </div>
                 </div>
                 <TransaccionesTable
                     transacciones={transacciones}
@@ -400,14 +408,6 @@ function HomePage() {
                 setFecha={setFecha}
                 error={modalError}
             />
-            <div className="mt-5 flex flex-col md:flex-row justify-end space-y-4 md:space-y-0 md:space-x-4">
-                <button 
-                    className="w-full md:w-auto bg-yellow-500 bg-opacity-80 text-gray-950 text-sm py-2 px-4 rounded-lg hover:bg-yellow-700"
-                    onClick={() => navigate('/profile')}
-                >
-                    Mi Cuenta
-                </button>
-            </div>
         </div>
         
     );

@@ -22,6 +22,7 @@ function ChangePasswordForm() {
     const toggleConfirmPasswordVisibility = () => {
         setShowConfirmPassword(!showConfirmPassword);
     }
+    
 
     const handleChangePassword = async (e) => {
         e.preventDefault();
@@ -71,6 +72,7 @@ function ChangePasswordForm() {
             setLoading(false); 
         }
     };
+    
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-black p-6">
@@ -91,9 +93,9 @@ function ChangePasswordForm() {
                             <button
                                 type="button"
                                 onClick={toggleCurrentPasswordVisibility}
-                                className="absolute inset-y-0 right-0 flex items-center px-2"
-                             >
-                                <FontAwesomeIcon icon={showCurrentPassword ? faEyeSlash : faEye} />
+                                className="absolute inset-y-0 right-0 flex items-center px-2 hover:bg-yellow-700"
+                            >
+                                <FontAwesomeIcon color="#F8C104" icon={showCurrentPassword ? faEyeSlash : faEye} />
                             </button>
                         </div>
                     </div>
@@ -112,9 +114,9 @@ function ChangePasswordForm() {
                             <button
                                 type="button"
                                 onClick={toggleNewPasswordVisibility}
-                                className="absolute inset-y-0 right-0 flex items-center px-2"
-                             >
-                                <FontAwesomeIcon icon={showNewPassword ? faEyeSlash : faEye} />
+                                className="absolute inset-y-0 right-0 flex items-center px-2 hover:bg-yellow-700"
+                            >
+                                <FontAwesomeIcon color="#F8C104" icon={showNewPassword ? faEyeSlash : faEye} />
                             </button>
                         </div>
                     </div>
@@ -132,9 +134,9 @@ function ChangePasswordForm() {
                             <button
                                 type="button"
                                 onClick={toggleConfirmPasswordVisibility}
-                                className="absolute inset-y-0 right-0 flex items-center px-2 "
-                             >
-                                <FontAwesomeIcon icon={showConfirmPassword ? faEyeSlash : faEye} />
+                                className="absolute inset-y-0 right-0 flex items-center px-2 hover:bg-yellow-700"
+                            >
+                                <FontAwesomeIcon color="#F8C104" icon={showConfirmPassword ? faEyeSlash : faEye} />
                             </button>
                         </div>
                     </div>

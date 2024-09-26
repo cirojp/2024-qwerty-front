@@ -16,7 +16,7 @@ function PrivateRoutes() {
 export default PrivateRoutes;*/
 
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 
 const PrivateRoutes = () => {
     const token = localStorage.getItem('token'); // Verifica si el token existe

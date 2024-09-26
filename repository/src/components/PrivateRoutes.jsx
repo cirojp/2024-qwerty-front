@@ -19,7 +19,7 @@ import React from 'react';
 import { Navigate } from 'react-router-dom';
 
 const PrivateRoutes = ({ children }) => {
-    const authToken = localStorage.getItem('authToken'); // Verifica si el token existe
+    const authToken = localStorage.getItem('token'); // Verifica si el token existe
 
     // Si no hay token, redirige al login
     if (!authToken) {

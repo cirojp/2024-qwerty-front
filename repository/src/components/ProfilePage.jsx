@@ -16,7 +16,7 @@ function ProfilePage() {
     ];
     
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [payCategories, setPayCategories] = useState(defaultCategories);
+    const [payCategories, setPayCategories] = useState([]);
     const [editCategory, setEditCategory] = useState({});
     const [isEditMode, setIsEditMode] = useState(false);  // Nuevo estado para controlar el modo (editar/agregar)
 

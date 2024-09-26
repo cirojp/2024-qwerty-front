@@ -32,9 +32,9 @@ function TransaccionesTable({ transacciones, editRow, deleteRow, onTableEmpty = 
         },
         {
             name:<span className='text-l text-center font-bold'>Categoria</span>,
-            selector: row => row.categoria.label,
+            selector: row => row.categoria,
             sortable: true,
-            cell: row => (<div className="text-center items-center"><FontAwesomeIcon icon={row.categoria.iconPath}/>{row.categoria.label}</div>)
+            cell: row => (<div className="text-center items-center">{row.categoria}</div>)
         },
         {
             name: <span className="text-l text-center font-bold">Fecha</span>,

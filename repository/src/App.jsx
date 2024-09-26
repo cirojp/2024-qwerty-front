@@ -16,16 +16,16 @@ import ProfilePage from './components/ProfilePage';
 
 function App() {
   useEffect(() => {
-      const handleTabClose = () => {
-          localStorage.removeItem('authToken'); // Eliminar el token
-      };
+    /*const handleTabClose = () => {
+        localStorage.removeItem('authToken'); // Eliminar el token
+    };
 
-      window.addEventListener('beforeunload', handleTabClose);
+    window.addEventListener('beforeunload', handleTabClose);
 
-      return () => {
-          window.removeEventListener('beforeunload', handleTabClose);
-      };
-  }, []);
+    return () => {
+        window.removeEventListener('beforeunload', handleTabClose);
+    };
+}, []);*/
   return (
     <Router>
       <Routes>

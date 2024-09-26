@@ -322,34 +322,40 @@ function HomePage() {
     
     return (
         <div className="container min-h-screen min-w-full max-w-full bg-black">
-        <div /*className="flex justify-center mb-0"*/>
-        <div className="flex justify-between items-center px-4">
-          <div className="w-36 h-36 rounded-full overflow-hidden border-4 border-gray-950 mx-auto">
-            <img 
-              src={logo} 
-              alt="Logo" 
-              className="w-full h-full object-cover"
-            />
-          </div>
-        <div className="mt-5 flex flex-col md:flex-row justify-end space-y-4 md:space-y-0 md:space-x-4">
-                <button 
-                    className="w-full md:w-auto bg-yellow-500 bg-opacity-80 text-gray-950 text-sm py-2 px-4 rounded-lg hover:bg-yellow-700"
-                    onClick={() => navigate('/profile')}
-                >
-                    Mi Cuenta
-                </button>
-            </div>
-            </div></div>
-            <div className="tabla shadow-md rounded-lg p-0 mb-4">
-                <div className="flex justify-between items-center mb-0 px-6">
-                    <h2 className="text-2xl py-2 px-4 font-bold text-center mb-4 text-gray-100">Historial de Transacciones</h2>
+            <div className="bg-black flex items-center justify-center w-full p-4">
+            <div className="grid grid-cols-3 grid-rows-2 gap-0 w-full">
+            {/*div vacio (grid 1)*/}
+                <div></div>
+                <div className="flex justify-center items-center"> {/* Agregar padding horizontal */}
+                <div className="w-24 h-24 md:w-36 md:h-36 rounded-full overflow-hidden border-4 border-gray-950">
+                    <img 
+                    src={logo} 
+                    alt="Logo" 
+                    className="w-full h-full object-cover"
+                    />
+                </div>
+                </div>
+                <div className="flex justify-end items-center px-20">
+                    <button 
+                        className="w-full md:w-auto bg-yellow-500 bg-opacity-80 text-gray-950 text-sm py-2 px-4 rounded-lg hover:bg-yellow-700"
+                        onClick={() => navigate('/profile')}
+                    >
+                        Mi Cuenta
+                    </button>
+                </div>
+                <div className="flex justify-start items-center px-6">
+                    <h2 className="text-2xl py-2 font-bold text-gray-100">Historial de Transacciones</h2>
+                </div>
+                <div className="flex justify-center items-center">
                     <button 
                         className="bg-yellow-500 bg-opacity-80 text-gray-900 py-2 px-4 rounded-lg hover:bg-red-700 mx-auto"
                         onClick={openModal}
                     >
                         Agregar Transacción
                     </button>
-                    <div className="flex flex-col justify-center">
+                </div>
+                <div className="flex justify-end items-center px-6">
+                    <div className="flex flex-col">
                         <label htmlFor="categorias" className="mb-2 text-lg font-medium text-gray-200">
                             Filtrar por categoría:
                         </label>
@@ -365,29 +371,28 @@ function HomePage() {
                         </select>
                     </div>
                 </div>
-                <TransaccionesTable
-                    transacciones={transacciones}
-                    editRow={editRow}
-                    deleteRow={deleteRow}
-                    onTableEmpty={() => setShowNoTransactions(true)}
-                    onTransactions={() => setShowNoTransactions(false)}
-                />
-                {showNoTransactions && (
-                    <div className='flex flex-col justify-center mb-0 items-center'>
-                        {categoriaSeleccionada !== "Todas" && (
-                            <p className="text-red-500 font-bold mb-4">Su filtro no coincide con ninguna transacción</p>
-                        )}
-                        <button 
-                            className="bg-yellow-500 bg-opacity-80 text-gray-950 font-extrabold py-6 px-16 rounded-lg hover:bg-yellow-700"
-                            onClick={openModal}
-                        >
-                            Ingrese una transacción
-                        </button>
-                    </div>
-                )}
             </div>
-
-            
+            </div>
+            <TransaccionesTable
+                transacciones={transacciones}
+                editRow={editRow}
+                deleteRow={deleteRow}
+                onTableEmpty={() => setShowNoTransactions(true)}
+                onTransactions={() => setShowNoTransactions(false)}
+            />
+            {showNoTransactions && (
+                <div className='flex flex-col justify-center mb-0 items-center'>
+                    {categoriaSeleccionada !== "Todas" && (
+                        <p className="text-red-500 font-bold mb-4">Su filtro no coincide con ninguna transacción</p>
+                    )}
+                    <button 
+                        className="bg-yellow-500 bg-opacity-80 text-gray-950 font-extrabold py-6 px-16 rounded-lg hover:bg-yellow-700"
+                        onClick={openModal}
+                    >
+                        Ingrese una transacción
+                    </button>
+                </div>
+            )}
             <ModalForm
                 isModalOpen={isModalOpen}
                 closeModal={closeModal}
@@ -410,7 +415,6 @@ function HomePage() {
                 error={modalError}
             />
         </div>
-        
     );
 }
 

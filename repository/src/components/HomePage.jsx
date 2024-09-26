@@ -323,7 +323,7 @@ function HomePage() {
     return (
         <div className="container min-h-screen min-w-full max-w-full bg-black">
         <div /*className="flex justify-center mb-0"*/>
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center px-4">
           <div className="w-36 h-36 rounded-full overflow-hidden border-4 border-gray-950 mx-auto">
             <img 
               src={logo} 
@@ -344,13 +344,13 @@ function HomePage() {
                 <div className="flex justify-between items-center mb-0 px-6">
                     <h2 className="text-2xl py-2 px-4 font-bold text-center mb-4 text-gray-100">Historial de Transacciones</h2>
                     <button 
-                        className="bg-yellow-500 bg-opacity-80 text-gray-900 py-2 px-4 rounded-lg hover:bg-red-700"
+                        className="bg-yellow-500 bg-opacity-80 text-gray-900 py-2 px-4 rounded-lg hover:bg-red-700 mx-auto"
                         onClick={openModal}
                     >
                         Agregar Transacción
                     </button>
                     <div className="flex flex-col justify-center">
-                        <label htmlFor="categorias" className="mb-2 text-lg font-medium text-gray-700">
+                        <label htmlFor="categorias" className="mb-2 text-lg font-medium text-gray-200">
                             Filtrar por categoría:
                         </label>
                         <select

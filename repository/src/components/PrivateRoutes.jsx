@@ -1,4 +1,4 @@
-import React from 'react'
+/*import React from 'react'
 import { Navigate, Outlet } from 'react-router-dom';
 
 function PrivateRoutes() {
@@ -13,4 +13,21 @@ function PrivateRoutes() {
     }
 }
 
-export default PrivateRoutes
+export default PrivateRoutes;*/
+
+import React from 'react';
+import { Navigate } from 'react-router-dom';
+
+const PrivateRoutes = ({ children }) => {
+    const authToken = localStorage.getItem('authToken'); // Verifica si el token existe
+
+    // Si no hay token, redirige al login
+    if (!authToken) {
+        return <Navigate to="/login" />;
+    }
+
+    // Si hay token, renderiza el componente hijo (la página protegida)
+    return children;
+};
+
+export default PrivateRoutes;

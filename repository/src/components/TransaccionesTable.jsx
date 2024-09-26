@@ -9,7 +9,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 
 
 
-function TransaccionesTable({ transacciones, editRow, deleteRow, onTableEmpty = () =>{}, onTransactions = () => {}}, payCategories) {
+function TransaccionesTable({ transacciones, editRow, deleteRow, onTableEmpty = () =>{}, onTransactions = () => {}, payCategories}) {
     createTheme("dark", {
         background: {
             default: '#1E2126',

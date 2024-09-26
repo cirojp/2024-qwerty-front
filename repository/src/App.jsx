@@ -15,17 +15,6 @@ import KeepSignedIn from './components/KeepSignedIn';
 import ProfilePage from './components/ProfilePage';
 
 function App() {
-  /*useEffect(() => {
-    const handleTabClose = () => {
-        localStorage.removeItem('authToken'); // Eliminar el token
-    };
-
-    window.addEventListener('beforeunload', handleTabClose);
-
-    return () => {
-        window.removeEventListener('beforeunload', handleTabClose);
-    };
-}, []);*/
   return (
     <Router>
       <Routes>
@@ -34,9 +23,9 @@ function App() {
           <Route exact path='/change-password' element={<ChangePasswordForm/>} />
           <Route exact path='/profile' element={<ProfilePage/>} />
         </Route>
-        {/* <Route element={<KeepSignedIn/>}>*/}
+        <Route element={<KeepSignedIn/>}>
           <Route exact path='/' element={<LoginForm/>} />
-        {/*</Route>*/}
+        </Route>
         <Route exact path='/reset-password' element={<ResetPasswordForm />} />
         <Route exact path="/register" element={<RegisterForm />} />
         <Route exact path='/forgot-password' element={<ForgotPasswordForm />} />

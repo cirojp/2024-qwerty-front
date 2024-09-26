@@ -19,10 +19,10 @@ import React from 'react';
 import { Navigate } from 'react-router-dom';
 
 const PrivateRoutes = () => {
-    const authToken = localStorage.getItem('token'); // Verifica si el token existe
+    const token = localStorage.getItem('token'); // Verifica si el token existe
 
     // Si no hay token, redirige al login
-    if (!authToken) {
+    if (!token) {
         return <Navigate to="/" />;
     }
 

@@ -3,6 +3,9 @@ import DataTable, { createTheme } from 'react-data-table-component';
 import ExpandedRow from './ExpandedRow';
 import deleteIcon from "../assets/delete-icon.png";
 import editIcon from "../assets/edit-icon.png";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+import { library } from '@fortawesome/fontawesome-svg-core';
 
 
 
@@ -13,6 +16,7 @@ function TransaccionesTable({ transacciones, editRow, deleteRow, onTableEmpty = 
         },
         
     });
+    library.add(fas);
 
     const columns = [
         {

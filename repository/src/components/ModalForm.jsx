@@ -99,6 +99,12 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
             /*setSelectedCategory({ value: "", label: "" });
             setCatGasto("");*/
         } catch (error) {
+            if(selectedCategory.value == ""){
+                setModalError("Ingrese una categoria");
+            }
+            if(selectedPayMethod.value == ""){
+                setModalError("Ingrese una Tipo de gasto");
+            }
             console.error("Error al agregar transacción:", error);
         } finally {
             setIsLoading(false); // Desactivamos el spinner al finalizar
@@ -151,6 +157,7 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
                         value={selectedPayMethod}
                         className="custom-select mt-1 block w-full border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm border-transparent"
                         styles={customSelectStyles}
+                        required
                     />
                 </div>
                 <div>
@@ -162,8 +169,9 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
                             value={selectedCategory}
                             className="custom-select mt-1 block w-full border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm border-transparent"
                             styles={customSelectStyles}
+                            required
                         />
-                        {modalError && <p className="text-red-500">{modalError}</p>}
+                        {modalError && <div className="text-red-500 text-sm text-center">{modalError}</div>}
                         <button
                             type="button"
                             onClick={() => openModalCategoria()}

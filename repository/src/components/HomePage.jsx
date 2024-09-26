@@ -23,11 +23,11 @@ function HomePage() {
         { value: "efectivo", label: "Efectivo" }
     ]);
     const [payCategories, setPayCategories] = useState([
-        {value: "Impuestos y Servicios", label: "Impuestos y Servicios"},
-        {value: "Entretenimiento y Ocio", label: "Entretenimiento y Ocio"},
-        {value: "Hogar y Mercado", label: "Hogar y Mercado"},
-        {value: "Antojos", label: "Antojos"},
-        {value: "Electro", label: "Electrodomesticos"},
+        {value: "Impuestos y Servicios", label: "Impuestos y Servicios", iconPath: "fa-solid fa-file-invoice-dollar"},
+        {value: "Entretenimiento y Ocio", label: "Entretenimiento y Ocio", iconPath: "fa-solid fa-ticket"},
+        {value: "Hogar y Mercado", label: "Hogar y Mercado", iconPath: "fa-solid fa-house"},
+        {value: "Antojos", label: "Antojos", iconPath: "fa-solid fa-candy-cane"},
+        {value: "Electrodomesticos", label: "Electrodomesticos", iconPath: "fa-solid fa-blender"},
       ]);
     const [selectedPayMethod, setSelectedPayMethod] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState(null);
@@ -115,7 +115,7 @@ function HomePage() {
     
             if (response.ok) {
                 const data = await response.json();
-                const customOptions = data.map(cat => ({ label: cat.nombre, value: cat.nombre }));
+                const customOptions = data.map(cat => ({ label: cat.nombre, value: cat.nombre , iconPath: cat.iconPath}));
                 setPayCategories([...payCategories, ...customOptions]);
             }
         } catch (error) {

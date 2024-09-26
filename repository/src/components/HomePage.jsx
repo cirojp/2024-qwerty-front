@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; 
 import TransaccionesTable from './TransaccionesTable';
 import ModalForm from './ModalForm';
-import ActionButtons from './ActionButtons';
 import './styles/HomePage.css';
 import logo from "../assets/logo.png";
 
@@ -341,7 +340,7 @@ function HomePage() {
                     >
                         Agregar Transacción
                     </button>
-                    <div className="flex flex-col items-center">
+                    <div className="flex flex-col items-center justify-center h-screen">
                     <label htmlFor="categorias" className="mb-2 text-lg font-medium text-gray-700">
                         Filtrar por categoría:
                     </label>
@@ -409,7 +408,6 @@ function HomePage() {
                     Mi Cuenta
                 </button>
             </div>
-            <ActionButtons />
         </div>
         
     );

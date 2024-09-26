@@ -23,9 +23,9 @@ function App() {
           <Route exact path='/change-password' element={<ChangePasswordForm/>} />
           <Route exact path='/profile' element={<ProfilePage/>} />
         </Route>
-        <Route element={<KeepSignedIn/>}>
+        {/* <Route element={<KeepSignedIn/>}>*/}
           <Route exact path='/' element={<LoginForm/>} />
-        </Route>
+        {/*</Route>*/}
         <Route exact path='/reset-password' element={<ResetPasswordForm />} />
         <Route exact path="/register" element={<RegisterForm />} />
         <Route exact path='/forgot-password' element={<ForgotPasswordForm />} />

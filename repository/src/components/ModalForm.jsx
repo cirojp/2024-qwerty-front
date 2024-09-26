@@ -5,7 +5,7 @@ import Select from 'react-select';
 import './styles/ModalForm.css';
 import ModalCategoria from './ModalCategoria'; 
 
-function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, descripcion, valor, fecha, handleMotivoChange, handleDescripcionChange, setValor, handlePayChange, selectedPayMethod, selectedCategory, payCategories, handleCategoryChange, payOptions, handleCreateTP, handleCreateCat, setFecha, error}) {
+function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, valor, fecha, handleMotivoChange, setValor, handlePayChange, selectedPayMethod, selectedCategory, payCategories, handleCategoryChange, payOptions, handleCreateTP, handleCreateCat, setFecha, error}) {
     const customStyles = {
         overlay: {
             position: 'fixed',
@@ -128,16 +128,6 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
                         type="text"
                         value={motivo}
                         onChange={handleMotivoChange}
-                        className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
-                        required
-                    />
-                </div>
-                <div>
-                    <label className="text-center text-gray-100 mb-6">Descripción:</label>
-                    <input
-                        type="text"
-                        value={descripcion}
-                        onChange={handleDescripcionChange}
                         className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
                         required
                     />

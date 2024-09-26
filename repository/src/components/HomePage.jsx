@@ -16,7 +16,6 @@ function HomePage() {
     const [fecha, setFecha] = useState("");    
     const [error, setError] = useState(null);
     const [edit, setEdit] = useState(false);
-    const [descripcion, setDescripcion] = useState("");
     const [tipoGasto, setTipoGasto] = useState("");
     const [categoria, setCategoria] = useState("");
     const [payOptions, setPayOptions] = useState([
@@ -133,7 +132,6 @@ function HomePage() {
 
     const clearForm = () => {
         setMotivo("");
-        setDescripcion("");
         setValor("");
         setSelectedPayMethod(null);
         setFecha("");
@@ -143,7 +141,6 @@ function HomePage() {
     const editRow = (row) => {
         setEdit(true);
         setMotivo(row.motivo);
-        setDescripcion(row.descripcion);
         setValor(row.valor);
         const selectedOption = payOptions.find(option => option.value === row.tipoGasto);
         setSelectedPayMethod(selectedOption || null);
@@ -180,7 +177,7 @@ function HomePage() {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 },
-                body: JSON.stringify({ motivo, descripcion, valor, tipoGasto, fecha, categoria})
+                body: JSON.stringify({ motivo, valor, tipoGasto, fecha, categoria})
             });
 
             if (response.ok) {
@@ -238,10 +235,6 @@ function HomePage() {
 
     const handleMotivoChange = (e) => {
         setMotivo(e.target.value);
-    };
-
-    const handleDescripcionChange = (e) => {
-        setDescripcion(e.target.value);
     };
     const handleCategoryChange  = (value) => {
         setCategoria(value ? value.value : "");
@@ -395,11 +388,9 @@ function HomePage() {
                 agregarTransaccion={agregarTransaccion}
                 edit={edit}
                 motivo={motivo}
-                descripcion={descripcion}
                 valor={valor}
                 fecha={fecha}
                 handleMotivoChange={handleMotivoChange}
-                handleDescripcionChange={handleDescripcionChange}
                 setValor={setValor}
                 handlePayChange={handlePayChange}
                 selectedPayMethod={selectedPayMethod}

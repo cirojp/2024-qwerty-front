@@ -5,7 +5,6 @@ const ExpandedRow = ({data = {
     motivo: "",
     valor: "",
     fecha: "",
-    descripcion: "",
     tipoGasto: "",
 }}) => {
   return (
@@ -13,9 +12,6 @@ const ExpandedRow = ({data = {
     <div className="grid grid-cols-2 gap-3">
       <div className="font-bold px-20">Motivo:</div>
       <div>{data.motivo}</div>
-
-      <div className="font-bold px-20">Descripción:</div>
-      <div>{data.descripcion}</div>
 
       <div className="font-bold px-20">Valor:</div>
       <div>{data.valor}</div>

@@ -17,8 +17,17 @@ function TransaccionesTable({ transacciones, editRow, deleteRow, onTableEmpty = 
         
     });
     library.add(fas);
+    const [hasMounted, setHasMounted] = useState(false);
     useEffect(() => {
-    }, [payCategories]);
+        // Solo ejecutar después del primer renderizado
+        if (hasMounted) {
+            console.log('Pay Categories han cambiado:', payCategories);
+            // Aquí puedes realizar cualquier acción necesaria con el nuevo contenido
+        } else {
+            // Marcar que el componente ha sido montado
+            setHasMounted(true);
+        }
+    }, [payCategories, hasMounted]);
 
     const columns = [
         {

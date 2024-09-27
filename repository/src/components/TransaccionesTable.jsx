@@ -17,6 +17,8 @@ function TransaccionesTable({ transacciones, editRow, deleteRow, onTableEmpty = 
         
     });
     library.add(fas);
+    useEffect(() => {
+    }, [payCategories]);
 
     const columns = [
         {

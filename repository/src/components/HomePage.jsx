@@ -380,7 +380,6 @@ function HomePage() {
                 deleteRow={deleteRow}
                 onTableEmpty={() => setShowNoTransactions(true)}
                 onTransactions={() => setShowNoTransactions(false)}
-                payCategories = {payCategories}
             />
             {showNoTransactions && (
                 <div className='flex flex-col justify-center mb-0 items-center'>

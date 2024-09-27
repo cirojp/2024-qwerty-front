@@ -9,7 +9,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 
 
 
-function TransaccionesTable({ transacciones, editRow, deleteRow, onTableEmpty = () =>{}, onTransactions = () => {}, payCategories}) {
+function TransaccionesTable({ transacciones, editRow, deleteRow, onTableEmpty = () =>{}, onTransactions = () => {}}) {
     createTheme("dark", {
         background: {
             default: '#1E2126',
@@ -17,7 +17,7 @@ function TransaccionesTable({ transacciones, editRow, deleteRow, onTableEmpty = 
         
     });
     library.add(fas);
-    const [hasMounted, setHasMounted] = useState(false);
+    /*const [hasMounted, setHasMounted] = useState(false);
     useEffect(() => {
         // Solo ejecutar después del primer renderizado
         if (hasMounted) {
@@ -27,7 +27,7 @@ function TransaccionesTable({ transacciones, editRow, deleteRow, onTableEmpty = 
             // Marcar que el componente ha sido montado
             setHasMounted(true);
         }
-    }, [payCategories, hasMounted]);
+    }, [payCategories, hasMounted]);*/
 
     const columns = [
         {
@@ -50,7 +50,7 @@ function TransaccionesTable({ transacciones, editRow, deleteRow, onTableEmpty = 
                 return (
                     <div className="text-center items-center flex">
                         {/*<FontAwesomeIcon icon={category.iconPath} className="mr-2" />*/}
-                        {category.iconPath}
+                        {/*category.iconPath*/}
                         {row.categoria}
                     </div>
                 );

@@ -49,7 +49,8 @@ function TransaccionesTable({ transacciones, editRow, deleteRow, onTableEmpty = 
                 const category = payCategories.find(cat => cat.value === row.categoria);
                 return (
                     <div className="text-center items-center flex">
-                        <FontAwesomeIcon icon={category.iconPath} className="mr-2" />
+                        {/*<FontAwesomeIcon icon={category.iconPath} className="mr-2" />*/}
+                        {category.iconPath}
                         {row.categoria}
                     </div>
                 );

@@ -13,7 +13,7 @@ import {
 import PrivateRoutes from './components/PrivateRoutes';
 import KeepSignedIn from './components/KeepSignedIn';
 import ProfilePage from './components/ProfilePage';
-import { PayCategoriesProvider } from './PayCategoriesContext';
+import { PayCategoriesProvider } from './components/PayCategoriesContext';
 
 function App() {
   return (

@@ -28,6 +28,7 @@ function HomePage() {
         {value: "Hogar y Mercado", label: "Hogar y Mercado", iconPath: "fa-solid fa-house"},
         {value: "Antojos", label: "Antojos", iconPath: "fa-solid fa-candy-cane"},
         {value: "Electrodomesticos", label: "Electrodomesticos", iconPath: "fa-solid fa-blender"},
+        {value: "Otros", label: "Otros", iconPath: "fa-solid fa-circle-dot"},
       ]);
     const [selectedPayMethod, setSelectedPayMethod] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState(null);

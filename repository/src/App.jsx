@@ -13,16 +13,13 @@ import {
 import PrivateRoutes from './components/PrivateRoutes';
 import KeepSignedIn from './components/KeepSignedIn';
 import ProfilePage from './components/ProfilePage';
-import { PayCategoriesProvider } from './components/PayCategoriesContext';
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route element={<PrivateRoutes/>}>
-          <PayCategoriesProvider>
-            <Route exact path='/index' element={<HomePage/>} />
-          </PayCategoriesProvider>
+          <Route exact path='/index' element={<HomePage/>} />
           <Route exact path='/change-password' element={<ChangePasswordForm/>} />
           <Route exact path='/profile' element={<ProfilePage/>} />
         </Route>

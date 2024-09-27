@@ -6,10 +6,10 @@ import editIcon from "../assets/edit-icon.png";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { usePayCategories } from './PayCategoriesContext';
 
 
-function TransaccionesTable({ transacciones, editRow, deleteRow, onTableEmpty = () =>{}, onTransactions = () => {}}) {
+
+function TransaccionesTable({ transacciones, editRow, deleteRow, onTableEmpty = () =>{}, onTransactions = () => {}, payCategories}) {
     createTheme("dark", {
         background: {
             default: '#1E2126',
@@ -17,8 +17,7 @@ function TransaccionesTable({ transacciones, editRow, deleteRow, onTableEmpty = 
         
     });
     library.add(fas);
-    const { payCategories } = usePayCategories()
-    /*const [hasMounted, setHasMounted] = useState(false);
+    const [hasMounted, setHasMounted] = useState(false);
     useEffect(() => {
         // Solo ejecutar después del primer renderizado
         if (hasMounted) {
@@ -28,12 +27,7 @@ function TransaccionesTable({ transacciones, editRow, deleteRow, onTableEmpty = 
             // Marcar que el componente ha sido montado
             setHasMounted(true);
         }
-    }, [payCategories, hasMounted]);*/
-    useEffect(() => {
-        // Aquí puedes usar payCategories para cualquier lógica que necesites
-        console.log('Categorías de pago en TransaccionesTable:', payCategories);
-    }, [payCategories]);
-
+    }, [payCategories, hasMounted]);
 
     const columns = [
         {

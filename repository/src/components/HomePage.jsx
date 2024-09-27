@@ -4,7 +4,6 @@ import TransaccionesTable from './TransaccionesTable';
 import ModalForm from './ModalForm';
 import './styles/HomePage.css';
 import logo from "../assets/logo.png";
-import { usePayCategories } from './PayCategoriesContext';
 
 
 
@@ -23,15 +22,14 @@ function HomePage() {
         { value: "debito", label: "Tarjeta de debito" },
         { value: "efectivo", label: "Efectivo" }
     ]);
-    /*const [payCategories, setPayCategories] = useState([
+    const [payCategories, setPayCategories] = useState([
         {value: "Impuestos y Servicios", label: "Impuestos y Servicios", iconPath: "fa-solid fa-file-invoice-dollar"},
         {value: "Entretenimiento y Ocio", label: "Entretenimiento y Ocio", iconPath: "fa-solid fa-ticket"},
         {value: "Hogar y Mercado", label: "Hogar y Mercado", iconPath: "fa-solid fa-house"},
         {value: "Antojos", label: "Antojos", iconPath: "fa-solid fa-candy-cane"},
         {value: "Electrodomesticos", label: "Electrodomesticos", iconPath: "fa-solid fa-blender"},
         {value: "Otros", label: "Otros", iconPath: "fa-solid fa-circle-dot"},
-      ]);*/
-    const { payCategories, setPayCategories } = usePayCategories();
+      ]);
     const [selectedPayMethod, setSelectedPayMethod] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -42,22 +40,10 @@ function HomePage() {
     const [categoriasConTodas, setCategoriasConTodas] = useState([]);
 
     useEffect(() => {
-        const fetchCategories = () => {
-            const newCategories = [
-                {value: "Impuestos y Servicios", label: "Impuestos y Servicios", iconPath: "fa-solid fa-file-invoice-dollar"},
-                {value: "Entretenimiento y Ocio", label: "Entretenimiento y Ocio", iconPath: "fa-solid fa-ticket"},
-                {value: "Hogar y Mercado", label: "Hogar y Mercado", iconPath: "fa-solid fa-house"},
-                {value: "Antojos", label: "Antojos", iconPath: "fa-solid fa-candy-cane"},
-                {value: "Electrodomesticos", label: "Electrodomesticos", iconPath: "fa-solid fa-blender"},
-                {value: "Otros", label: "Otros", iconPath: "fa-solid fa-circle-dot"},
-              ];
-            setPayCategories(newCategories);
-        };
-        fetchCategories();
         getTransacciones();
         fetchPersonalTipoGastos();
         fetchPersonalCategorias();
-    }, [setPayCategories]);
+    }, []);
     useEffect(() => {
         if (payCategories.length > 0) {
             setCategoriasConTodas([{ value: "Todas", label: "Todas" }, ...payCategories]);
@@ -394,6 +380,7 @@ function HomePage() {
                 deleteRow={deleteRow}
                 onTableEmpty={() => setShowNoTransactions(true)}
                 onTransactions={() => setShowNoTransactions(false)}
+                payCategories = {payCategories}
             />
             {showNoTransactions && (
                 <div className='flex flex-col justify-center mb-0 items-center'>

@@ -17,7 +17,7 @@ function TransaccionesTable({ transacciones, editRow, deleteRow, onTableEmpty = 
         
     });
     library.add(fas);
-    const [hasMounted, setHasMounted] = useState(false);
+    //const [hasMounted, setHasMounted] = useState(false);
     useEffect(() => {
         // Solo ejecutar después del primer renderizado
         if (hasMounted) {
@@ -27,7 +27,7 @@ function TransaccionesTable({ transacciones, editRow, deleteRow, onTableEmpty = 
             // Marcar que el componente ha sido montado
             setHasMounted(true);
         }
-    }, [payCategories, hasMounted]);
+    }, [payCategories]);
 
     const columns = [
         {

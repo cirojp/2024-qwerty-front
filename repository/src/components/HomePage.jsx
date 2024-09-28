@@ -54,9 +54,9 @@ function HomePage() {
         const token = localStorage.getItem("token");
         let url = "";
         if (filtrado === "Todas") {
-            url = "https://two024-qwerty-back-2.onrender.com/api/transacciones/user";
+            url = "http://localhost:8080/api/transacciones/user";
         } else {
-            url = `https://two024-qwerty-back-2.onrender.com/api/transacciones/user/filter?categoria=${filtrado}`;
+            url = `http://localhost:8080/api/transacciones/user/filter?categoria=${filtrado}`;
         }
         try {
             const response = await fetch(url, {
@@ -80,7 +80,7 @@ function HomePage() {
     const fetchPersonalTipoGastos = async () => {
         const token = localStorage.getItem("token");
         try {
-            const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/personal-tipo-gasto", {
+            const response = await fetch("http://localhost:8080/api/personal-tipo-gasto", {
                 headers: {
                     "Authorization": `Bearer ${token}`
                 }
@@ -103,7 +103,7 @@ function HomePage() {
     const fetchPersonalCategorias = async () => {
         const token = localStorage.getItem("token");
         try {
-            const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/personal-categoria", {
+            const response = await fetch("http://localhost:8080/api/personal-categoria", {
                 headers: {
                     "Authorization": `Bearer ${token}`
                 }
@@ -154,8 +154,8 @@ function HomePage() {
         const token = localStorage.getItem("token");
 
         const url = edit 
-        ? `https://two024-qwerty-back-2.onrender.com/api/transacciones/${transaccionId}` 
-        : "https://two024-qwerty-back-2.onrender.com/api/transacciones";
+        ? `http://localhost:8080/api/transacciones/${transaccionId}` 
+        : "http://localhost:8080/api/transacciones";
         /*const url = edit 
         ? `http://localhost:8080/api/transacciones/${transaccionId}` 
         : "http://localhost:8080/api/transacciones";*/
@@ -205,7 +205,7 @@ function HomePage() {
     const deleteRow = async (id) => {
         const token = localStorage.getItem("token");
         try {
-            const response = await fetch(`https://two024-qwerty-back-2.onrender.com/api/transacciones/${id}`, {
+            const response = await fetch(`http://localhost:8080/api/transacciones/${id}`, {
                 method: "DELETE",
                 headers: {
                     "Authorization": `Bearer ${token}`
@@ -245,7 +245,7 @@ function HomePage() {
         const token = localStorage.getItem("token");
 
         try {
-            const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/personal-tipo-gasto", {
+            const response = await fetch("http://localhost:8080/api/personal-tipo-gasto", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -284,7 +284,7 @@ function HomePage() {
                 nombre: nombre,
                 iconPath: icono 
             };
-            const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/personal-categoria", {
+            const response = await fetch("http://localhost:8080/api/personal-categoria", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

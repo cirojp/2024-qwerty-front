@@ -28,7 +28,6 @@ function HomePage() {
         {value: "Hogar y Mercado", label: "Hogar y Mercado", iconPath: "fa-solid fa-house"},
         {value: "Antojos", label: "Antojos", iconPath: "fa-solid fa-candy-cane"},
         {value: "Electrodomesticos", label: "Electrodomesticos", iconPath: "fa-solid fa-blender"},
-        {value: "Otros", label: "Otros", iconPath: "fa-solid fa-circle-dot"},
       ]);
     const [selectedPayMethod, setSelectedPayMethod] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState(null);
@@ -46,7 +45,7 @@ function HomePage() {
     }, []);
     useEffect(() => {
         if (payCategories.length > 0) {
-            setCategoriasConTodas([{ value: "Todas", label: "Todas" }, ...payCategories]);
+            setCategoriasConTodas([{ value: "Todas", label: "Todas" }, {value: "Otros", label: "Otros"}, ...payCategories]);
         }
     }, [payCategories]);
 
@@ -124,10 +123,13 @@ function HomePage() {
         }
     };
 
-    const openModal = () => setIsModalOpen(true);
+    const openModal = () => {
+        setIsModalOpen(true)
+    };
     const closeModal = () => {
         setIsModalOpen(false);
         clearForm();
+        setEdit(false);
     };
 
     const clearForm = () => {
@@ -144,6 +146,8 @@ function HomePage() {
         setValor(row.valor);
         const selectedOption = payOptions.find(option => option.value === row.tipoGasto);
         setSelectedPayMethod(selectedOption || null);
+        const selectedPayCategory = payCategories.find(option => option.value == row.categoria);
+        setSelectedCategory(selectedPayCategory || null);
         setFecha(row.fecha);
         setTransaccionId(row.id);
         openModal();

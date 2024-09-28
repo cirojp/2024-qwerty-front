@@ -46,14 +46,22 @@ function TransaccionesTable({ transacciones, editRow, deleteRow, onTableEmpty = 
             selector: row => row.categoria,
             sortable: true,
             cell: row => {
-                const category = payCategories.find(cat => cat.value === row.categoria);
-                return (
-                    <div className="text-center items-center flex">
-                        <FontAwesomeIcon icon={category.iconPath} className="mr-2" />
-                        {/*category.iconPath*/}
-                        {row.categoria}
-                    </div>
-                );
+                if(row.categoria == "Otros"){
+                    return (
+                        <div className="text-center items-center flex">
+                            <FontAwesomeIcon icon="fa-solid fa-circle-dot" className="mr-2" />
+                            {row.categoria}
+                        </div>
+                    );
+                }else{
+                    const category = payCategories.find(cat => cat.value === row.categoria);
+                    return (
+                        <div className="text-center items-center flex">
+                            <FontAwesomeIcon icon={category.iconPath} className="mr-2" />
+                            {row.categoria}
+                        </div>
+                    );
+                }
             }
         },
         {

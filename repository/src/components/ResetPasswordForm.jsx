@@ -57,8 +57,8 @@ function ResetPasswordForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-indigo-950 p-6">
-      <div className="bg-blue-950 shadow-md rounded-lg p-8 max-w-md w-full">
+    <div className="min-h-screen flex items-center justify-center bg-black p-6">
+      <div className="bg-gray-950 shadow-md rounded-lg p-8 max-w-md w-full">
         <h2 className="text-2xl font-bold mb-6 text-gray-100">Reset Password</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -66,7 +66,7 @@ function ResetPasswordForm() {
             <div className="relative">
               <input 
                 type={showPassword ? "text" : "password"}
-                className="mt-1 block w-full p-2 border bg-blue-950 text-white border-blue-900 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" 
+                className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500" 
                 value={newPassword} 
                 placeholder="Contraseña" 
                 onChange={(e) => setNewPassword(e.target.value)} 
@@ -94,7 +94,7 @@ function ResetPasswordForm() {
           </div>
           <button 
             type="submit" 
-            className="w-full bg-red-500 bg-opacity-80 text-white py-2 px-4 rounded-lg hover:bg-red-700 flex justify-center items-center"
+            className="w-full bg-yellow-500 bg-opacity-80 text-gray-950 py-2 px-4 rounded-lg hover:bg-yellow-700 flex justify-center items-center"
             disabled={loading}
           >
             {loading ? (

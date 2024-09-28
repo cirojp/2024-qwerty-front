@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import TransaccionesTable from './TransaccionesTable';
 import ModalForm from './ModalForm';
 import './styles/HomePage.css';
-import logo from "../assets/logo.png";
+import logo from "../assets/logo-removebg-preview.png";
 
 
 
@@ -328,10 +328,10 @@ function HomePage() {
             {/*div vacio (grid 1)*/}
                 <div></div>
                 <div className="flex justify-center items-center"> {/* Agregar padding horizontal */}
-                <div className="w-24 h-24 md:w-36 md:h-36 rounded-full overflow-hidden border-4 border-gray-950">
+                <div className="w-24 h-24 md:w-36 md:h-36 rounded-full overflow-hidden border-4 border-yellow-600">
                     <img 
                     src={logo} 
-                    alt="Logo" 
+                    alt="logo" 
                     className="w-full h-full object-cover"
                     />
                 </div>

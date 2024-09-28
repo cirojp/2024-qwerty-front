@@ -119,7 +119,7 @@ const ModalCategoria = ({
                 onClick={handleSubmit}
                 className="mt-4 bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-600 transition duration-300"
             >
-                Crear Categoría
+                {edit ? "Editar Categoria":  "Crear Categoría"}
             </button>
             <button
                 onClick={onRequestClose}

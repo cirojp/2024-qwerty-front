@@ -2,7 +2,7 @@ import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import logo from "../assets/logo.png";
+import logo from "../assets/logo-removebg-preview.png";
 
 function LoginForm() {
   const navigate = useNavigate();
@@ -66,7 +66,7 @@ function LoginForm() {
           <div className="w-36 h-36 rounded-full overflow-hidden border-4 border-yellow-600">
             <img 
               src={logo} 
-              alt="Logo" 
+              alt="logo" 
               className="w-full h-full object-cover"
             />
           </div>

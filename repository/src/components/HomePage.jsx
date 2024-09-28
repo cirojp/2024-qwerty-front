@@ -303,8 +303,9 @@ function HomePage() {
     
             if (response.ok) {
                 const newCategoria = await response.json();
-                const newOption = { label: newCategoria.nombre, value: newCategoria.nombre };
+                const newOption = { label: newCategoria.nombre, value: newCategoria.nombre, iconPath: newCategoria.iconPath};
                 setPayCategories(prevOptions => [...prevOptions, newOption]);
+                console.log(payCategories);
                 setSelectedCategory(newOption);
                 setCategoria(newCategoria.nombre);
             } else {
@@ -376,6 +377,7 @@ function HomePage() {
             </div>
             <TransaccionesTable
                 transacciones={transacciones}
+                payCategories={payCategories}
                 editRow={editRow}
                 deleteRow={deleteRow}
                 onTableEmpty={() => setShowNoTransactions(true)}

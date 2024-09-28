@@ -9,7 +9,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 
 
 
-function TransaccionesTable({ transacciones, editRow, deleteRow, onTableEmpty = () =>{}, onTransactions = () => {}}) {
+function TransaccionesTable({ transacciones, editRow, deleteRow, onTableEmpty = () =>{}, onTransactions = () => {}, payCategories = []}) {
     createTheme("dark", {
         background: {
             default: '#1E2126',
@@ -46,10 +46,10 @@ function TransaccionesTable({ transacciones, editRow, deleteRow, onTableEmpty = 
             selector: row => row.categoria,
             sortable: true,
             cell: row => {
-                //const category = payCategories.find(cat => cat.value === row.categoria);
+                const category = payCategories.find(cat => cat.value === row.categoria);
                 return (
                     <div className="text-center items-center flex">
-                        {/*<FontAwesomeIcon icon={category.iconPath} className="mr-2" />*/}
+                        <FontAwesomeIcon icon={category.iconPath} className="mr-2" />
                         {/*category.iconPath*/}
                         {row.categoria}
                     </div>

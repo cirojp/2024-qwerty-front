@@ -1,6 +1,5 @@
 import React from "react";
 
-
 const ExpandedRow = ({data = {
     motivo: "",
     valor: "",
@@ -8,24 +7,25 @@ const ExpandedRow = ({data = {
     tipoGasto: "",
 }}) => {
   return (
-    <div className="bg-gray-950 shadow-md rounded-lg p-2 min-w-max">
-    <div className="grid grid-cols-2 gap-3">
-      <div className="font-bold px-20">Motivo:</div>
-      <div>{data.motivo}</div>
+    <div className="bg-gray-950 shadow-md rounded-lg p-4 sm:p-6 min-w-full sm:min-w-max">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        
+        <div className="font-bold text-gray-300">Motivo:</div>
+        <div className="text-gray-200">{data.motivo}</div>
 
-      <div className="font-bold px-20">Valor:</div>
-      <div>{data.valor}</div>
+        <div className="font-bold text-gray-300">Valor:</div>
+        <div className="text-gray-200">{data.valor}</div>
 
-      <div className="font-bold px-20">Tipo de Gasto:</div>
-      <div>{data.tipoGasto}</div>
+        <div className="font-bold text-gray-300">Tipo de Gasto:</div>
+        <div className="text-gray-200">{data.tipoGasto}</div>
 
-      <div className="font-bold px-20">Categoria</div>
-      <div>{data.categoria}</div>
+        <div className="font-bold text-gray-300">Categoría:</div>
+        <div className="text-gray-200">{data.categoria}</div>
 
-      <div className="font-bold px-20">Fecha:</div>
-      <div>{data.fecha}</div>
+        <div className="font-bold text-gray-300">Fecha:</div>
+        <div className="text-gray-200">{data.fecha}</div>
+      </div>
     </div>
-  </div>
   );
 };
 

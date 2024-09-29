@@ -7,112 +7,119 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
 
-
-
-function TransaccionesTable({ transacciones, editRow, deleteRow, onTableEmpty = () =>{}, onTransactions = () => {}, payCategories = []}) {
+function TransaccionesTable({ transacciones, editRow, deleteRow, onTableEmpty = () => {}, onTransactions = () => {}, payCategories = [] }) {
+    // Crear un tema oscuro para la tabla
     createTheme("dark", {
         background: {
             default: '#1E2126',
         },
-        
     });
+    
     library.add(fas);
-    /*const [hasMounted, setHasMounted] = useState(false);
-    useEffect(() => {
-        // Solo ejecutar después del primer renderizado
-        if (hasMounted) {
-            console.log('Pay Categories han cambiado:', payCategories);
-            // Aquí puedes realizar cualquier acción necesaria con el nuevo contenido
-        } else {
-            // Marcar que el componente ha sido montado
-            setHasMounted(true);
-        }
-    }, [payCategories, hasMounted]);*/
 
+    // Configurar las columnas
     const columns = [
+        // Columna de Motivo
         {
-            name: <span className="text-l text-center font-bold">Motivo</span>,
+            name: <span className="text-sm sm:text-lg font-bold text-center">Motivo</span>,
             selector: row => row.motivo,
-            cell: row => <div className="text-center">{row.motivo}</div>
+            cell: row => <div className="text-sm text-center">{row.motivo}</div>,
+            wrap: true,  // Envolver texto si es largo
+            minWidth: "150px",  // Establecer un ancho mínimo para que no sea muy pequeño
         },
+        // Columna de Valor
         {
-            name: <span className="text-l text-center font-bold">Valor ($)</span>, 
+            name: <span className="text-sm sm:text-lg font-bold text-center">Valor ($)</span>,
             selector: row => row.valor,
             sortable: true,
-            cell: row => <div className="text-center">{row.valor}</div>
+            cell: row => <div className="text-sm text-center">{row.valor}</div>,
+            minWidth: "100px",  // Limitar el tamaño de la columna
+            wrap: true,
         },
+        // Columna de Categoría
         {
-            name:<span className='text-l text-center font-bold'>Categoria</span>,
+            name: <span className="text-sm sm:text-lg font-bold text-center">Categoría</span>,
             selector: row => row.categoria,
             sortable: true,
             cell: row => {
-                if(row.categoria == "Otros"){
-                    return (
-                        <div className="text-center items-center flex">
-                            <FontAwesomeIcon icon="fa-solid fa-circle-dot" className="mr-2" />
+                const category = payCategories.find(cat => cat.value === row.categoria);
+                const icon = row.categoria === "Otros"
+                    ? <FontAwesomeIcon icon="fa-solid fa-circle-dot" className="mr-2" />
+                    : <FontAwesomeIcon icon={category?.iconPath} className="mr-2 text-yellow-400" />;
+    
+                return (
+                    <div className="text-sm sm:text-base text-center flex items-center justify-center space-x-2">
+                        {icon}
+                        <span className="truncate" title={row.categoria}>
                             {row.categoria}
-                        </div>
-                    );
-                }else{
-                    const category = payCategories.find(cat => cat.value === row.categoria);
-                    return (
-                        <div className="text-center items-center flex">
-                            <FontAwesomeIcon icon={category.iconPath} className="mr-2" />
-                            {row.categoria}
-                        </div>
-                    );
-                }
-            }
+                        </span>
+                    </div>
+                );
+            },
+            wrap: true,  // Asegurarse de que el texto se ajuste
+            minWidth: "180px",  // Asegurar que la columna tenga suficiente espacio para el texto y el icono
         },
+        // Columna de Fecha
         {
-            name: <span className="text-l text-center font-bold">Fecha</span>,
+            name: <span className="text-sm sm:text-lg font-bold text-center">Fecha</span>,
             selector: row => row.fecha,
-            format: row => new Date(row.fecha).toJSON().slice(0,10),
+            format: row => new Date(row.fecha).toJSON().slice(0, 10),
             sortable: true,
-            cell: row => <div className="text-center">{new Date(row.fecha).toJSON().slice(0,10)}</div>
+            cell: row => <div className="text-sm text-center">{new Date(row.fecha).toJSON().slice(0, 10)}</div>,
+            minWidth: "120px",  // Tamaño mínimo de la columna
+            wrap: true,
         },
+        // Columna de Acciones
         {
-            name: <span className="text-l text-center font-bold">Acciones</span>, 
+            name: <span className="text-sm sm:text-lg font-bold text-center">Acciones</span>,
             cell: (row) => (
-                <div className="flex justify-center space-x-4">
-                    <button 
-                        className="bg-yellow-500 text-white font-bold py-1 px-1 rounded hover:bg-yellow-600 transition-colors duration-300"
+                <div className="flex justify-center space-x-2 sm:space-x-4">
+                    <button
+                        className="bg-yellow-500 text-white font-bold py-1 px-2 sm:px-3 rounded hover:bg-yellow-600 transition-colors duration-300"
                         onClick={() => editRow(row)}
                     >
-                        <img 
-                            src={editIcon} 
-                            alt="Edit" 
-                            className="w-5 h-5 justify-center" 
+                        <img
+                            src={editIcon}
+                            alt="Edit"
+                            className="w-4 h-4 sm:w-5 sm:h-5 justify-center"
                         />
                     </button>
-                    <button 
-                        className="bg-red-600 text-white font-bold py-1 px-1 rounded hover:bg-red-700 transition-colors duration-300"
+                    <button
+                        className="bg-red-600 text-white font-bold py-1 px-2 sm:px-3 rounded hover:bg-red-700 transition-colors duration-300"
                         onClick={() => deleteRow(row.id)}
                     >
-                        <img 
-                                src={deleteIcon} 
-                                alt="Delete" 
-                                className="w-5 h-5 justify-center" 
-                            />
+                        <img
+                            src={deleteIcon}
+                            alt="Delete"
+                            className="w-4 h-4 sm:w-5 sm:h-5 justify-center"
+                        />
                     </button>
                 </div>
-            )
-        }
+            ),
+            button: true,
+            minWidth: "120px",  // Asegurar un ancho mínimo para que los botones se vean bien
+            wrap: true,
+        },
     ];
-    if(transacciones[0] == null){
+    
+
+    // Verificar si hay transacciones
+    if (transacciones[0] == null) {
         onTableEmpty();
-    }else{
+    } else {
         onTransactions();
+
         return (
-            <DataTable 
+            <DataTable
                 className="w-full border-collapse bg-gray-800 rounded-lg shadow-lg mb-0"
                 columns={columns}
                 data={transacciones}
                 pagination
                 expandableRows={true}
-                expandableRowsComponent={({data}) => <ExpandedRow data={data} />}
-                theme='dark'
+                expandableRowsComponent={({ data }) => <ExpandedRow data={data} />}
+                theme="dark"
                 responsive
+                noHeader
             />
         );
     }

@@ -49,7 +49,7 @@ function HomePage() {
         }
     }, [payCategories]);
 
-    const getTransacciones = async(filtrado = "Todas") => { //valor si no se le pasa nada es ""
+    const getTransacciones = async(filtrado = "Todas") => {
         const token = localStorage.getItem("token");
         let url = "";
         if (filtrado === "Todas") {
@@ -84,12 +84,7 @@ function HomePage() {
                     "Authorization": `Bearer ${token}`
                 }
             });
-            /*const response = await fetch("http://localhost:8080/api/personal-tipo-gasto", {
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                }
-            });*/
-
+            
             if (response.ok) {
                 const data = await response.json();
                 const customOptions = data.map(tipo => ({ label: tipo.nombre, value: tipo.nombre }));
@@ -107,12 +102,7 @@ function HomePage() {
                     "Authorization": `Bearer ${token}`
                 }
             });
-            /*const response = await fetch("http://localhost:8080/api/personal-categoria", {
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                }
-            });*/
-    
+            
             if (response.ok) {
                 const data = await response.json();
                 const customOptions = data.map(cat => ({ label: cat.nombre, value: cat.nombre , iconPath: cat.iconPath}));
@@ -160,11 +150,7 @@ function HomePage() {
         const url = edit 
         ? `http://localhost:8080/api/transacciones/${transaccionId}` 
         : "http://localhost:8080/api/transacciones";
-        /*const url = edit 
-        ? `http://localhost:8080/api/transacciones/${transaccionId}` 
-        : "http://localhost:8080/api/transacciones";*/
-
-    
+        
         const method = edit ? "PUT" : "POST";
 
         try {
@@ -215,13 +201,7 @@ function HomePage() {
                     "Authorization": `Bearer ${token}`
                 }
             });
-            /*const response = await fetch(`http://localhost:8080/api/transacciones/${id}`, {
-                method: "DELETE",
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                }
-            });*/
-    
+            
             if (response.ok) {
                 setTransacciones(transacciones.filter(t => t.id !== id));
             } else {
@@ -257,15 +237,7 @@ function HomePage() {
                 },
                 body: JSON.stringify(inputValue)
             });
-            /*const response = await fetch("http://localhost:8080/api/personal-tipo-gasto", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
-                body: JSON.stringify(inputValue)
-            });*/
-
+            
             if (response.ok) {
                 const newTipoGasto = await response.json();
                 const newOption = { label: newTipoGasto.nombre, value: newTipoGasto.nombre };
@@ -296,15 +268,6 @@ function HomePage() {
                 },
                 body: JSON.stringify(inputValue)
             });
-            /*const response = await fetch("http://localhost:8080/api/personal-categoria", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
-                body: JSON.stringify(inputValue)
-            });*/
-    
             if (response.ok) {
                 const newCategoria = await response.json();
                 const newOption = { label: newCategoria.nombre, value: newCategoria.nombre, iconPath: newCategoria.iconPath};
@@ -330,20 +293,19 @@ function HomePage() {
         <div className="container min-h-screen min-w-full max-w-full bg-black">
             <div className="bg-black flex items-center justify-center w-full p-4">
             <div className="grid grid-cols-3 grid-rows-2 gap-0 w-full">
-            {/*div vacio (grid 1)*/}
                 <div></div>
-                <div className="flex justify-center items-center"> {/* Agregar padding horizontal */}
-                <div className="w-24 h-24 md:w-36 md:h-36 rounded-full overflow-hidden border-4 border-yellow-600">
-                    <img 
-                    src={logo} 
-                    alt="logo" 
-                    className="w-full h-full object-cover"
-                    />
+                <div className="flex justify-center items-center"> {/* Ajustar tamaño del logo */}
+                    <div className="w-16 h-16 md:w-36 md:h-36 rounded-full overflow-hidden border-4 border-yellow-600"> {/* Cambié de w-24 a w-16 para pantallas pequeñas */}
+                        <img 
+                            src={logo} 
+                            alt="logo" 
+                            className="w-full h-full object-cover"
+                        />
+                    </div>
                 </div>
-                </div>
-                <div className="flex justify-end items-center px-20">
+                <div className="flex justify-end items-center px-4 md:px-20"> {/* Ajustar padding */}
                     <button 
-                        className="w-full md:w-auto bg-yellow-500 bg-opacity-80 text-gray-950 text-sm py-2 px-4 rounded-lg hover:bg-yellow-700"
+                        className="w-auto bg-yellow-500 bg-opacity-80 text-gray-950 text-sm py-2 px-4 rounded-lg hover:bg-yellow-700"
                         onClick={() => navigate('/profile')}
                     >
                         Mi Cuenta
@@ -352,15 +314,15 @@ function HomePage() {
                 <div className="flex justify-start items-center px-6">
                     <h2 className="text-2xl py-2 font-bold text-gray-100">Historial de Transacciones</h2>
                 </div>
-                <div className="flex justify-center items-center">
+                <div className="flex justify-center items-center py-4">
                     <button 
-                        className="bg-yellow-500 bg-opacity-80 text-gray-900 py-2 px-4 rounded-lg hover:bg-red-700 mx-auto"
+                        className="bg-yellow-500 bg-opacity-80 text-gray-900 py-2 px-4 rounded-lg hover:bg-red-700 w-full md:w-auto"
                         onClick={openModal}
                     >
                         Agregar Transacción
                     </button>
                 </div>
-                <div className="flex justify-end items-center px-6">
+                <div className="flex justify-end items-center px-4 md:px-6"> {/* Ajustamos el padding en pantallas pequeñas */}
                     <div className="flex flex-col">
                         <label htmlFor="categorias" className="mb-2 text-lg font-medium text-gray-200">
                             Filtrar por categoría:
@@ -369,7 +331,7 @@ function HomePage() {
                             id="categorias"
                             value={categoriaSeleccionada}
                             onChange={handleChange}
-                            className="block w-64 px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            className="block w-full md:w-64 px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         >
                             {categoriasConTodas.map(cat => (
                                 <option key={cat.value} value={cat.value}>{cat.label}</option>
@@ -378,7 +340,7 @@ function HomePage() {
                     </div>
                 </div>
             </div>
-            </div>
+        </div>
             <TransaccionesTable
                 transacciones={transacciones}
                 payCategories={payCategories}

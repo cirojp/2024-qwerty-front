@@ -4,16 +4,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core'
 
-
 const ModalCategoria = ({ 
     isOpen = false, 
-    onRequestClose = () =>{},
+    onRequestClose = () => {},
     handleCreateCat = () => {},
     handleEditCat = () => {},
-    edit=false,
+    edit = false,
     editCat = {}
 }) => {
     library.add(fas);
+    
+    // Estilos del Modal
     const customStyles = {
         overlay: {
             position: 'fixed',
@@ -21,80 +22,77 @@ const ModalCategoria = ({
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: 'rgba(0, 255, 255, 0.75)',
+            backgroundColor: 'rgba(0, 255, 255, 0.75)', // Fondo semitransparente
             zIndex: 1002,
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
         },
         content: {
-            zIndex: 1003,
+            position: 'relative',
+            width: '90%', // El modal ocupa el 90% del ancho en dispositivos pequeños
+            maxWidth: '500px', // Máximo ancho del modal para pantallas grandes
+            height: 'auto', // Altura automática para ajustarse al contenido
+            maxHeight: '90vh', // En pantallas pequeñas, que no exceda el 90% de la altura de la ventana
+            padding: '20px', // Padding interno adaptativo
+            margin: 'auto', // Centrar el modal
+            borderRadius: '10px', // Bordes redondeados
+            backgroundColor: '#1a1a1a', // Fondo oscuro para mantener el estilo
+            overflowY: 'auto', // Habilitamos scroll si el contenido es demasiado grande
         },
     };
+    
 
     const [categoriaNombre, setCategoriaNombre] = useState('');
     const [iconoSeleccionado, setIconoSeleccionado] = useState('');
     const [error, setError] = useState('');
 
-    /*const handleCreateCategory = () => {
-        if (categoriaNombre && iconoSeleccionado) {
-            onCreateCategory({ label: categoriaNombre, value: categoriaNombre, icon: iconoSeleccionado });
-            setCategoriaNombre('');
-            setIconoSeleccionado('');
-            onRequestClose();
-        }
-    };*/
-
     useEffect(() => {
-        if(edit){
-            console.log(editCat);
+        if (edit) {
             setCategoriaNombre(editCat.value);
             setIconoSeleccionado(editCat.iconPath || '');
         }
-    },[editCat]);
+    }, [editCat]);
 
     const handleSubmit = () => {
         if (!categoriaNombre || !iconoSeleccionado) {
             setError("Debes ingresar un nombre y seleccionar un icono.");
             return;
         }
-        if(!edit){
+        if (!edit) {
             handleCreateCat(categoriaNombre, iconoSeleccionado);
-            setCategoriaNombre('');
-            setIconoSeleccionado('');
-            setError('');
-            onRequestClose();
-        }else{
+        } else {
             handleEditCat(categoriaNombre, iconoSeleccionado);
-            setCategoriaNombre('');
-            setIconoSeleccionado('');
-            setError('');
-            onRequestClose();
         }
+        setCategoriaNombre('');
+        setIconoSeleccionado('');
+        setError('');
+        onRequestClose();
     };
 
     const iconos = [
-        { alt: 'faUser', faIcon: "fa-solid fa-user"},
-        { alt: 'faImage', faIcon: "fa-solid fa-image"},
-        { alt: 'faStar', faIcon: "fa-solid fa-star"},
-        { alt: 'faMusic', faIcon: "fa-solid fa-music"},
-        { alt: 'faHeart', faIcon: "fa-solid fa-heart"},
-        { alt: 'faCameraRetro', faIcon: "fa-solid fa-camera-retro"},
-        { alt: 'faCar', faIcon: "fa-solid fa-car"},
-        { alt: 'faMugHot', faIcon: "fa-solid fa-mug-hot"},
-        { alt: 'faBook', faIcon: "fa-solid fa-book"},
-        
+        { alt: 'faUser', faIcon: "fa-solid fa-user" },
+        { alt: 'faImage', faIcon: "fa-solid fa-image" },
+        { alt: 'faStar', faIcon: "fa-solid fa-star" },
+        { alt: 'faMusic', faIcon: "fa-solid fa-music" },
+        { alt: 'faHeart', faIcon: "fa-solid fa-heart" },
+        { alt: 'faCameraRetro', faIcon: "fa-solid fa-camera-retro" },
+        { alt: 'faCar', faIcon: "fa-solid fa-car" },
+        { alt: 'faMugHot', faIcon: "fa-solid fa-mug-hot" },
+        { alt: 'faBook', faIcon: "fa-solid fa-book" },
     ];
 
     return (
         <Modal
             isOpen={isOpen}
             onRequestClose={onRequestClose}
-            contentLabel="Crear Categoría"
-            className="bg-gray-900 text-white p-5 rounded-lg shadow-lg"
+            contentLabel={edit ? "Editar Categoría" : "Crear Categoría"}
             style={customStyles}
+            className="bg-gray-900 text-white p-4 sm:p-2 rounded-lg shadow-lg"
         >
-            {edit ? <h2 className="text-2xl font-bold mb-4">Editar Categoría</h2>:<h2 className="text-2xl font-bold mb-4">Crear Nueva Categoría</h2>}
+            <h2 className="text-xl sm:text-lg font-bold mb-4">
+                {edit ? "Editar Categoría" : "Crear Nueva Categoría"}
+            </h2>
             <input
                 type="text"
                 placeholder="Nombre de la categoría"
@@ -102,28 +100,32 @@ const ModalCategoria = ({
                 onChange={(e) => setCategoriaNombre(e.target.value)}
                 className="mt-1 block w-full p-2 border border-gray-600 bg-gray-800 text-white rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
             />
-            {error && <p className="text-red-500">{error}</p>}
+            {error && <p className="text-red-500 mt-2">{error}</p>}
+            
             <label className="mt-4 block">Selecciona un icono:</label>
-            <div className="grid grid-cols-3 gap-4 mt-2">
+            <div className="grid gap-0 sm:grid-cols-4 sm:grid-rows-3 lg:grid-cols-5">
                 {iconos.map((icono) => (
                     <div
                         key={icono.alt}
-                        className={`p-2 border rounded-md cursor-pointer transition duration-200 ease-in-out ${iconoSeleccionado === icono.faIcon ? 'border-yellow-500' : 'border-transparent'} hover:border-yellow-500`}
+                        className={`p-1 border rounded-md cursor-pointer transition duration-200 ease-in-out 
+                        ${iconoSeleccionado === icono.faIcon ? 'border-yellow-500' : 'border-transparent'} 
+                        hover:border-yellow-500`}
                         onClick={() => setIconoSeleccionado(icono.faIcon)}
                     >
-                        <FontAwesomeIcon icon={icono.faIcon} className='fa-3x'/>
+                        <FontAwesomeIcon icon={icono.faIcon} className="fa-2x sm:fa-2xs" /> {/* Tamaño del icono */}
                     </div>
                 ))}
             </div>
+            
             <button
                 onClick={handleSubmit}
-                className="mt-4 bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-600 transition duration-300"
+                className="mt-4 w-full sm:w-auto bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-600 transition duration-300"
             >
-                {edit ? "Editar Categoria":  "Crear Categoría"}
+                {edit ? "Editar Categoría" : "Crear Categoría"}
             </button>
             <button
                 onClick={onRequestClose}
-                className="mt-2 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-600 transition duration-300"
+                className="mt-2 w-full sm:w-auto bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-600 transition duration-300"
             >
                 Cerrar
             </button>

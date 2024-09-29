@@ -13,7 +13,6 @@ const ModalCategoria = ({
     editCat = {}
 }) => {
     library.add(fas);
-    
     // Estilos del Modal
     const customStyles = {
         overlay: {
@@ -54,15 +53,21 @@ const ModalCategoria = ({
         }
     }, [editCat]);
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (!categoriaNombre || !iconoSeleccionado) {
             setError("Debes ingresar un nombre y seleccionar un icono.");
             return;
         }
+        let errorMessage = "";
         if (!edit) {
-            handleCreateCat(categoriaNombre, iconoSeleccionado);
+            errorMessage = await handleCreateCat(categoriaNombre, iconoSeleccionado);
         } else {
-            handleEditCat(categoriaNombre, iconoSeleccionado);
+            errorMessage = await handleEditCat(categoriaNombre, iconoSeleccionado);
+
+        }
+        if(errorMessage != ""){
+            setError(errorMessage);
+            return;
         }
         setCategoriaNombre('');
         setIconoSeleccionado('');
@@ -72,6 +77,8 @@ const ModalCategoria = ({
 
     const handleClose = () =>{
         setError("");
+        setCategoriaNombre('');
+        setIconoSeleccionado('');
         onRequestClose();
     }
 

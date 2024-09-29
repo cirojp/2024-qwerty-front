@@ -90,6 +90,7 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
             console.error("Error al agregar transacción:", error);
         } finally {
             setIsLoading(false); // Desactivamos el spinner al finalizar
+            closeModal();
         }
     };
     const closeWindow = () =>{

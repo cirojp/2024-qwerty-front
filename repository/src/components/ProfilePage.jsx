@@ -24,7 +24,7 @@ function ProfilePage() {
     const fetchPersonalCategorias = async () => {
         const token = localStorage.getItem("token");
         try {
-            const response = await fetch("http://localhost:8080/api/personal-categoria", {
+            const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/personal-categoria", {
                 headers: {
                     "Authorization": `Bearer ${token}`
                 }
@@ -56,7 +56,7 @@ function ProfilePage() {
             iconPath: newIcon
         };
         try {
-            const response = await fetch("http://localhost:8080/api/personal-categoria/" + inputValue.nombre, {
+            const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/personal-categoria/" + inputValue.nombre, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -82,7 +82,7 @@ function ProfilePage() {
             iconPath: filteredCategories[0].iconPath
         };
         try {
-            const response = await fetch("http://localhost:8080/api/personal-categoria", {
+            const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/personal-categoria", {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
@@ -107,7 +107,7 @@ function ProfilePage() {
             iconPath: newIcon
         };
         try {
-            const response = await fetch("http://localhost:8080/api/personal-categoria", {
+            const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/personal-categoria", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -120,11 +120,16 @@ function ProfilePage() {
                 setPayCategories([]);
                 await fetchPersonalCategorias();
             }else{
-                console.log("Categoria repetida");
+                const errorMessage = await response.text();
+                console.error("Error al agregar categoria:", errorMessage);
+                console.log("la categoria existeeeeeeeeeee");
+                return "La categoria ya existe";
             }
         }catch(err){
             console.log(err);
+            return "";
         }
+        return "";
     };
 
     return (

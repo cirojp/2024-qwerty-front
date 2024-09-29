@@ -33,7 +33,7 @@ function RegisterForm() {
     }
 
     try {
-      const response = await fetch("http://localhost:8080/api/auth/register", {
+      const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

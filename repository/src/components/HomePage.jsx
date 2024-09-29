@@ -15,13 +15,7 @@ function HomePage() {
     const [fecha, setFecha] = useState("");    
     const [error, setError] = useState(null);
     const [edit, setEdit] = useState(false);
-    const [tipoGasto, setTipoGasto] = useState("");
     const [categoria, setCategoria] = useState("");
-    const [payOptions, setPayOptions] = useState([
-        { value: "credito", label: "Tarjeta de credito" },
-        { value: "debito", label: "Tarjeta de debito" },
-        { value: "efectivo", label: "Efectivo" }
-    ]);
     const [payCategories, setPayCategories] = useState([
         {value: "Impuestos y Servicios", label: "Impuestos y Servicios", iconPath: "fa-solid fa-file-invoice-dollar"},
         {value: "Entretenimiento y Ocio", label: "Entretenimiento y Ocio", iconPath: "fa-solid fa-ticket"},
@@ -29,18 +23,15 @@ function HomePage() {
         {value: "Antojos", label: "Antojos", iconPath: "fa-solid fa-candy-cane"},
         {value: "Electrodomesticos", label: "Electrodomesticos", iconPath: "fa-solid fa-blender"},
       ]);
-    const [selectedPayMethod, setSelectedPayMethod] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [transaccionId, setTransaccionId] = useState(null);
-    const [modalError, setModalError] = useState("");
     const navigate = useNavigate();
     const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('Todas');
     const [categoriasConTodas, setCategoriasConTodas] = useState([]);
 
     useEffect(() => {
         getTransacciones();
-        fetchPersonalTipoGastos();
         fetchPersonalCategorias();
     }, []);
     useEffect(() => {
@@ -76,24 +67,6 @@ function HomePage() {
         }
     };
 
-    const fetchPersonalTipoGastos = async () => {
-        const token = localStorage.getItem("token");
-        try {
-            const response = await fetch("http://localhost:8080/api/personal-tipo-gasto", {
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                }
-            });
-            
-            if (response.ok) {
-                const data = await response.json();
-                const customOptions = data.map(tipo => ({ label: tipo.nombre, value: tipo.nombre }));
-                setPayOptions([...payOptions, ...customOptions]);
-            }
-        } catch (error) {
-            console.error("Error al obtener los tipos de gasto personalizados:", error);
-        }
-    };
     const fetchPersonalCategorias = async () => {
         const token = localStorage.getItem("token");
         try {
@@ -125,7 +98,6 @@ function HomePage() {
     const clearForm = () => {
         setMotivo("");
         setValor("");
-        setSelectedPayMethod(null);
         setFecha("");
         setSelectedCategory(null);
     };
@@ -134,8 +106,6 @@ function HomePage() {
         setEdit(true);
         setMotivo(row.motivo);
         setValor(row.valor);
-        const selectedOption = payOptions.find(option => option.value === row.tipoGasto);
-        setSelectedPayMethod(selectedOption || null);
         const selectedPayCategory = payCategories.find(option => option.value == row.categoria);
         setSelectedCategory(selectedPayCategory || null);
         setFecha(row.fecha);
@@ -157,9 +127,6 @@ function HomePage() {
             if(valor <= 0){
                 setModalError("El valor debe ser mayor a 0");
                 return;
-            }else if(selectedPayMethod == null){
-                setModalError("Elegir un medio de pago");
-                return;
             }
             const response = await fetch(url, {
                 method: method,
@@ -167,7 +134,7 @@ function HomePage() {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 },
-                body: JSON.stringify({ motivo, valor, tipoGasto, fecha, categoria})
+                body: JSON.stringify({ motivo, valor, fecha, categoria})
             });
 
             if (response.ok) {
@@ -211,12 +178,6 @@ function HomePage() {
             setError("Ocurrió un error. Intenta nuevamente.");
         }
     };
-
-    const handlePayChange = (value) => {
-        setTipoGasto(value ? value.value : "");
-        setSelectedPayMethod(value);
-    };
-
     const handleMotivoChange = (e) => {
         setMotivo(e.target.value);
     };
@@ -225,30 +186,6 @@ function HomePage() {
         setSelectedCategory(value);
     };
 
-    const handleCreateTP = async (inputValue) => {
-        const token = localStorage.getItem("token");
-
-        try {
-            const response = await fetch("http://localhost:8080/api/personal-tipo-gasto", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
-                body: JSON.stringify(inputValue)
-            });
-            
-            if (response.ok) {
-                const newTipoGasto = await response.json();
-                const newOption = { label: newTipoGasto.nombre, value: newTipoGasto.nombre };
-                setPayOptions(prevOptions => [...prevOptions, newOption]);
-                setSelectedPayMethod(newOption);
-                setTipoGasto(newTipoGasto.nombre);
-            }
-        } catch (error) {
-            console.error("Error al agregar el tipo de gasto personalizado:", error);
-        }
-    };
     const handleCreateCat = async (nombre, icono) => {
         const token = localStorage.getItem("token");
         if (!nombre || !icono) {
@@ -372,16 +309,11 @@ function HomePage() {
                 fecha={fecha}
                 handleMotivoChange={handleMotivoChange}
                 setValor={setValor}
-                handlePayChange={handlePayChange}
-                selectedPayMethod={selectedPayMethod}
                 selectedCategory={selectedCategory}
                 payCategories={payCategories}
                 handleCategoryChange={handleCategoryChange}
-                payOptions={payOptions}
-                handleCreateTP={handleCreateTP}
                 handleCreateCat={handleCreateCat}
                 setFecha={setFecha}
-                error={modalError}
             />
         </div>
     );

@@ -70,6 +70,11 @@ const ModalCategoria = ({
         onRequestClose();
     };
 
+    const handleClose = () =>{
+        setError("");
+        onRequestClose();
+    }
+
     const iconos = [
         { alt: 'faUser', faIcon: "fa-solid fa-user" },
         { alt: 'faImage', faIcon: "fa-solid fa-image" },
@@ -100,10 +105,10 @@ const ModalCategoria = ({
                 onChange={(e) => setCategoriaNombre(e.target.value)}
                 className="mt-1 block w-full p-2 border border-gray-600 bg-gray-800 text-white rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
             />
-            {error && <p className="text-red-500 mt-2">{error}</p>}
+            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
             
             <label className="mt-4 block">Selecciona un icono:</label>
-            <div className="grid gap-0 sm:grid-cols-4 sm:grid-rows-3 lg:grid-cols-5">
+            <div className="grid grid-cols-3 gap-0 sm:grid-cols-4">
                 {iconos.map((icono) => (
                     <div
                         key={icono.alt}
@@ -124,7 +129,7 @@ const ModalCategoria = ({
                 {edit ? "Editar Categoría" : "Crear Categoría"}
             </button>
             <button
-                onClick={onRequestClose}
+                onClick={() => handleClose()}
                 className="mt-2 w-full sm:w-auto bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-600 transition duration-300"
             >
                 Cerrar

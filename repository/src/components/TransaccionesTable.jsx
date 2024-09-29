@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import DataTable, { createTheme } from 'react-data-table-component';
 import ExpandedRow from './ExpandedRow';
 import deleteIcon from "../assets/delete-icon.png";
@@ -8,7 +8,6 @@ import { fas } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
 
 function TransaccionesTable({ transacciones, editRow, deleteRow, onTableEmpty = () => {}, onTransactions = () => {}, payCategories = [] }) {
-    // Crear un tema oscuro para la tabla
     createTheme("dark", {
         background: {
             default: '#1E2126',
@@ -16,8 +15,7 @@ function TransaccionesTable({ transacciones, editRow, deleteRow, onTableEmpty = 
     });
     
     library.add(fas);
-
-    // Configurar las columnas
+    
     const columns = [
         // Columna de Motivo
         {
@@ -45,7 +43,7 @@ function TransaccionesTable({ transacciones, editRow, deleteRow, onTableEmpty = 
                 const category = payCategories.find(cat => cat.value === row.categoria);
                 const icon = row.categoria === "Otros"
                     ? <FontAwesomeIcon icon="fa-solid fa-circle-dot" className="mr-2" />
-                    : <FontAwesomeIcon icon={category?.iconPath} className="mr-2 text-yellow-400" />;
+                    : <FontAwesomeIcon icon={category?.iconPath} className="mr-2 text-white" />;
     
                 return (
                     <div className="text-sm sm:text-base text-center flex items-center justify-center space-x-2">

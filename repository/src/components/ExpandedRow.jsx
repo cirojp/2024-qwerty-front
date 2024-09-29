@@ -3,8 +3,8 @@ import React from "react";
 const ExpandedRow = ({data = {
     motivo: "",
     valor: "",
+    categoria: "",
     fecha: "",
-    tipoGasto: "",
 }}) => {
   return (
     <div className="bg-gray-950 shadow-md rounded-lg p-4 sm:p-6 min-w-full sm:min-w-max">
@@ -15,9 +15,6 @@ const ExpandedRow = ({data = {
 
         <div className="font-bold text-gray-300">Valor:</div>
         <div className="text-gray-200">{data.valor}</div>
-
-        <div className="font-bold text-gray-300">Tipo de Gasto:</div>
-        <div className="text-gray-200">{data.tipoGasto}</div>
 
         <div className="font-bold text-gray-300">Categoría:</div>
         <div className="text-gray-200">{data.categoria}</div>

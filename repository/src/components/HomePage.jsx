@@ -24,6 +24,7 @@ function HomePage() {
         {value: "Hogar y Mercado", label: "Hogar y Mercado", iconPath: "fa-solid fa-house"},
         {value: "Antojos", label: "Antojos", iconPath: "fa-solid fa-candy-cane"},
         {value: "Electrodomesticos", label: "Electrodomesticos", iconPath: "fa-solid fa-blender"},
+        {value: "Clase", label: "Clase", iconPath: "fa-solid fa-chalkboard-user"},
       ]);
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -148,16 +149,67 @@ function HomePage() {
         openModal();
     };
 
-    const isAccepted = (transaction) => {
-        console.log("Accepted");
+    const isAccepted = async (transaction) => {
+        await aceptarTransaccion(transaction, "Clase");
+        eliminarTransaccionPendiente(transaction.id);
+        enviarRespuesta("aceptada",transaction.id_reserva);
         setPendTran(false);
     }
 
     const isRejected = (transaction) => {
-        console.log("Rejected");
+        eliminarTransaccionPendiente(transaction.id);
+        enviarRespuesta("rechazada", transaction.id_reserva);
         setPendTran(false);
     }
+    const enviarRespuesta = async (resp, id_reserva) => {
+        const token = localStorage.getItem("token");
+        const url = `https://two024-qwerty-back-2.onrender.com/api/transaccionesPendientes/${resp}?id_reserva=${id_reserva}`;
+        const method = "POST";
+        try {
+            //hacer chequeos de que pase bien las cosas en el back!
+            const response = await fetch(url, {
+                method: method,
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                }
+            });
 
+            if (response.ok) {
+                //
+            } 
+        } catch (err) {
+            // habria que avisar que hubo un error en aceptar la transaccion o algo
+        }
+    };
+    const aceptarTransaccion = async (transaccion, categoria) => {
+        const token = localStorage.getItem("token");
+        const url = "https://two024-qwerty-back-2.onrender.com/api/transacciones";
+        const method = "POST";
+        let motivo = transaccion.motivo;
+        let valor = transaccion.valor;
+        let fecha = transaccion.fecha;
+        try {
+            //hacer chequeos de que pase bien las cosas en el back!
+            const response = await fetch(url, {
+                method: method,
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({ motivo, valor, fecha, categoria})
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                const updatedTransacciones = [...transacciones, data];
+                updatedTransacciones.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+                setTransacciones(updatedTransacciones);
+            } 
+        } catch (err) {
+            // habria que avisar que hubo un error en aceptar la transaccion o algo
+        }
+    };
     const agregarTransaccion = async (e, categoria) => {
         e.preventDefault();
         const token = localStorage.getItem("token");
@@ -221,6 +273,25 @@ function HomePage() {
             }
         } catch (err) {
             setError("Ocurrió un error. Intenta nuevamente.");
+        }
+    };
+    const eliminarTransaccionPendiente = async (id) => {
+        const token = localStorage.getItem("token");
+        try {
+            const response = await fetch(`https://two024-qwerty-back-2.onrender.com/api/transaccionesPendientes/${id}`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
+            if (response.ok) {
+                showTransactionsPendientes();
+            } else {
+                //poner algun error?
+            }
+        } catch (err) {
+            //poner algun error?
+            //setError("Ocurrió un error. Intenta nuevamente.");
         }
     };
     const handleMotivoChange = (e) => {

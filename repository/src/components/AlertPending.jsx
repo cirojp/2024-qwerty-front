@@ -2,7 +2,6 @@ import React from 'react';
 import Modal from 'react-modal';
 
 function AlertPending({pendingTransaction, isOpen, isAccepted = () => {}, isRejected = () => {}}) {
-    console.log(pendingTransaction);
     const customStyles = {
         overlay: {
             position: 'fixed',

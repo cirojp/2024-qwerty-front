@@ -29,6 +29,7 @@ function HomePage() {
     const navigate = useNavigate();
     const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('Todas');
     const [categoriasConTodas, setCategoriasConTodas] = useState([]);
+    const [isLoadingFilter, setIsLoadingFilter] = useState(false);
 
     useEffect(() => {
         getTransacciones();
@@ -64,6 +65,8 @@ function HomePage() {
             setTransacciones(data);
         } catch (err) {
             console.error("Error fetching transactions:", err);
+        } finally{
+            setIsLoadingFilter(false);
         }
     };
 
@@ -226,6 +229,7 @@ function HomePage() {
         return "";
     };
     const handleChange = (event) => {
+        setIsLoadingFilter(true);
         let cat = event.target.value
         setCategoriaSeleccionada(cat);
         getTransacciones(cat)
@@ -283,27 +287,48 @@ function HomePage() {
                 </div>
             </div>
         </div>
-            <TransaccionesTable
-                transacciones={transacciones}
-                payCategories={payCategories}
-                editRow={editRow}
-                deleteRow={deleteRow}
-                onTableEmpty={() => setShowNoTransactions(true)}
-                onTransactions={() => setShowNoTransactions(false)}
-            />
-            {showNoTransactions && (
-                <div className='flex flex-col justify-center mb-0 items-center'>
-                    {categoriaSeleccionada !== "Todas" && (
-                        <p className="text-red-500 font-bold mb-4">Su filtro no coincide con ninguna transacción</p>
-                    )}
-                    <button 
-                        className="bg-yellow-500 bg-opacity-80 text-gray-950 font-extrabold py-6 px-16 rounded-lg hover:bg-yellow-700"
-                        onClick={openModal}
-                    >
-                        Ingrese una transacción
-                    </button>
-                </div>
-            )}
+        {isLoadingFilter ? (
+            <div className='flex justify-center items-center'>
+                {/* Spinner o ícono de carga */}
+                <svg 
+                    className="animate-spin h-10 w-10 text-yellow-500" 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    fill="none" 
+                    viewBox="0 0 24 24"
+                >
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.965 7.965 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span className="text-yellow-500 font-bold ml-2">Cargando...</span>
+            </div>
+        ) : (
+            <>
+                {/* Mostrar la tabla de transacciones si no está cargando */}
+                <TransaccionesTable
+                    transacciones={transacciones}
+                    payCategories={payCategories}
+                    editRow={editRow}
+                    deleteRow={deleteRow}
+                    onTableEmpty={() => setShowNoTransactions(true)}
+                    onTransactions={() => setShowNoTransactions(false)}
+                />
+
+                {/* Si no hay transacciones para mostrar */}
+                {showNoTransactions && (
+                    <div className='flex flex-col justify-center mb-0 items-center'>
+                        {categoriaSeleccionada !== "Todas" && (
+                            <p className="text-red-500 font-bold mb-4">Su filtro no coincide con ninguna transacción</p>
+                        )}
+                        <button 
+                            className="bg-yellow-500 bg-opacity-80 text-gray-950 font-extrabold py-6 px-16 rounded-lg hover:bg-yellow-700"
+                            onClick={openModal}
+                        >
+                            Ingrese una transacción
+                        </button>
+                    </div>
+                )}
+            </>
+        )}
             <ModalForm
                 isModalOpen={isModalOpen}
                 closeModal={closeModal}

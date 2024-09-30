@@ -77,23 +77,23 @@ function ModalForm({ isModalOpen, closeModal, agregarTransaccion, edit, motivo, 
     };
     const sendTransaccion = async (e) => {
         e.preventDefault();
+        if(valor <= 0){
+            setModalError("Ingrese un valor positivo")
+            return;
+        }
         setIsLoading(true);
         try {
-            if(selectedCategory.value == ""){
-                setModalError("Ingrese una categoria");
-            }else if(valor <= 0){
-                setModalError("Ingrese un valor positivo")
-            }else{
-                await agregarTransaccion(e, selectedCategory.value); // Espera a que se complete la transacción
-            }
-        } catch (error) {
+            await agregarTransaccion(e, selectedCategory.value); // Espera a que se complete la transacción
+         } catch (error) {
             console.error("Error al agregar transacción:", error);
         } finally {
             setIsLoading(false); // Desactivamos el spinner al finalizar
             closeModal();
+            setModalError("")
         }
     };
     const closeWindow = () =>{
+        setModalError("")
         closeModal();
     };
     return (

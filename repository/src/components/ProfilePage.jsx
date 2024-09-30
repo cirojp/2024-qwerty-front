@@ -5,6 +5,7 @@ import { fas } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import ModalCategoria from './ModalCategoria';
 import './styles/ProfilePage.css';
+import logo from "../assets/logo-removebg-preview.png";
 
 function ProfilePage() {
     library.add(fas);
@@ -133,69 +134,109 @@ function ProfilePage() {
     };
 
     return (
-        <div className="container min-h-screen min-w-full max-w-full bg-black px-4 sm:px-8"> {/* Añadimos padding lateral */}
-    <div className='text-white font-bold text-lg sm:text-2xl'>Mi Cuenta</div> {/* Ajustamos tamaño de texto */}
-    <ActionButtons />
-    <div className='text-white mt-2'>
-        <div className='font-bold text-yellow-500 text-lg sm:text-xl mb-3 underline'>Mis Categorías</div>
-        <ul>
-            {defaultCategories.map((category) => (
-                <li key={category.value} className="flex items-center justify-between mb-2">
-                    <div className="flex items-center">
-                        <FontAwesomeIcon icon={category.iconPath} className={`${category.textColor} text-sm sm:text-lg`} />
-                        <div className={category.textColor}>{category.label}</div>
+        <div className="min-h-screen flex bg-gray-900 py-10 relative">
+            {/* Título "Mi Cuenta" arriba a la izquierda */}
+            <div className="fixed top-10 left-16 text-2xl font-bold text-gray-100">
+                Mi Cuenta
+            </div>
+
+            {/* Logo centrado verticalmente en el lado izquierdo */}
+            <div className="fixed top-1/2 transform -translate-y-1/2 left-16">
+                <div className="w-24 h-24 md:w-36 md:h-36 rounded-full overflow-hidden border-4 border-yellow-600">
+                    <img 
+                        src={logo} 
+                        alt="logo" 
+                        className="w-full h-full object-cover"
+                    />
+                </div>
+            </div>
+            <div className= "fixed top-1/2 transform -translate-y-1/2 right-16">
+                <ActionButtons />
+            </div>
+            {/* Contenedor para categorías y tabla */}
+            <div className="flex flex-col flex-grow px-8">
+                <div className="flex justify-between w-full mt-16">
+                    {/* Espacio vacío a la izquierda (primer cuarto) */}
+                    <div className="w-1/4"></div>
+
+                    {/* Tabla de categorías ocupando el espacio correcto (tercer al sexto octavo) */}
+                    <div className="w-1/2 bg-gray-800 p-8 rounded-lg shadow-lg text-white">
+                        <div className="mt-6">
+                            <div className="font-bold text-yellow-500 text-xl text-center mb-4">
+                                Mis Categorías
+                            </div>
+
+                            {/* Categorías por defecto */}
+                            <ul>
+                                {defaultCategories.map((category) => (
+                                    <li key={category.value} className="flex items-center justify-between bg-gray-700 p-3 rounded-md shadow mb-3">
+                                        <div className="flex items-center">
+                                            <FontAwesomeIcon icon={category.iconPath} className={`${category.textColor} text-lg`} />
+                                            <div className={category.textColor}>{category.label}</div>
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+
+                            {/* Categorías personalizadas */}
+                            <ul>
+                                {payCategories.map((category) => (
+                                    <li key={category.value} className="flex items-center justify-between bg-gray-700 p-3 rounded-md shadow mb-3">
+                                        <div className="flex items-center">
+                                            <FontAwesomeIcon icon={category.iconPath} className={category.textColor} />
+                                            <div className={category.textColor}>{category.label}</div>
+                                        </div>
+                                        <div>
+                                            <button 
+                                                className="ml-4 text-blue-500 hover:text-blue-700"
+                                                onClick={() => {
+                                                    setEditCategory(category);
+                                                    setIsEditMode(true);  // Modo editar
+                                                    setIsModalOpen(true);
+                                                }}
+                                            >
+                                                Editar
+                                            </button>
+                                            <button 
+                                                className="ml-2 text-red-500 hover:text-red-700"
+                                                onClick={() => handleDelete(category.value)}
+                                            >
+                                                X
+                                            </button>
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+
+                            {/* Botón para agregar categoría */}
+                            <button 
+                                className="mt-4 w-full px-4 py-2 bg-yellow-500 text-black rounded-md hover:bg-yellow-700"
+                                onClick={() => {
+                                    setEditCategory({});
+                                    setIsEditMode(false);  // Modo agregar
+                                    setIsModalOpen(true);
+                                }}
+                            >
+                                Agregar Categoría
+                            </button>
+                        </div>
+
+                        {/* Modal para agregar o editar categoría */}
+                        <ModalCategoria 
+                            isOpen={isModalOpen} 
+                            edit={isEditMode} 
+                            onRequestClose={() => setIsModalOpen(!isModalOpen)} 
+                            handleEditCat={(nom, icon) => isEditMode ? handleEdit(editCategory, nom, icon) : handleAddCategory(nom, icon)} 
+                            editCat={editCategory}
+                            handleCreateCat={handleAddCategory}
+                        />
                     </div>
-                </li>
-            ))}
-        </ul>
-        <ul>
-            {payCategories.map((category) => (
-                <li key={category.value} className="flex flex-wrap items-center justify-between mb-2"> {/* Añadimos flex-wrap */}
-                    <div className="flex items-center">
-                        <FontAwesomeIcon icon={category.iconPath} className={category.textColor} />
-                        <div className={category.textColor}>{category.label}</div>
-                    </div>
-                    <div className="mt-2 sm:mt-0"> {/* Ajustamos margin-top en móviles */}
-                        <button 
-                            className="ml-4 text-blue-500 hover:text-blue-700"
-                            onClick={() => {
-                                setEditCategory(category);
-                                setIsEditMode(true);  // Modo editar
-                                setIsModalOpen(true);
-                            }}
-                        >
-                            Editar
-                        </button>
-                        <button 
-                            className="ml-2 text-red-500 hover:text-red-700"
-                            onClick={() => handleDelete(category.value)}
-                        >
-                            X
-                        </button>
-                    </div>
-                </li>
-            ))}
-        </ul>
-        <button 
-            className="mt-4 w-full sm:w-auto px-3 py-3 bg-yellow-500 text-black hover:bg-yellow-700"
-            onClick={() => {
-                setEditCategory({});
-                setIsEditMode(false);  // Modo agregar
-                setIsModalOpen(true);
-            }}
-        >
-            Agregar Categoría
-        </button>
-    </div>
-    <ModalCategoria 
-        isOpen={isModalOpen} 
-        edit={isEditMode} 
-        onRequestClose={() => setIsModalOpen(!isModalOpen)} 
-        handleEditCat={(nom, icon) => isEditMode ? handleEdit(editCategory, nom, icon) : handleAddCategory(nom, icon)} 
-        editCat={editCategory}
-        handleCreateCat={handleAddCategory}
-    />
-</div>
+
+                    {/* Espacio vacío a la derecha (último cuarto) */}
+                    <div className="w-1/4"></div>
+                </div>
+            </div>
+        </div>
 
     );
 }

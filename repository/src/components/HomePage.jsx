@@ -4,6 +4,7 @@ import TransaccionesTable from './TransaccionesTable';
 import ModalForm from './ModalForm';
 import './styles/HomePage.css';
 import logo from "../assets/logo-removebg-preview.png";
+import AlertPending from './AlertPending';
 
 
 
@@ -15,6 +16,7 @@ function HomePage() {
     const [fecha, setFecha] = useState("");    
     const [error, setError] = useState(null);
     const [edit, setEdit] = useState(false);
+    const [tranPendiente, setTranPendiente] = useState({});
     const [categoria, setCategoria] = useState("");
     const [payCategories, setPayCategories] = useState([
         {value: "Impuestos y Servicios", label: "Impuestos y Servicios", iconPath: "fa-solid fa-file-invoice-dollar"},
@@ -30,16 +32,46 @@ function HomePage() {
     const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('Todas');
     const [categoriasConTodas, setCategoriasConTodas] = useState([]);
     const [isLoadingFilter, setIsLoadingFilter] = useState(false);
+    const [pendTran, setPendTran] = useState(false);
 
     useEffect(() => {
         getTransacciones();
         fetchPersonalCategorias();
+        showTransactionsPendientes();
     }, []);
     useEffect(() => {
         if (payCategories.length > 0) {
             setCategoriasConTodas([{ value: "Todas", label: "Todas" }, {value: "Otros", label: "Otros"}, ...payCategories]);
         }
     }, [payCategories]);
+
+    const showTransactionsPendientes = async () =>{
+        const token = localStorage.getItem("token");
+        try {
+            const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/transaccionesPendientes/user", {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                },
+            });
+    
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status}`);
+            }
+    
+            const data = await response.json();
+            console.log(data[0]);
+            if(data[0] != null){
+                setTranPendiente(data[0]);
+                setPendTran(true);
+            }
+            
+        } catch (err) {
+            console.error("Error fetching transactions:", err);
+        } finally{
+            setIsLoadingFilter(false);
+        }
+    }
 
     const getTransacciones = async(filtrado = "Todas") => {
         const token = localStorage.getItem("token");
@@ -115,6 +147,16 @@ function HomePage() {
         setTransaccionId(row.id);
         openModal();
     };
+
+    const isAccepted = (transaction) => {
+        console.log("Accepted");
+        setPendTran(false);
+    }
+
+    const isRejected = (transaction) => {
+        console.log("Rejected");
+        setPendTran(false);
+    }
 
     const agregarTransaccion = async (e, categoria) => {
         e.preventDefault();
@@ -345,6 +387,7 @@ function HomePage() {
                 handleCreateCat={handleCreateCat}
                 setFecha={setFecha}
             />
+            <AlertPending isOpen={pendTran} pendingTransaction={tranPendiente} isAccepted={isAccepted} isRejected={isRejected}/>
         </div>
     );
 }

@@ -37,8 +37,7 @@ function HomePage() {
 
     useEffect(() => {
         getTransacciones();
-        fetchPersonalCategorias();
-        showTransactionsPendientes();
+        
     }, []);
     useEffect(() => {
         if (payCategories.length > 0) {
@@ -73,33 +72,58 @@ function HomePage() {
             setIsLoadingFilter(false);
         }
     }
-
-    const getTransacciones = async(filtrado = "Todas") => {
-        const token = localStorage.getItem("token");
-        let url = "";
-        if (filtrado === "Todas") {
-            url = "https://two024-qwerty-back-2.onrender.com/api/transacciones/user";
-        } else {
-            url = `https://two024-qwerty-back-2.onrender.com/api/transacciones/user/filter?categoria=${filtrado}`;
-        }
+    const checkIfValidToken = async (token) => {
         try {
-            const response = await fetch(url, {
-                method: "GET",
+            const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/transacciones/userTest", {
                 headers: {
                     "Authorization": `Bearer ${token}`,
-                },
+                    "Content-Type": "application/json"
+                }
             });
-    
-            if (!response.ok) {
-                throw new Error(`Error: ${response.status}`);
+            if (response.ok) { //entra aca si pasa la autenticacion
+                return true;//si esta activo tengo que devolver true
+            }else{
+                localStorage.removeItem("token");
+                return false;
             }
-    
-            const data = await response.json();
-            setTransacciones(data);
-        } catch (err) {
-            console.error("Error fetching transactions:", err);
-        } finally{
-            setIsLoadingFilter(false);
+        } catch (error) {
+            localStorage.removeItem("token");
+            return false;
+        }
+    };
+    const getTransacciones = async(filtrado = "Todas") => {
+        const token = localStorage.getItem("token");
+        if(await checkIfValidToken(token)){
+            let url = "";
+            if (filtrado === "Todas") {
+                url = "https://two024-qwerty-back-2.onrender.com/api/transacciones/user";
+            } else {
+                url = `https://two024-qwerty-back-2.onrender.com/api/transacciones/user/filter?categoria=${filtrado}`;
+            }
+            try {
+                const response = await fetch(url, {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                    },
+                });
+        
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status}`);
+                }
+        
+                const data = await response.json();
+                setTransacciones(data);
+            } catch (err) {
+                console.error("Error fetching transactions:", err);
+            } finally{
+                setIsLoadingFilter(false);
+            }
+            fetchPersonalCategorias();
+            showTransactionsPendientes();
+        } else {
+            console.log("deberia redirec");
+            navigate("/");
         }
     };
 

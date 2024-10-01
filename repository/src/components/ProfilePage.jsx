@@ -6,6 +6,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import ModalCategoria from './ModalCategoria';
 import './styles/ProfilePage.css';
 import logo from "../assets/logo-removebg-preview.png";
+import { useNavigate } from 'react-router-dom'; 
 
 function ProfilePage() {
     library.add(fas);
@@ -22,22 +23,46 @@ function ProfilePage() {
     const [payCategories, setPayCategories] = useState([]);
     const [editCategory, setEditCategory] = useState({});
     const [isEditMode, setIsEditMode] = useState(false);  // Nuevo estado para controlar el modo (editar/agregar)
-
-    const fetchPersonalCategorias = async () => {
-        const token = localStorage.getItem("token");
+    const navigate = useNavigate();
+    const checkIfValidToken = async (token) => {
         try {
-            const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/personal-categoria", {
+            const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/transacciones/userTest", {
                 headers: {
-                    "Authorization": `Bearer ${token}`
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
                 }
             });
-            if (response.ok) {
-                const data = await response.json();
-                const customOptions = data.map(cat => ({ label: cat.nombre, value: cat.nombre, iconPath: cat.iconPath, textColor: 'mr-2 text-white' }));
-                setPayCategories(customOptions);
+            if (response.ok) { //entra aca si pasa la autenticacion
+                return true;//si esta activo tengo que devolver true
+            }else{
+                localStorage.removeItem("token");
+                return false;
             }
         } catch (error) {
-            console.error("Error al obtener las categorías personalizadas:", error);
+            localStorage.removeItem("token");
+            return false;
+        }
+    };
+    const fetchPersonalCategorias = async () => {
+        const token = localStorage.getItem("token");
+        if(await checkIfValidToken(token)){
+            try {
+                const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/personal-categoria", {
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    const customOptions = data.map(cat => ({ label: cat.nombre, value: cat.nombre, iconPath: cat.iconPath, textColor: 'mr-2 text-white' }));
+                    setPayCategories(customOptions);
+                }
+            } catch (error) {
+                console.error("Error al obtener las categorías personalizadas:", error);
+            }
+        } else {
+            console.log("deberia redirec");
+            navigate("/");
         }
     };
 

@@ -21,7 +21,7 @@ const ModalCategoria = ({
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: 'rgba(0, 255, 255, 0.75)', // Fondo semitransparente
+            backgroundColor: 'rgba(0, 0, 0, 0.9)', // Fondo semitransparente
             zIndex: 1002,
             display: 'flex',
             justifyContent: 'center',
@@ -131,7 +131,7 @@ const ModalCategoria = ({
             
             <button
                 onClick={handleSubmit}
-                className="mt-4 w-full sm:w-auto bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-600 transition duration-300"
+                className="mt-4 mr-2 w-full sm:w-auto bg-yellow-500 text-black font-bold py-2 px-4 rounded hover:bg-green-600 transition duration-300"
             >
                 {edit ? "Editar Categoría" : "Crear Categoría"}
             </button>

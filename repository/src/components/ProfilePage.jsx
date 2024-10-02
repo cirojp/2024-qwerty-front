@@ -92,7 +92,7 @@ function ProfilePage() {
                 body: JSON.stringify(newValue)
             });
             if(response.ok){
-                console.log(`Categoría editada: ${categoryValue}`);
+                console.log(`Categoría editada: ${categoryValue }`);
                 setPayCategories([]);
                 await fetchPersonalCategorias();
             }
@@ -194,59 +194,50 @@ function ProfilePage() {
     
                     <ul>
                         {payCategories.map((category) => (
-                            <li key={category.value} className="bg-gray-700 p-3 rounded-md shadow mb-3">
-                                <div className="flex items-center justify-between"></div>
-                                    <div className="flex items-center">
-                                        <FontAwesomeIcon icon={category.iconPath} className={category.textColor} />
-                                        <div className={category.textColor}>{category.label}</div>
-                                    </div>
-                                    <div>
-                                        <button 
-                                            className="text-blue-500 hover:text-blue-700"
-                                            onClick={() => {
-                                                setEditCategory(category);
-                                                setIsEditMode(true);
-                                                setIsModalOpen(true);
-                                            }}
-                                        >
-                                            Editar
-                                        </button>
-                                        <button 
-                                            className="text-red-500 hover:text-red-700"
-                                            onClick={() => handleDelete(category.value)}
-                                        >
-                                            X
-                                        </button>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
+                            <li key={category.value} className="bg-gray-700 p-3 rounded-md shadow mb-3 flex justify-between">
+                                <div className="flex items-center">
+                                    <FontAwesomeIcon icon={category.iconPath} className={category.textColor} />
+                                    <div className={category.textColor}>{category.label}</div>
+                                </div>
+                                <div className="flex items-center">
+                                    <button 
+                                        className="text-blue-500 hover:text-blue-700 mr-2"
+                                        onClick={() => {
+                                            setEditCategory(category);
+                                            setIsEditMode(true);
+                                            setIsModalOpen(true);
+                                        }}
+                                    >
+                                        Editar
+                                    </button>
+                                    <button 
+                                        className="text-red-500 hover:text-red-700"
+                                        onClick={() => handleDelete(category.value)}
+                                    >
+                                        X
+                                    </button>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
     
-                        <button 
-                            className="mt-4 px-4 py-2 bg-yellow-500 text-black rounded-md hover:bg-yellow-700"
-                            onClick={() => {
-                                setEditCategory({});
-                                setIsEditMode(false);
-                                setIsModalOpen(true);
-                            }}
-                        >
-                            Agregar Categoría
-                        </button>
-                    </div>
-    
-                    <ModalCategoria 
-                        isOpen={isModalOpen} 
-                        edit={isEditMode} 
-                        onRequestClose={() => setIsModalOpen(!isModalOpen)} 
-                        handleEditCat={(nom, icon) => isEditMode ? handleEdit(editCategory, nom, icon) : handleAddCategory(nom, icon)} 
-                        editCat={editCategory}
-                        handleCreateCat={handleAddCategory}
-                    />
+                    <button 
+                        className="mt-4 px-4 py-2 bg-yellow-500 text-black rounded-md hover:bg-yellow-700"
+                        onClick={() => {
+                            setEditCategory({});
+                            setIsEditMode(false);
+                            setIsModalOpen(true);
+                        }}
+                    >
+                        Agregar Categoría
+                    </button>
                 </div>
+    
                 <div className='m-4'>
                     <ActionButtons/>
                 </div>
             </div>
+        </div>
     );
 }
 

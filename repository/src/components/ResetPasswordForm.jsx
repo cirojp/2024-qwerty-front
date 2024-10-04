@@ -9,6 +9,7 @@ function ResetPasswordForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState("");
   const { search } = useLocation();
+  const [loading, setLoading] = useState(false);
   const queryParams = new URLSearchParams(search);
   const token = queryParams.get('token');
   const navigate = useNavigate(); 
@@ -32,25 +33,32 @@ function ResetPasswordForm() {
       setMessage("La contraseña debe tener al menos 8 caracteres, una mayuscula y minuscula, un número, un carácter especial y no puede contener comillas simples, dobles, barra vertical, barra inclinada o barra invertida.");
       return;
     }else{
+      setLoading(true);
       try {
-        const response = await fetch(`http://localhost:8080/api/auth/reset-password?token=${token}&newPassword=${newPassword}`, {
+        const response = await fetch(`https://two024-qwerty-back-2.onrender.com/api/auth/reset-password?token=${token}&newPassword=${newPassword}`, {
           method: "POST"
         });
+        /*const response = await fetch(`http://localhost:8080/api/auth/reset-password?token=${token}&newPassword=${newPassword}`, {
+          method: "POST"
+        });*/
+        
         if (response.ok) {
-          setMessage("Password reset successfully.");
+          setMessage("Contraseña restablecida con éxito.");
           setTimeout(() => navigate('/'), 2000);
         } else {
-          setMessage("Error resetting password.");
+          setMessage("Error al restablecer la contraseña.");
         }
       } catch (err) {
-        setMessage("An error occurred.");
+        setMessage("Ocurrió un error.");
+      } finally {
+        setLoading(false); 
       }
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-indigo-950 p-6">
-      <div className="bg-blue-950 shadow-md rounded-lg p-8 max-w-md w-full">
+    <div className="min-h-screen flex items-center justify-center bg-black p-6">
+      <div className="bg-gray-950 shadow-md rounded-lg p-8 max-w-md w-full">
         <h2 className="text-2xl font-bold mb-6 text-gray-100">Reset Password</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -58,7 +66,7 @@ function ResetPasswordForm() {
             <div className="relative">
               <input 
                 type={showPassword ? "text" : "password"}
-                className="mt-1 block w-full p-2 border bg-blue-950 text-white border-blue-900 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" 
+                className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500" 
                 value={newPassword} 
                 placeholder="Contraseña" 
                 onChange={(e) => setNewPassword(e.target.value)} 
@@ -67,9 +75,9 @@ function ResetPasswordForm() {
               <button
                 type="button"
                 onClick={togglePasswordVisibility}
-                className="absolute inset-y-0 right-0 flex items-center px-2"
+                className="absolute inset-y-0 right-0 flex items-center px-2 hover:bg-yellow-700"
               >
-                <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+                <FontAwesomeIcon color="#F8C104" icon={showPassword ? faEyeSlash : faEye} />
               </button>
             </div>
             <div className="text-gray-400 text-sm text-center">
@@ -86,9 +94,17 @@ function ResetPasswordForm() {
           </div>
           <button 
             type="submit" 
-            className="w-full bg-red-500 bg-opacity-80 text-white py-2 px-4 rounded-lg hover:bg-red-700"
+            className="w-full bg-yellow-500 bg-opacity-80 text-gray-950 py-2 px-4 rounded-lg hover:bg-yellow-700 flex justify-center items-center"
+            disabled={loading}
           >
-            Reset Password
+            {loading ? (
+              <>
+                 <div className="loading-circle border-4 border-t-yellow-600 border-gray-200 rounded-full w-6 h-6 animate-spin mr-2"></div>
+                 Cargando...
+              </>
+            ) : (
+              "Restablecer Contraseña"
+            )}
           </button>
           {message && <p className="text-center text-gray-100 mt-4">{message}</p>}
         </form>

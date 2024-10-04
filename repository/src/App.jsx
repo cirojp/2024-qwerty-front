@@ -12,6 +12,7 @@ import {
 } from "react-router-dom";
 import PrivateRoutes from './components/PrivateRoutes';
 import KeepSignedIn from './components/KeepSignedIn';
+import ProfilePage from './components/ProfilePage';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route element={<PrivateRoutes/>}>
           <Route exact path='/index' element={<HomePage/>} />
           <Route exact path='/change-password' element={<ChangePasswordForm/>} />
+          <Route exact path='/profile' element={<ProfilePage/>} />
         </Route>
         <Route element={<KeepSignedIn/>}>
           <Route exact path='/' element={<LoginForm/>} />

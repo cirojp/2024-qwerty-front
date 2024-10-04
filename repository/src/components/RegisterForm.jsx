@@ -9,6 +9,7 @@ function RegisterForm() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -23,14 +24,16 @@ function RegisterForm() {
 
   const onRegister = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     if (!validatePassword(password)) {
       setError("La contraseña debe tener al menos 8 caracteres, una mayuscula y minuscula, un número, un carácter especial y no puede contener comillas simples, dobles, barra vertical, barra inclinada o barra invertida.");
+      setLoading(false);
       return;
     }
 
     try {
-      const response = await fetch("http://localhost:8080/api/auth/register", {
+      const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -40,9 +43,9 @@ function RegisterForm() {
           password: password,
         }),
       });
-
+      
       if (response.ok) {
-        navigate("/"); // Redirige al login después del registro exitoso
+        navigate("/"); 
       } else {
         if (response.status === 409) {
           setError("Email ya en uso. Intente iniciar sesión o utilizar otro e-mail.");
@@ -53,6 +56,8 @@ function RegisterForm() {
     } catch (err) {
       console.error("Error during registration:", err);
       setError("Ocurrió un error. Intenta nuevamente.");
+    } finally {
+      setLoading(false); 
     }
   };
 
@@ -105,14 +110,20 @@ function RegisterForm() {
               barra vertical, barra inclinada o barra invertida.</li>
             </ul>
           {error && <div className="text-red-500 text-sm text-center">{error}</div>}
-          <div className="flex justify-between items-center">
             <button
               type="submit"
-              className="w-full bg-yellow-500 bg-opacity-80 text-gray-950 py-2 px-4 rounded-lg hover:bg-yellow-700"
+              className="w-full bg-yellow-500 bg-opacity-80 text-gray-950 py-2 px-4 rounded-lg hover:bg-yellow-700 flex justify-center items-center"
+              disabled={loading}
             >
-              Crear Cuenta
+              {loading ? (
+                  <>
+                      <div className="loading-circle border-4 border-t-yellow-600 border-gray-200 rounded-full w-6 h-6 animate-spin mr-2"></div>
+                      Cargando...
+                  </>
+              ) : (
+                "Crear Cuenta"
+              )}
             </button>
-          </div>
         </form>
         <div className="mt-4 text-center text-gray-400">
         ¿Ya tienes una cuenta? <a href="/" className="text-yellow-500 hover:underline">Inicia sesión</a>

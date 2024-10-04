@@ -2,20 +2,23 @@ import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import logo from "../assets/logo-removebg-preview.png";
 
 function LoginForm() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
   const onClick = async () => {
+    setIsLoading(true);
     try {
-      const response = await fetch("http://localhost:8080/api/auth/login", {
+      const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -24,19 +27,35 @@ function LoginForm() {
           email: email,
           password: password,
         }),
+        
       });
+      /*const response = await fetch("http://localhost:8080/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          email: email,
+          password: password,
+        }),
+        
+      });
+      */
 
       if (response.ok) {
         const token = await response.text();
         console.log("Token recibido:", token);
         localStorage.setItem("token", token);
+        setIsLoading(false);
         navigate("/index");
       } else {
         setError("Credenciales inválidas");
+        setIsLoading(false);
       }
     } catch (err) {
       console.error("Error durante el login:", err);
       setError("Ocurrió un error. Intenta nuevamente.");
+      setIsLoading(false);
     }
   };
 
@@ -46,8 +65,8 @@ function LoginForm() {
       <div className="flex justify-center mb-6">
           <div className="w-36 h-36 rounded-full overflow-hidden border-4 border-yellow-600">
             <img 
-              src="../src/assets/logo.png" 
-              alt="Logo" 
+              src={logo} 
+              alt="logo" 
               className="w-full h-full object-cover"
             />
           </div>
@@ -92,9 +111,17 @@ function LoginForm() {
           <div className="flex justify-between items-center">
             <button 
               type="submit" 
-              className="w-full bg-yellow-500 bg-opacity-80 text-gray-950 py-2 px-4 rounded-lg hover:bg-yellow-700"
+              disabled={isLoading}
+              className="w-full bg-yellow-500 bg-opacity-80 text-gray-950 py-2 px-4 rounded-lg hover:bg-yellow-700 flex justify-center items-center"
             >
-              Iniciar Sesion
+              {isLoading ? (
+                <>
+                  <div className="loading-circle border-4 border-t-yellow-600 border-gray-200 rounded-full w-6 h-6 animate-spin mr-2"></div>
+                  Cargando...
+                </>
+              ) : (
+                "Iniciar Sesión"
+              )}
             </button>
           </div>
         </form>

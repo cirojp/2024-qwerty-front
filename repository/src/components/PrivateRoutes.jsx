@@ -1,16 +1,16 @@
-import React from 'react'
+import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 
-function PrivateRoutes() {
-  const notToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYXJjb3NtYXJjZWxsb0B1Y2EuZWR1LmFyIiwiaWF0IjoxNzI2NTg2MDg0LCJleHAiOjE3MjY1ODk2ODR9.lbLkXhovxs7wqTnmTXtykXdRl0xFOJsVt4ctIlBsrzU";
-  const token = localStorage.getItem("token");
-    if (token == null || token == notToken){
-      return(<Navigate to="/"/>);
-    }else{
-      return(
-        <Outlet/>
-      );
-    }
-}
+const PrivateRoutes = () => {
+    const token = localStorage.getItem('token'); // Verifica si el token existe
 
-export default PrivateRoutes
+    // Si no hay token, redirige al login
+    if (!token) {
+        return <Navigate to="/" />;
+    }
+
+    // Si hay token, renderiza el componente hijo (la página protegida)
+    return <Outlet />;
+};
+
+export default PrivateRoutes;

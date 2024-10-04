@@ -44,12 +44,47 @@ button:hover {
   background-color: #218838; /* Verde más oscuro */
 }
 
-@media (min-width: 768px) {
-  h1 {
-    font-size: 3rem;
+.modal-content {
+  width: 100%;
+  max-width: 400px; /* Limitar el ancho máximo del modal */
+  padding: 1rem;
+  margin: 0 auto;
+}
+
+@media (max-width: 640px) {
+  .modal-content {
+    width: 90%; /* Hacer el modal más pequeño en pantallas pequeñas */
+  }
+}
+
+.table-container {
+  overflow-x: auto; /* Permitir scroll horizontal en pantallas pequeñas si la tabla es muy grande */
+}
+
+/* Media Query para pantallas pequeñas */
+@media (max-width: 640px) {
+  .container {
+    padding: 1rem; /* Agrega padding lateral para no pegar los elementos al borde */
   }
 
-  button {
-    padding: 1rem 2rem;
+  .text-lg {
+    font-size: 1rem; /* Reduce el tamaño del texto */
+  }
+
+  .px-20 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .w-64 {
+    width: 100%; /* Ajusta los elementos que usan width a full width en móvil */
+  }
+
+  .md\\:w-auto {
+    width: 100%;
+  }
+
+  .grid {
+    grid-template-columns: 1fr !important; /* Cambiar el grid a una columna en pantallas pequeñas */
   }
 }

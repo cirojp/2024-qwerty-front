@@ -5,24 +5,31 @@ function ForgotPasswordForm() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [messageColor, setMessageColor] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage("Esperando respuesta...");
-    setMessageColor("text-yellow-500 text-sm text-center");
+    setLoading(true);
     try {
-      const response = await fetch("http://localhost:8080/api/auth/forgot-password?email=" + email, {
+      const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/auth/forgot-password?email=" + email, {
         method: "POST"
       });
+      /*const response = await fetch("http://localhost:8080/api/auth/forgot-password?email=" + email, {
+        method: "POST"
+      });*/
+      
       if (response.ok) {
-        setMessage("Email sent successfully. Please check your inbox.");
+        setMessage("Email enviado con éxito. Por favor revisa tu bandeja de entrada.");
         setMessageColor("text-green-600 text-sm text-center");
       } else {
-        setMessage("Error sending email.");
+        setMessage("Error al enviar el email.");
         setMessageColor("text-red-500 text-sm text-center");
       }
     } catch (err) {
-      setMessage("An error occurred.");
+      setMessage("Ocurrió un error.");
+      setMessageColor("text-red-500 text-sm text-center");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -43,9 +50,17 @@ function ForgotPasswordForm() {
           </div>
           <button 
             type="submit" 
-            className="w-full bg-yellow-500 bg-opacity-80 text-gray-950 py-2 px-4 rounded-lg hover:bg-yellow-700"
+            className="w-full bg-yellow-500 bg-opacity-80 text-gray-950 py-2 px-4 rounded-lg hover:bg-yellow-700 flex justify-center items-center"
+            disabled={loading}
           >
-            Enviar e-mail de recuperacion
+            {loading ? (
+              <>
+                  <div className="loading-circle border-4 border-t-yellow-600 border-gray-200 rounded-full w-6 h-6 animate-spin mr-2"></div>
+                  Cargando...
+              </>
+            ) : (
+              "Enviar e-mail de recuperación"
+            )}
           </button>
           {message && <p className={messageColor}>{message}</p>}
         </form>

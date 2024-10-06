@@ -7,6 +7,7 @@ import ModalCategoria from "./ModalCategoria";
 import "./styles/ProfilePage.css";
 import logo from "../assets/logo-removebg-preview.png";
 import { useNavigate } from "react-router-dom";
+import ConfirmDeleteCategory from "./ConfirmDeleteCategory";
 
 function ProfilePage() {
   library.add(fas);
@@ -52,7 +53,9 @@ function ProfilePage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [payCategories, setPayCategories] = useState([]);
   const [editCategory, setEditCategory] = useState({});
-  const [isEditMode, setIsEditMode] = useState(false); // Nuevo estado para controlar el modo (editar/agregar)
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState({});
   const navigate = useNavigate();
   const checkIfValidToken = async (token) => {
     try {
@@ -158,6 +161,7 @@ function ProfilePage() {
       nombre: filteredCategories[0].label,
       iconPath: filteredCategories[0].iconPath,
     };
+    setConfirmDeleteOpen(false);
     try {
       const response = await fetch(
         "https://two024-qwerty-back-2.onrender.com/api/personal-categoria",
@@ -178,6 +182,12 @@ function ProfilePage() {
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const cancelDelete = () => {
+    setConfirmDeleteOpen(false);
+    setClickDelete(false);
+    setItemToDelete({});
   };
 
   const handleAddCategory = async (newName, newIcon) => {
@@ -213,6 +223,11 @@ function ProfilePage() {
       return "";
     }
     return "";
+  };
+
+  const confirmDelete = (categoryValue) => {
+    setConfirmDeleteOpen(true);
+    setItemToDelete(categoryValue);
   };
 
   return (
@@ -276,7 +291,7 @@ function ProfilePage() {
                   </button>
                   <button
                     className="text-red-500 hover:text-red-700"
-                    onClick={() => handleDelete(category.value)}
+                    onClick={() => confirmDelete(category.value)}
                   >
                     X
                   </button>
@@ -308,6 +323,13 @@ function ProfilePage() {
         handleEditCat={handleEdit}
         edit={isEditMode}
         editCat={editCategory}
+      />
+      <ConfirmDeleteCategory
+        isOpen={confirmDeleteOpen}
+        handleClose={cancelDelete}
+        handleDelete={() => {
+          handleDelete(itemToDelete);
+        }}
       />
     </div>
   );

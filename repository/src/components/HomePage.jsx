@@ -16,7 +16,8 @@ function HomePage() {
   const [edit, setEdit] = useState(false);
   const [tranPendiente, setTranPendiente] = useState({});
   const [categoria, setCategoria] = useState("");
-  const [payCategories, setPayCategories] = useState([
+  const [payCategories, setPayCategories] = useState([]);
+  const [payCategoriesDefault, setPayCategoriesDefault] = useState([
     {
       value: "Impuestos y Servicios",
       label: "Impuestos y Servicios",
@@ -170,11 +171,8 @@ function HomePage() {
           value: cat.nombre,
           iconPath: cat.iconPath,
         }));
-        console.log(customOptions);
-        console.log(payCategories);
-        if (payCategories.indexOf(customOptions) == -1) {
-          setPayCategories([...payCategories, ...customOptions]);
-        }
+       
+        setPayCategories([...payCategoriesDefault, ...customOptions]);
       }
     } catch (error) {
       console.error("Error al obtener las categorías personalizadas:", error);

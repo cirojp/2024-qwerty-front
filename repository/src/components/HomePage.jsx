@@ -173,7 +173,7 @@ function HomePage() {
           value: cat.nombre,
           iconPath: cat.iconPath,
         }));
-       
+
         setPayCategories([...payCategoriesDefault, ...customOptions]);
       }
     } catch (error) {
@@ -195,7 +195,6 @@ function HomePage() {
   const closeModalCategoria = () => {
     setIsModalCategoriaOpen(false);
   };
-  
 
   const clearForm = () => {
     setMotivo("");
@@ -455,7 +454,7 @@ function HomePage() {
             {" "}
             {/* Ajustar padding */}
             <button
-              className="w-auto bg-yellow-500 bg-opacity-80 text-gray-950 text-sm py-2 px-4 rounded-lg hover:bg-yellow-700"
+              className="w-auto mr-2 bg-yellow-500 bg-opacity-80 text-gray-950 text-sm py-2 px-4 rounded-lg hover:bg-yellow-700"
               onClick={() => navigate("/profile")}
             >
               Mi Cuenta

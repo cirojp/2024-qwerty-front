@@ -10,38 +10,38 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import ConfirmDeleteCategory from "./ConfirmDeleteCategory";
 
 function ModalVerCategorias({
-    isModalCategoriaOpen,
-    closeModalCategoria,
-    payCategories,
-    fetchPersonalCategorias,
-    setPayCategories
+  isModalCategoriaOpen,
+  closeModalCategoria,
+  payCategories,
+  fetchPersonalCategorias,
+  setPayCategories,
 }) {
   const customStyles = {
     overlay: {
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: "rgba(0, 0, 0, 0.75)",
-        zIndex: 1000,
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      },
-      content: {
-        padding: "2rem",
-        borderRadius: "0.75rem",
-        width: "90vw",
-        maxWidth: "500px",
-        maxHeight: "80vh",  // Limita la altura del modal
-        margin: "auto",
-        display: "flex",
-        flexDirection: "column",
-        gap: "1.5rem",
-        overflowY: "auto",  // Habilita scroll si el contenido excede el tamaño
-        zIndex: 1001,
-      },
+      position: "fixed",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: "rgba(0, 0, 0, 0.75)",
+      zIndex: 1000,
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    content: {
+      padding: "2rem",
+      borderRadius: "0.75rem",
+      width: "90vw",
+      maxWidth: "500px",
+      maxHeight: "80vh", // Limita la altura del modal
+      margin: "auto",
+      display: "flex",
+      flexDirection: "column",
+      gap: "1.5rem",
+      overflowY: "auto", // Habilita scroll si el contenido excede el tamaño
+      zIndex: 1001,
+    },
   };
   const customSelectStyles = {
     control: (provided) => ({
@@ -280,11 +280,8 @@ function ModalVerCategorias({
                 className="bg-gray-700 p-3 rounded-md shadow mb-3 flex justify-between"
               >
                 <div className="flex items-center">
-                  <FontAwesomeIcon
-                    icon={category.iconPath}
-                    className={category.textColor}
-                  />
-                  <div className={category.textColor}>{category.label}</div>
+                  <FontAwesomeIcon icon={category.iconPath} />
+                  <div className="ml-2">{category.label}</div>
                 </div>
                 <div className="flex items-center">
                   <button
@@ -308,7 +305,7 @@ function ModalVerCategorias({
             ))}
           </ul>
           <button
-            className="mt-4 px-4 py-2 bg-yellow-500 text-black rounded-md hover:bg-yellow-700"
+            className="mt-4 px-4 py-3 bg-yellow-500 text-black rounded-md hover:bg-yellow-700 mr-2"
             onClick={() => {
               setEditCategory({});
               setIsEditMode(false);
@@ -323,9 +320,9 @@ function ModalVerCategorias({
           >
             Cerrar
           </button>
-          
-          </div> </div>
-          <ModalCategoria
+        </div>{" "}
+      </div>
+      <ModalCategoria
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}
         handleCreateCat={handleAddCategory}
@@ -333,9 +330,14 @@ function ModalVerCategorias({
         edit={isEditMode}
         editCat={editCategory}
       />
-          
+      <ConfirmDeleteCategory
+        isOpen={confirmDeleteOpen}
+        handleClose={cancelDelete}
+        handleDelete={() => {
+          handleDelete(itemToDelete);
+        }}
+      />
     </Modal>
-    
   );
 }
 

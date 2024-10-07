@@ -1,16 +1,91 @@
+import Modal from "react-modal";
+import Select from "react-select";
+import "./styles/ModalForm.css";
+import ModalCategoria from "./ModalCategoria";
 import React, { useEffect, useState } from "react";
 import ActionButtons from "./ActionButtons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
-import ModalCategoria from "./ModalCategoria";
-import "./styles/ProfilePage.css";
-import logo from "../assets/logo-removebg-preview.png";
-import { useNavigate } from "react-router-dom";
 import ConfirmDeleteCategory from "./ConfirmDeleteCategory";
 
-function ProfilePage() {
-  library.add(fas);
+function ModalVerCategorias({
+  isModalCategoriaOpen,
+  closeModalCategoria,
+  payCategories,
+  fetchPersonalCategorias,
+  setPayCategories,
+}) {
+  const customStyles = {
+    overlay: {
+      position: "fixed",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: "rgba(0, 0, 0, 0.75)",
+      zIndex: 1000,
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    content: {
+      padding: "2rem",
+      borderRadius: "0.75rem",
+      width: "90vw",
+      maxWidth: "500px",
+      maxHeight: "80vh", // Limita la altura del modal
+      margin: "auto",
+      display: "flex",
+      flexDirection: "column",
+      gap: "1.5rem",
+      overflowY: "auto", // Habilita scroll si el contenido excede el tamaño
+      zIndex: 1001,
+    },
+  };
+  const customSelectStyles = {
+    control: (provided) => ({
+      ...provided,
+      backgroundColor: "#111827",
+      color: "white",
+    }),
+    menu: (provided) => ({
+      ...provided,
+      backgroundColor: "#111827",
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      backgroundColor: state.isSelected ? "#eab308" : "#111827",
+      color: state.isSelected ? "black" : "white",
+    }),
+    singleValue: (provided) => ({
+      ...provided,
+      color: "white",
+    }),
+    placeholder: (provided) => ({
+      ...provided,
+      color: "white",
+    }),
+    input: (provided) => ({
+      ...provided,
+      color: "white",
+    }),
+    indicatorSeparator: (provided) => ({
+      ...provided,
+      backgroundColor: "transparent",
+    }),
+    dropdownIndicator: (provided) => ({
+      ...provided,
+      color: "white",
+    }),
+  };
+  const [modalError, setModalError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editCategory, setEditCategory] = useState({});
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState({});
   const defaultCategories = [
     {
       value: "Impuestos y Servicios",
@@ -49,72 +124,10 @@ function ProfilePage() {
       textColor: "mr-2 text-yellow-500",
     },
   ];
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [payCategories, setPayCategories] = useState([]);
-  const [editCategory, setEditCategory] = useState({});
-  const [isEditMode, setIsEditMode] = useState(false);
-  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
-  const [itemToDelete, setItemToDelete] = useState({});
-  const navigate = useNavigate();
-  const checkIfValidToken = async (token) => {
-    try {
-      const response = await fetch(
-        "https://two024-qwerty-back-2.onrender.com/api/transacciones/userTest",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (response.ok) {
-        //entra aca si pasa la autenticacion
-        return true; //si esta activo tengo que devolver true
-      } else {
-        localStorage.removeItem("token");
-        return false;
-      }
-    } catch (error) {
-      localStorage.removeItem("token");
-      return false;
-    }
+  const closeWindow = () => {
+    setModalError("");
+    closeModalCategoria();
   };
-  const fetchPersonalCategorias = async () => {
-    const token = localStorage.getItem("token");
-    if (await checkIfValidToken(token)) {
-      try {
-        const response = await fetch(
-          "https://two024-qwerty-back-2.onrender.com/api/personal-categoria",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        if (response.ok) {
-          const data = await response.json();
-          const customOptions = data.map((cat) => ({
-            label: cat.nombre,
-            value: cat.nombre,
-            iconPath: cat.iconPath,
-            textColor: "mr-2 text-white",
-          }));
-          setPayCategories(customOptions);
-        }
-      } catch (error) {
-        console.error("Error al obtener las categorías personalizadas:", error);
-      }
-    } else {
-      console.log("deberia redirec");
-      navigate("/");
-    }
-  };
-
-  useEffect(() => {
-    fetchPersonalCategorias();
-  }, []);
-
   const handleEdit = async (categoryValue, newName, newIcon) => {
     const filteredCategories = payCategories.filter(
       (category) => category.value === categoryValue.value
@@ -231,23 +244,18 @@ function ProfilePage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-900 py-10">
+    <Modal
+      isOpen={isModalCategoriaOpen}
+      onRequestClose={closeModalCategoria}
+      contentLabel="Mis Categorias"
+      style={customStyles}
+      className="bg-gray-950 shadow-lg p-4 rounded-lg"
+    >
       <div className="text-2xl font-bold text-gray-100 text-center mb-4">
-        Mi Cuenta
+        Mis Categorias
       </div>
-
-      <div className="flex justify-center mb-4">
-        <div className="w-24 h-24 md:w-36 md:h-36 rounded-full overflow-hidden border-4 border-yellow-600">
-          <img src={logo} alt="logo" className="w-full h-full object-cover" />
-        </div>
-      </div>
-
       <div className="flex flex-col flex-grow px-4">
         <div className="bg-gray-800 p-4 rounded-lg shadow-lg text-white">
-          <div className="font-bold text-yellow-500 text-xl text-center mb-4">
-            Mis Categorías
-          </div>
-
           <ul>
             {defaultCategories.map((category) => (
               <li
@@ -266,17 +274,14 @@ function ProfilePage() {
           </ul>
 
           <ul>
-            {payCategories.map((category) => (
+            {payCategories.slice(6).map((category) => (
               <li
                 key={category.value}
                 className="bg-gray-700 p-3 rounded-md shadow mb-3 flex justify-between"
               >
                 <div className="flex items-center">
-                  <FontAwesomeIcon
-                    icon={category.iconPath}
-                    className={category.textColor}
-                  />
-                  <div className={category.textColor}>{category.label}</div>
+                  <FontAwesomeIcon icon={category.iconPath} />
+                  <div className="ml-2">{category.label}</div>
                 </div>
                 <div className="flex items-center">
                   <button
@@ -299,9 +304,8 @@ function ProfilePage() {
               </li>
             ))}
           </ul>
-
           <button
-            className="mt-4 px-4 py-2 bg-yellow-500 text-black rounded-md hover:bg-yellow-700"
+            className="mt-4 px-4 py-3 bg-yellow-500 text-black rounded-md hover:bg-yellow-700 mr-2"
             onClick={() => {
               setEditCategory({});
               setIsEditMode(false);
@@ -310,11 +314,13 @@ function ProfilePage() {
           >
             Agregar Categoría
           </button>
-        </div>
-
-        <div className="m-4">
-          <ActionButtons />
-        </div>
+          <button
+            onClick={closeWindow}
+            className="flex-1 bg-red-500 text-white font-bold py-3 px-4 rounded hover:bg-red-600 transition-colors duration-300"
+          >
+            Cerrar
+          </button>
+        </div>{" "}
       </div>
       <ModalCategoria
         isOpen={isModalOpen}
@@ -331,8 +337,8 @@ function ProfilePage() {
           handleDelete(itemToDelete);
         }}
       />
-    </div>
+    </Modal>
   );
 }
 
-export default ProfilePage;
+export default ModalVerCategorias;

@@ -5,6 +5,7 @@ import ModalForm from "./ModalForm";
 import "./styles/HomePage.css";
 import logo from "../assets/logo-removebg-preview.png";
 import AlertPending from "./AlertPending";
+import ModalVerCategorias from "./ModalVerCategorias";
 
 function HomePage() {
   const [transacciones, setTransacciones] = useState([]);
@@ -43,6 +44,7 @@ function HomePage() {
   ]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalCategoriaOpen, setIsModalCategoriaOpen] = useState(false);
   const [transaccionId, setTransaccionId] = useState(null);
   const navigate = useNavigate();
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("Todas");
@@ -187,6 +189,13 @@ function HomePage() {
     clearForm();
     setEdit(false);
   };
+  const openModalCategoria = () => {
+    setIsModalCategoriaOpen(true);
+  };
+  const closeModalCategoria = () => {
+    setIsModalCategoriaOpen(false);
+  };
+  
 
   const clearForm = () => {
     setMotivo("");
@@ -451,6 +460,12 @@ function HomePage() {
             >
               Mi Cuenta
             </button>
+            <button
+              className="w-auto bg-yellow-500 bg-opacity-80 text-gray-950 text-sm py-2 px-4 rounded-lg hover:bg-yellow-700"
+              onClick={openModalCategoria}
+            >
+              Categorias
+            </button>
           </div>
           <div className="flex justify-start items-center px-6">
             <h2 className="text-2xl py-2 font-bold text-gray-100">
@@ -561,6 +576,15 @@ function HomePage() {
         handleCategoryChange={handleCategoryChange}
         handleCreateCat={handleCreateCat}
         setFecha={setFecha}
+      />
+      <ModalVerCategorias
+        isModalCategoriaOpen={isModalCategoriaOpen}
+        closeModalCategoria={closeModalCategoria}
+        fetchPersonalCategorias={fetchPersonalCategorias}
+        setPayCategories={setPayCategories}
+        //edit={edit}
+        payCategories={payCategories}
+        //handleCreateCat={handleCreateCat}
       />
       <AlertPending
         isOpen={pendTran}

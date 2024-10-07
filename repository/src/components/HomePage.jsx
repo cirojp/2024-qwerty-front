@@ -426,13 +426,12 @@ function HomePage() {
 
   return (
     <div className="container min-h-screen min-w-full max-w-full bg-black">
-      <div className="bg-black flex items-center justify-center w-full p-4">
+      <div className="bg-black flex items-center justify-center w-full">
         <div className="grid grid-cols-3 grid-rows-2 gap-0 w-full">
-          <div></div>
-          <div className="flex justify-center items-center">
+          <div className="flex items-center px-8">
             {" "}
             {/* Ajustar tamaño del logo */}
-            <div className="w-16 h-16 md:w-36 md:h-36 rounded-full overflow-hidden border-4 border-yellow-600">
+            <div className="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border-4 border-yellow-600">
               {" "}
               {/* Cambié de w-24 a w-16 para pantallas pequeñas */}
               <img
@@ -442,6 +441,7 @@ function HomePage() {
               />
             </div>
           </div>
+          <div></div>
           <div className="flex justify-end items-center px-4 md:px-20">
             {" "}
             {/* Ajustar padding */}
@@ -459,7 +459,7 @@ function HomePage() {
           </div>
           <div className="flex justify-center items-center py-4">
             <button
-              className="bg-yellow-500 bg-opacity-80 text-gray-900 py-2 px-4 rounded-lg hover:bg-red-700 w-full md:w-auto"
+              className="bg-yellow-500 bg-opacity-80 text-gray-900 py-4 px-6 rounded-lg hover:bg-red-700 w-full md:w-auto text-xl"
               onClick={openModal}
             >
               Agregar Transacción

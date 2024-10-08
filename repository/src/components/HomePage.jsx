@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import TransaccionesTable from "./TransaccionesTable";
 import ModalForm from "./ModalForm";
 import "./styles/HomePage.css";
-import logo from "../assets/logo-removebg-preview.png";
 import AlertPending from "./AlertPending";
-import ModalVerCategorias from "./ModalVerCategorias";
+import MonthlyGraphic from "./MonthlyGraphic";
+import Header from "./Header";
 
 function HomePage() {
   const [transacciones, setTransacciones] = useState([]);
@@ -44,7 +44,6 @@ function HomePage() {
   ]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isModalCategoriaOpen, setIsModalCategoriaOpen] = useState(false);
   const [transaccionId, setTransaccionId] = useState(null);
   const navigate = useNavigate();
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("Todas");
@@ -83,7 +82,6 @@ function HomePage() {
       }
 
       const data = await response.json();
-      console.log(data[0]);
       if (data[0] != null) {
         setTranPendiente(data[0]);
         setPendTran(true);
@@ -188,12 +186,6 @@ function HomePage() {
     setIsModalOpen(false);
     clearForm();
     setEdit(false);
-  };
-  const openModalCategoria = () => {
-    setIsModalCategoriaOpen(true);
-  };
-  const closeModalCategoria = () => {
-    setIsModalCategoriaOpen(false);
   };
 
   const clearForm = () => {
@@ -434,54 +426,24 @@ function HomePage() {
 
   return (
     <div className="container min-h-screen min-w-full max-w-full bg-black">
-      <div className="bg-black flex items-center justify-center w-full">
-        <div className="grid grid-cols-3 grid-rows-2 gap-0 w-full">
-          <div className="flex items-center px-8">
-            {" "}
-            {/* Ajustar tamaño del logo */}
-            <div className="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border-4 border-yellow-600">
-              {" "}
-              {/* Cambié de w-24 a w-16 para pantallas pequeñas */}
-              <img
-                src={logo}
-                alt="logo"
-                className="w-full h-full object-cover"
-              />
-            </div>
-          </div>
-          <div></div>
-          <div className="flex justify-end items-center px-4 md:px-20">
-            {" "}
-            {/* Ajustar padding */}
-            <button
-              className="w-auto mr-2 bg-yellow-500 bg-opacity-80 text-gray-950 text-sm py-2 px-4 rounded-lg hover:bg-yellow-700"
-              onClick={() => navigate("/profile")}
-            >
-              Mi Cuenta
-            </button>
-            <button
-              className="w-auto bg-yellow-500 bg-opacity-80 text-gray-950 text-sm py-2 px-4 rounded-lg hover:bg-yellow-700"
-              onClick={openModalCategoria}
-            >
-              Categorias
-            </button>
-          </div>
-          <div className="flex justify-start items-center px-6">
+      <Header />
+      <MonthlyGraphic transacciones={transacciones} />
+      <div className="bg-black flex flex-col w-full">
+        <div className="flex justify-between items-center w-full px-4 py-6">
+          <div className="flex items-center">
             <h2 className="text-2xl py-2 font-bold text-gray-100">
               Historial de Transacciones
             </h2>
           </div>
-          <div className="flex justify-center items-center py-4">
+          <div className="flex items-center mx-auto">
             <button
-              className="bg-yellow-500 bg-opacity-80 text-gray-900 py-4 px-6 rounded-lg hover:bg-red-700 w-full md:w-auto text-xl"
+              className="bg-yellow-500 bg-opacity-80 text-gray-900 py-4 px-6 rounded-lg hover:bg-red-700 text-xl"
               onClick={openModal}
             >
               Agregar Transacción
             </button>
           </div>
-          <div className="flex justify-end items-center px-4 md:px-6">
-            {" "}
-            {/* Ajustamos el padding en pantallas pequeñas */}
+          <div className="flex items-center">
             <div className="flex flex-col">
               <label
                 htmlFor="categorias"
@@ -505,9 +467,9 @@ function HomePage() {
           </div>
         </div>
       </div>
+
       {isLoadingFilter ? (
         <div className="flex justify-center items-center">
-          {/* Spinner o ícono de carga */}
           <svg
             className="animate-spin h-10 w-10 text-yellow-500"
             xmlns="http://www.w3.org/2000/svg"
@@ -532,7 +494,6 @@ function HomePage() {
         </div>
       ) : (
         <>
-          {/* Mostrar la tabla de transacciones si no está cargando */}
           <TransaccionesTable
             transacciones={transacciones}
             payCategories={payCategories}
@@ -575,15 +536,6 @@ function HomePage() {
         handleCategoryChange={handleCategoryChange}
         handleCreateCat={handleCreateCat}
         setFecha={setFecha}
-      />
-      <ModalVerCategorias
-        isModalCategoriaOpen={isModalCategoriaOpen}
-        closeModalCategoria={closeModalCategoria}
-        fetchPersonalCategorias={fetchPersonalCategorias}
-        setPayCategories={setPayCategories}
-        //edit={edit}
-        payCategories={payCategories}
-        //handleCreateCat={handleCreateCat}
       />
       <AlertPending
         isOpen={pendTran}

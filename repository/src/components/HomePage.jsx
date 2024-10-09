@@ -426,7 +426,10 @@ function HomePage() {
 
   return (
     <div className="container min-h-screen min-w-full max-w-full bg-black">
-      <Header />
+      <Header 
+      payCategories={payCategories}
+      setPayCategories={setPayCategories}
+       />
       {!showNoTransactions && (
     <>
       <MonthlyGraphic transacciones={transacciones} />

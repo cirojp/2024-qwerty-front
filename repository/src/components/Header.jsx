@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import logo from "../assets/logo-removebg-preview.png";
 import ModalVerCategorias from "./ModalVerCategorias";
 import { useNavigate } from "react-router-dom";
-function Header() {
+function Header({ payCategories, setPayCategories}) {
   const [isModalCategoriaOpen, setIsModalCategoriaOpen] = useState(false);
-  const [payCategories, setPayCategories] = useState([]);
+  //const [payCategories, setPayCategories] = useState([]);
   const navigate = useNavigate();
   const openModalCategoria = () => {
     setIsModalCategoriaOpen(true);

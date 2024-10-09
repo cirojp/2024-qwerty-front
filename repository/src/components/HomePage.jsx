@@ -427,6 +427,8 @@ function HomePage() {
   return (
     <div className="container min-h-screen min-w-full max-w-full bg-black">
       <Header />
+      {!showNoTransactions && (
+    <>
       <MonthlyGraphic transacciones={transacciones} />
       <div className="bg-black flex flex-col w-full">
         <div className="flex justify-between items-center w-full px-4 py-6">
@@ -467,6 +469,7 @@ function HomePage() {
           </div>
         </div>
       </div>
+      </> )}
 
       {isLoadingFilter ? (
         <div className="flex justify-center items-center">

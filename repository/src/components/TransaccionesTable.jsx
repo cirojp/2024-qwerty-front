@@ -91,7 +91,7 @@ function TransaccionesTable({
         data={transacciones}
         pagination
         expandableRows={true}
-        expandableRowsComponent={({ data }) => <ExpandedRow data={data} />}
+        expandableRowsComponent={({ data }) => <ExpandedRow data={data} payCategories={payCategories} />}
         theme="dark"
         responsive
         noHeader

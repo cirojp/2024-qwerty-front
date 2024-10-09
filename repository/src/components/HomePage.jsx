@@ -432,7 +432,7 @@ function HomePage() {
        />
       {!showNoTransactions && (
     <>
-      <MonthlyGraphic transacciones={transacciones} />
+      <MonthlyGraphic transacciones={transacciones} payCategories={payCategories}/>
       <div className="bg-black flex flex-col w-full">
         <div className="flex justify-between items-center w-full px-4 py-6">
           <div className="flex items-center">

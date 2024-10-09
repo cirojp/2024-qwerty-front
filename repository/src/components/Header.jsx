@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import logo from "../assets/logo-removebg-preview.png";
 import ModalVerCategorias from "./ModalVerCategorias";
-
+import { useNavigate } from "react-router-dom";
 function Header() {
   const [isModalCategoriaOpen, setIsModalCategoriaOpen] = useState(false);
   const [payCategories, setPayCategories] = useState([]);
-
+  const navigate = useNavigate();
   const openModalCategoria = () => {
     setIsModalCategoriaOpen(true);
   };
@@ -16,7 +16,7 @@ function Header() {
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(
-        `https://two024-qwerty-back-2.onrender.com/api/auth`,
+        "https://two024-qwerty-back-2.onrender.com/api/personal-categoria",
         {
           headers: {
             Authorization: `Bearer ${token}`,

@@ -1,5 +1,5 @@
 import React from "react";
-import { PieChart, Pie, Sector, Cell, ResponsiveContainer } from "recharts";
+import { PieChart, Pie, Sector, Cell, ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip  } from "recharts";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -34,6 +34,20 @@ function MonthlyGraphic({ transacciones = [], payCategories }) {
     const category = payCategories.find((cat) => cat.value === categoryName);
     return category ? category.iconPath : null;
   };
+  // Calcular gastos por mes
+  const gastosPorMes = transacciones.reduce((acc, transaccion) => {
+    const mes = new Date(transaccion.fecha).getMonth(); // Obtener el mes de la transacción
+    if (!acc[mes]) {
+      acc[mes] = 0;
+    }
+    acc[mes] += transaccion.valor;
+    return acc;
+  }, {});
+   // Preparar los datos para el gráfico de líneas
+   const dataLine = Object.keys(gastosPorMes).map((mes) => ({
+    month: new Date(2024, mes).toLocaleString("default", { month: "short" }),
+    total: gastosPorMes[mes],
+  }));
 
   return (
     <div className="flex flex justify-center items-center py-4 bg-gray-950 h-full w-full">
@@ -77,6 +91,15 @@ function MonthlyGraphic({ transacciones = [], payCategories }) {
           );
         })}
       </div>
+      {/* Gráfico de líneas */}
+      <ResponsiveContainer width={500} height={400}>
+          <LineChart data={dataLine}>
+            <XAxis dataKey="month" stroke="#ffffff" />
+            <YAxis stroke="#ffffff" />
+            <Tooltip />
+            <Line type="monotone" dataKey="total" stroke="#82ca9d" />
+          </LineChart>
+        </ResponsiveContainer>
     </div>
   );
 }

@@ -61,7 +61,6 @@ function HomePage() {
     if (payCategories.length > 0) {
       setCategoriasConTodas([
         { value: "Todas", label: "Todas" },
-        { value: "Otros", label: "Otros" },
         ...payCategories,
       ]);
     }
@@ -175,7 +174,7 @@ function HomePage() {
           iconPath: cat.iconPath,
         }));
 
-        setPayCategories([...payCategoriesDefault, ...customOptions]);
+        setPayCategories([{ value: "Otros", label: "Otros", iconPath: "fa-solid fa-circle-dot" }, ...payCategoriesDefault, ...customOptions]);
       }
     } catch (error) {
       console.error("Error al obtener las categorías personalizadas:", error);

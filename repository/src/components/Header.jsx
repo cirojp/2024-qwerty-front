@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import logo from "../assets/logo-removebg-preview.png";
 import ModalVerCategorias from "./ModalVerCategorias";
 import { useNavigate } from "react-router-dom";
-function Header({ payCategories, setPayCategories}) {
+function Header({ payCategories, setPayCategories }) {
   const [isModalCategoriaOpen, setIsModalCategoriaOpen] = useState(false);
   //const [payCategories, setPayCategories] = useState([]);
   const navigate = useNavigate();
@@ -47,15 +47,15 @@ function Header({ payCategories, setPayCategories}) {
         </div>
       </div>
       <div></div>
-      <div className="flex justify-end items-center px-4 md:px-20">
+      <div className="flex justify-end items-center px-4 md:px-20 join">
         <button
-          className="w-auto mr-2 bg-yellow-500 bg-opacity-80 text-gray-950 text-sm py-2 px-4 rounded-lg hover:bg-yellow-700"
+          className="btn join-item w-auto mr-2 bg-yellow-500 bg-opacity-80 text-gray-950 text-sm   rounded-lg hover:bg-yellow-700"
           onClick={() => navigate("/profile")}
         >
           Mi Cuenta
         </button>
         <button
-          className="w-auto bg-yellow-500 bg-opacity-80 text-gray-950 text-sm py-2 px-4 rounded-lg hover:bg-yellow-700"
+          className="btn join-item w-auto bg-yellow-500 bg-opacity-80 text-gray-950 text-sm  rounded-lg hover:bg-yellow-700"
           onClick={openModalCategoria}
         >
           Categorias

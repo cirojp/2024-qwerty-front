@@ -6,6 +6,7 @@ import "./styles/HomePage.css";
 import AlertPending from "./AlertPending";
 import MonthlyGraphic from "./MonthlyGraphic";
 import Header from "./Header";
+import ModalSendPayment from "./ModalSendPayment";
 
 function HomePage() {
   const [transacciones, setTransacciones] = useState([]);
@@ -50,9 +51,8 @@ function HomePage() {
   const [categoriasConTodas, setCategoriasConTodas] = useState([]);
   const [isLoadingFilter, setIsLoadingFilter] = useState(false);
   const [pendTran, setPendTran] = useState(false);
-  const [filtroMes, setFiltroMes] = useState("");  // Ej: "10" para octubre
-  const [filtroAno, setFiltroAno] = useState("");  // Ej: "2023"
-
+  const [filtroMes, setFiltroMes] = useState(""); // Ej: "10" para octubre
+  const [filtroAno, setFiltroAno] = useState(""); // Ej: "2023"
 
   useEffect(() => {
     getTransacciones(categoriaSeleccionada);
@@ -125,7 +125,7 @@ function HomePage() {
         url += `?categoria=${filtrado}`;
         if (filtroMes) url += `&mes=${filtroMes}`;
         if (filtroAno) url += `&anio=${filtroAno}`;
-        console.log(url)
+        console.log(url);
       }
       try {
         const response = await fetch(url, {
@@ -174,7 +174,15 @@ function HomePage() {
           iconPath: cat.iconPath,
         }));
 
-        setPayCategories([{ value: "Otros", label: "Otros", iconPath: "fa-solid fa-circle-dot" }, ...payCategoriesDefault, ...customOptions]);
+        setPayCategories([
+          {
+            value: "Otros",
+            label: "Otros",
+            iconPath: "fa-solid fa-circle-dot",
+          },
+          ...payCategoriesDefault,
+          ...customOptions,
+        ]);
       }
     } catch (error) {
       console.error("Error al obtener las categorías personalizadas:", error);
@@ -433,82 +441,99 @@ function HomePage() {
 
   return (
     <div className="container min-h-screen min-w-full max-w-full bg-black">
-      <Header 
-      payCategories={payCategories}
-      setPayCategories={setPayCategories}
-       />
+      <Header
+        payCategories={payCategories}
+        setPayCategories={setPayCategories}
+      />
       {!showNoTransactions && (
-    <>
-      <MonthlyGraphic transacciones={transacciones} payCategories={payCategories}/>
-      <div className="bg-black flex flex-col w-full">
-        <div className="flex justify-between items-center w-full px-4 py-6">
-          <div className="flex items-center">
-            <h2 className="text-2xl py-2 font-bold text-gray-100">
-              Historial de Transacciones
-            </h2>
-          </div>
-          <div className="flex items-center mx-auto">
-            <button
-              className="bg-yellow-500 bg-opacity-80 text-gray-900 py-4 px-6 rounded-lg hover:bg-red-700 text-xl"
-              onClick={openModal}
-            >
-              Agregar Transacción
-            </button>
-          </div>
-          <div className="flex items-center">
-            <div className="flex flex-col">
-              <label
-                htmlFor="categorias"
-                className="mb-2 text-lg font-medium text-gray-200"
-              >
-                Filtrar por categoría:
-              </label>
-              <select
-                id="categorias"
-                value={categoriaSeleccionada}
-                onChange={handleChange}
-                className="block w-full md:w-64 px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                {categoriasConTodas.map((cat) => (
-                  <option key={cat.value} value={cat.value}>
-                    {cat.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <select value={filtroMes} onChange={(e) => setFiltroMes(e.target.value)}>
-                <option value="">Mes</option>
-                <option value="01">Enero</option>
-                <option value="02">Febrero</option>
-                <option value="03">Marzo</option>
-                <option value="04">Abril</option>
-                <option value="05">Mayo</option>
-                <option value="06">Junio</option>
-                <option value="07">Julio</option>
-                <option value="08">Agosto</option>
-                <option value="09">Septiembre</option>
-                <option value="10">Octubre</option>
-                <option value="11">Noviembre</option>
-                <option value="12">Diciembre</option>
-              </select>
+        <>
+          <MonthlyGraphic
+            transacciones={transacciones}
+            payCategories={payCategories}
+          />
+          <div className="bg-black flex flex-col w-full">
+            <div className="flex justify-between items-center w-full px-4 py-6">
+              <div className="flex items-center">
+                <h2 className="text-2xl py-2 font-bold text-gray-100">
+                  Historial de Transacciones
+                </h2>
+              </div>
+              <div className="flex items-center join">
+                <button
+                  className="btn join-item w-auto mr-2 bg-yellow-500 bg-opacity-80 text-gray-950 text-xl rounded-lg hover:bg-yellow-700"
+                  onClick={openModal}
+                >
+                  Agregar Transacción
+                </button>
+                <button className="btn join-item w-auto mr-2 bg-yellow-500 bg-opacity-80 text-gray-950 text-xl rounded-lg hover:bg-yellow-700">
+                  Realizar Pago
+                </button>
+              </div>
 
-              <select value={filtroAno} onChange={(e) => (setFiltroAno(e.target.value), console.log("cambie año "+filtroAno))}>
-                <option value="">Año</option>
-                <option value="2021">2021</option>
-                <option value="2022">2022</option>
-                <option value="2023">2023</option>
-                <option value="2024">2024</option>
-                <option value="2025">2025</option>
-                <option value="2026">2026</option>
-              </select>
+              <div className="flex items-center">
+                <div className="flex flex-col">
+                  <label
+                    htmlFor="categorias"
+                    className="mb-2 text-lg font-medium text-gray-200"
+                  >
+                    Filtrar por categoría:
+                  </label>
+                  <select
+                    id="categorias"
+                    value={categoriaSeleccionada}
+                    onChange={handleChange}
+                    className="block w-full md:w-64 px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    {categoriasConTodas.map((cat) => (
+                      <option key={cat.value} value={cat.value}>
+                        {cat.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <select
+                    value={filtroMes}
+                    onChange={(e) => setFiltroMes(e.target.value)}
+                  >
+                    <option value="">Mes</option>
+                    <option value="01">Enero</option>
+                    <option value="02">Febrero</option>
+                    <option value="03">Marzo</option>
+                    <option value="04">Abril</option>
+                    <option value="05">Mayo</option>
+                    <option value="06">Junio</option>
+                    <option value="07">Julio</option>
+                    <option value="08">Agosto</option>
+                    <option value="09">Septiembre</option>
+                    <option value="10">Octubre</option>
+                    <option value="11">Noviembre</option>
+                    <option value="12">Diciembre</option>
+                  </select>
 
-              <button onClick={() => resetFilters()}>Borrar filtros</button>
+                  <select
+                    value={filtroAno}
+                    onChange={(e) => (
+                      setFiltroAno(e.target.value),
+                      console.log("cambie año " + filtroAno)
+                    )}
+                  >
+                    <option value="">Año</option>
+                    <option value="2021">2021</option>
+                    <option value="2022">2022</option>
+                    <option value="2023">2023</option>
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                    <option value="2026">2026</option>
+                  </select>
+
+                  <button onClick={() => resetFilters()}>Borrar filtros</button>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-      </> )}
+        </>
+      )}
 
       {isLoadingFilter ? (
         <div className="flex justify-center items-center">
@@ -579,6 +604,7 @@ function HomePage() {
         handleCreateCat={handleCreateCat}
         setFecha={setFecha}
       />
+      {/*<ModalSendPayment />*/}
       <AlertPending
         isOpen={pendTran}
         pendingTransaction={tranPendiente}

@@ -50,10 +50,13 @@ function HomePage() {
   const [categoriasConTodas, setCategoriasConTodas] = useState([]);
   const [isLoadingFilter, setIsLoadingFilter] = useState(false);
   const [pendTran, setPendTran] = useState(false);
+  const [filtroMes, setFiltroMes] = useState("");  // Ej: "10" para octubre
+  const [filtroAno, setFiltroAno] = useState("");  // Ej: "2023"
+
 
   useEffect(() => {
-    getTransacciones();
-  }, []);
+    getTransacciones(categoriaSeleccionada);
+  }, [categoriaSeleccionada, filtroMes, filtroAno]);
   useEffect(() => {
     if (payCategories.length > 0) {
       setCategoriasConTodas([
@@ -118,12 +121,12 @@ function HomePage() {
   const getTransacciones = async (filtrado = "Todas") => {
     const token = localStorage.getItem("token");
     if (await checkIfValidToken(token)) {
-      let url = "";
-      if (filtrado === "Todas") {
-        url =
-          "https://two024-qwerty-back-2.onrender.com/api/transacciones/user";
-      } else {
-        url = `https://two024-qwerty-back-2.onrender.com/api/transacciones/user/filter?categoria=${filtrado}`;
+      let url = `https://two024-qwerty-back-2.onrender.com/api/transacciones/user/filter`;
+      if (filtrado !== "Todas" || filtroMes || filtroAno) {
+        url += `?categoria=${filtrado}`;
+        if (filtroMes) url += `&mes=${filtroMes}`;
+        if (filtroAno) url += `&anio=${filtroAno}`;
+        console.log(url)
       }
       try {
         const response = await fetch(url, {
@@ -423,6 +426,11 @@ function HomePage() {
     setCategoriaSeleccionada(cat);
     getTransacciones(cat);
   };
+  const resetFilters = () => {
+    setCategoriaSeleccionada("Todas");
+    setFiltroAno("");
+    setFiltroMes("");
+  };
 
   return (
     <div className="container min-h-screen min-w-full max-w-full bg-black">
@@ -468,6 +476,35 @@ function HomePage() {
                   </option>
                 ))}
               </select>
+            </div>
+            <div>
+              <select value={filtroMes} onChange={(e) => setFiltroMes(e.target.value)}>
+                <option value="">Mes</option>
+                <option value="01">Enero</option>
+                <option value="02">Febrero</option>
+                <option value="03">Marzo</option>
+                <option value="04">Abril</option>
+                <option value="05">Mayo</option>
+                <option value="06">Junio</option>
+                <option value="07">Julio</option>
+                <option value="08">Agosto</option>
+                <option value="09">Septiembre</option>
+                <option value="10">Octubre</option>
+                <option value="11">Noviembre</option>
+                <option value="12">Diciembre</option>
+              </select>
+
+              <select value={filtroAno} onChange={(e) => (setFiltroAno(e.target.value), console.log("cambie año "+filtroAno))}>
+                <option value="">Año</option>
+                <option value="2021">2021</option>
+                <option value="2022">2022</option>
+                <option value="2023">2023</option>
+                <option value="2024">2024</option>
+                <option value="2025">2025</option>
+                <option value="2026">2026</option>
+              </select>
+
+              <button onClick={() => resetFilters()}>Borrar filtros</button>
             </div>
           </div>
         </div>

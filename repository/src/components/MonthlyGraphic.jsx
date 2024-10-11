@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 
-function MonthlyGraphic({ transacciones = [], payCategories }) {
+function MonthlyGraphic({ transacciones = [], payCategories, filtroMes = "" }) {
   library.add(fas);
 
   // Calcular la suma por categoría
@@ -37,21 +37,50 @@ function MonthlyGraphic({ transacciones = [], payCategories }) {
     new Date(2024, index).toLocaleString("default", { month: "short" })
   );
 
-  // Calcular gastos por mes
-  const gastosPorMes = transacciones.reduce((acc, transaccion) => {
-    const mes = new Date(transaccion.fecha).getMonth(); // Obtener el mes de la transacción
-    if (!acc[mes]) {
-      acc[mes] = 0;
-    }
-    acc[mes] += transaccion.valor;
-    return acc;
-  }, {});
+  // Si hay un filtro de mes, cambiar a gráfico diario
+  let dataLine = [];
 
-  // Asegurar que todos los meses estén presentes con un valor de 0 si no hay gastos
-  const dataLine = allMonths.map((month, index) => ({
-    month,
-    total: gastosPorMes[index] || 0, // Si no hay valor, poner 0
-  }));
+  if (filtroMes) {
+    // Filtrar las transacciones por el mes seleccionado
+    const selectedMonth = parseInt(filtroMes, 10) - 1; // Convertir filtroMes a número (0-indexado)
+    
+    // Calcular gastos por día en el mes filtrado
+    const gastosPorDia = transacciones.reduce((acc, transaccion) => {
+      const fecha = new Date(transaccion.fecha);
+      const mes = fecha.getMonth();
+      if (mes === selectedMonth) {
+        const dia = fecha.getDate(); // Obtener el día del mes
+        if (!acc[dia]) {
+          acc[dia] = 0;
+        }
+        acc[dia] += transaccion.valor; // Sumar el valor de la transacción a ese día
+      }
+      return acc;
+    }, {});
+
+    // Preparar los datos para el gráfico de líneas diario
+    const daysInMonth = new Date(2024, selectedMonth + 1, 0).getDate(); // Obtener días del mes
+    dataLine = Array.from({ length: daysInMonth }, (_, index) => ({
+      day: (index + 1).toString(),
+      total: gastosPorDia[index + 1] || 0, // Si no hay valor, poner 0
+    }));
+  } else {
+    // Calcular gastos por mes
+    const gastosPorMes = transacciones.reduce((acc, transaccion) => {
+      const mes = new Date(transaccion.fecha).getMonth(); // Obtener el mes de la transacción
+      if (!acc[mes]) {
+        acc[mes] = 0;
+      }
+      acc[mes] += transaccion.valor;
+      return acc;
+    }, {});
+
+    // Asegurar que todos los meses estén presentes con un valor de 0 si no hay gastos
+    dataLine = allMonths.map((month, index) => ({
+      month,
+      total: gastosPorMes[index] || 0, // Si no hay valor, poner 0
+    }));
+  }
 
   return (
     <div className="flex flex justify-center items-center py-4 bg-gray-950 h-full w-full">
@@ -94,7 +123,7 @@ function MonthlyGraphic({ transacciones = [], payCategories }) {
       {/* Gráfico de líneas */}
       <ResponsiveContainer width={500} height={400}>
         <LineChart data={dataLine}>
-          <XAxis dataKey="month" stroke="#ffffff" />
+          <XAxis dataKey={filtroMes ? "day" : "month"} stroke="#ffffff" />
           <YAxis stroke="#ffffff" />
           <Tooltip />
           <Line type="monotone" dataKey="total" stroke="#82ca9d" />

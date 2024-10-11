@@ -52,7 +52,7 @@ function HomePage() {
   const [isLoadingFilter, setIsLoadingFilter] = useState(false);
   const [pendTran, setPendTran] = useState(false);
   const [filtroMes, setFiltroMes] = useState(""); // Ej: "10" para octubre
-  const [filtroAno, setFiltroAno] = useState(""); // Ej: "2023"
+  const [filtroAno, setFiltroAno] = useState("2024"); //
 
   useEffect(() => {
     getTransacciones(categoriaSeleccionada);
@@ -435,7 +435,7 @@ function HomePage() {
   };
   const resetFilters = () => {
     setCategoriaSeleccionada("Todas");
-    setFiltroAno("");
+    setFiltroAno("2024");
     setFiltroMes("");
   };
 
@@ -493,7 +493,6 @@ function HomePage() {
             onChange={(e) => setFiltroAno(e.target.value)}
             className="select select-bordered w-full md:w-48 max-w-xs"
           >
-            <option value="">Año</option>
             <option value="2021">2021</option>
             <option value="2022">2022</option>
             <option value="2023">2023</option>

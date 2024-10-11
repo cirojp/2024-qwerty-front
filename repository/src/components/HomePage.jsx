@@ -60,7 +60,7 @@ function HomePage() {
   useEffect(() => {
     if (payCategories.length > 0) {
       setCategoriasConTodas([
-        { value: "Todas", label: "Todas" },
+        { value: "Todas", label: "Todas las Categorias" },
         ...payCategories,
       ]);
     }
@@ -445,6 +445,72 @@ function HomePage() {
         payCategories={payCategories}
         setPayCategories={setPayCategories}
       />
+      <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6 mb-4">
+        <div className="flex flex-col w-full md:w-auto">
+          {/*<label
+            htmlFor="categorias"
+            className="text-lg font-medium text-gray-200"
+          >
+            Filtrar por categoría:
+          </label>*/}
+          <select
+            id="categorias"
+            value={categoriaSeleccionada}
+            onChange={handleChange}
+            className="block select select-bordered w-full md:w-48 max-w-xs"
+          >
+            {categoriasConTodas.map((cat) => (
+              <option key={cat.value} value={cat.value}>
+                {cat.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
+          <select
+            value={filtroMes}
+            onChange={(e) => setFiltroMes(e.target.value)}
+            className="select select-bordered w-full md:w-48 max-w-xs"
+          >
+            <option value="">Mes</option>
+            <option value="01">Enero</option>
+            <option value="02">Febrero</option>
+            <option value="03">Marzo</option>
+            <option value="04">Abril</option>
+            <option value="05">Mayo</option>
+            <option value="06">Junio</option>
+            <option value="07">Julio</option>
+            <option value="08">Agosto</option>
+            <option value="09">Septiembre</option>
+            <option value="10">Octubre</option>
+            <option value="11">Noviembre</option>
+            <option value="12">Diciembre</option>
+          </select>
+
+          <select
+            value={filtroAno}
+            onChange={(e) => setFiltroAno(e.target.value)}
+            className="select select-bordered w-full md:w-48 max-w-xs"
+          >
+            <option value="">Año</option>
+            <option value="2021">2021</option>
+            <option value="2022">2022</option>
+            <option value="2023">2023</option>
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026">2026</option>
+          </select>
+
+          <button
+            onClick={() => resetFilters()}
+            className="btn btn-warning w-full md:w-auto"
+          >
+            Borrar filtros
+          </button>
+        </div>
+      </div>
+
       {!showNoTransactions && (
         <>
           <MonthlyGraphic
@@ -466,69 +532,16 @@ function HomePage() {
                   Agregar Transacción
                 </button>
                 <button className="btn join-item w-auto mr-2 bg-yellow-500 bg-opacity-80 text-gray-950 text-xl rounded-lg hover:bg-yellow-700">
+                  Generar Cobro
+                </button>
+                <button
+                  className="btn join-item w-auto mr-2 bg-yellow-500 bg-opacity-80 text-gray-950 text-xl rounded-lg hover:bg-yellow-700"
+                  onClick={() =>
+                    document.getElementById("generatePayModal").showModal()
+                  }
+                >
                   Realizar Pago
                 </button>
-              </div>
-
-              <div className="flex items-center">
-                <div className="flex flex-col">
-                  <label
-                    htmlFor="categorias"
-                    className="mb-2 text-lg font-medium text-gray-200"
-                  >
-                    Filtrar por categoría:
-                  </label>
-                  <select
-                    id="categorias"
-                    value={categoriaSeleccionada}
-                    onChange={handleChange}
-                    className="block w-full md:w-64 px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  >
-                    {categoriasConTodas.map((cat) => (
-                      <option key={cat.value} value={cat.value}>
-                        {cat.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <select
-                    value={filtroMes}
-                    onChange={(e) => setFiltroMes(e.target.value)}
-                  >
-                    <option value="">Mes</option>
-                    <option value="01">Enero</option>
-                    <option value="02">Febrero</option>
-                    <option value="03">Marzo</option>
-                    <option value="04">Abril</option>
-                    <option value="05">Mayo</option>
-                    <option value="06">Junio</option>
-                    <option value="07">Julio</option>
-                    <option value="08">Agosto</option>
-                    <option value="09">Septiembre</option>
-                    <option value="10">Octubre</option>
-                    <option value="11">Noviembre</option>
-                    <option value="12">Diciembre</option>
-                  </select>
-
-                  <select
-                    value={filtroAno}
-                    onChange={(e) => (
-                      setFiltroAno(e.target.value),
-                      console.log("cambie año " + filtroAno)
-                    )}
-                  >
-                    <option value="">Año</option>
-                    <option value="2021">2021</option>
-                    <option value="2022">2022</option>
-                    <option value="2023">2023</option>
-                    <option value="2024">2024</option>
-                    <option value="2025">2025</option>
-                    <option value="2026">2026</option>
-                  </select>
-
-                  <button onClick={() => resetFilters()}>Borrar filtros</button>
-                </div>
               </div>
             </div>
           </div>
@@ -604,7 +617,7 @@ function HomePage() {
         handleCreateCat={handleCreateCat}
         setFecha={setFecha}
       />
-      {/*<ModalSendPayment />*/}
+      <ModalSendPayment payCategories={payCategories} />
       <AlertPending
         isOpen={pendTran}
         pendingTransaction={tranPendiente}

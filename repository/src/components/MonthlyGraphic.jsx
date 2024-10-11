@@ -1,26 +1,23 @@
 import React from "react";
-import { PieChart, Pie, Sector, Cell, ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip  } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip } from "recharts";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 
 function MonthlyGraphic({ transacciones = [], payCategories }) {
-  
   library.add(fas);
+
   // Calcular la suma por categoría
   const sumaPorCategoria = transacciones.reduce((acc, transaccion) => {
     const categoria = transaccion.categoria;
-
     if (!acc[categoria]) {
       acc[categoria] = 0;
     }
-
     acc[categoria] += transaccion.valor;
-
     return acc;
   }, {});
 
-  // Preparar los datos para el gráfico
+  // Preparar los datos para el gráfico de pie
   const data = Object.entries(sumaPorCategoria).map(([categoria, monto]) => ({
     name: categoria,
     value: monto,
@@ -34,6 +31,12 @@ function MonthlyGraphic({ transacciones = [], payCategories }) {
     const category = payCategories.find((cat) => cat.value === categoryName);
     return category ? category.iconPath : null;
   };
+
+  // Array con todos los meses
+  const allMonths = Array.from({ length: 12 }, (_, index) =>
+    new Date(2024, index).toLocaleString("default", { month: "short" })
+  );
+
   // Calcular gastos por mes
   const gastosPorMes = transacciones.reduce((acc, transaccion) => {
     const mes = new Date(transaccion.fecha).getMonth(); // Obtener el mes de la transacción
@@ -43,10 +46,11 @@ function MonthlyGraphic({ transacciones = [], payCategories }) {
     acc[mes] += transaccion.valor;
     return acc;
   }, {});
-   // Preparar los datos para el gráfico de líneas
-   const dataLine = Object.keys(gastosPorMes).map((mes) => ({
-    month: new Date(2024, mes).toLocaleString("default", { month: "short" }),
-    total: gastosPorMes[mes],
+
+  // Asegurar que todos los meses estén presentes con un valor de 0 si no hay gastos
+  const dataLine = allMonths.map((month, index) => ({
+    month,
+    total: gastosPorMes[index] || 0, // Si no hay valor, poner 0
   }));
 
   return (
@@ -73,11 +77,7 @@ function MonthlyGraphic({ transacciones = [], payCategories }) {
         {data.map((entry, index) => {
           const iconPath = getCategoryIcon(entry.name);
           return (
-            <div
-              key={`legend-item-${index}`}
-              className="flex items-center mb-2 text-white"
-            >
-              {/* Ícono de la categoría */}
+            <div key={`legend-item-${index}`} className="flex items-center mb-2 text-white">
               {iconPath && (
                 <FontAwesomeIcon
                   icon={iconPath}
@@ -85,28 +85,28 @@ function MonthlyGraphic({ transacciones = [], payCategories }) {
                   style={{ color: COLORS[index % COLORS.length] }}
                 />
               )}
-              {/* Nombre de la categoría */}
               <span>{entry.name}</span>
             </div>
           );
         })}
       </div>
+
       {/* Gráfico de líneas */}
       <ResponsiveContainer width={500} height={400}>
-          <LineChart data={dataLine}>
-            <XAxis dataKey="month" stroke="#ffffff" />
-            <YAxis stroke="#ffffff" />
-            <Tooltip />
-            <Line type="monotone" dataKey="total" stroke="#82ca9d" />
-          </LineChart>
-        </ResponsiveContainer>
+        <LineChart data={dataLine}>
+          <XAxis dataKey="month" stroke="#ffffff" />
+          <YAxis stroke="#ffffff" />
+          <Tooltip />
+          <Line type="monotone" dataKey="total" stroke="#82ca9d" />
+        </LineChart>
+      </ResponsiveContainer>
     </div>
   );
 }
 
 export default MonthlyGraphic;
 
-// Función para renderizar etiquetas personalizadas en el gráfico
+// Función para renderizar etiquetas personalizadas en el gráfico de pie
 const renderCustomizedLabel = ({
   cx,
   cy,

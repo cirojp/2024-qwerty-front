@@ -6,6 +6,7 @@ import "./styles/HomePage.css";
 import AlertPending from "./AlertPending";
 import MonthlyGraphic from "./MonthlyGraphic";
 import Header from "./Header";
+import ModalAskPayment from "./ModalAskPayment";
 import ModalSendPayment from "./ModalSendPayment";
 
 function HomePage() {
@@ -47,10 +48,13 @@ function HomePage() {
   const [payOptions, setPayOptions] = useState([
     { value: "Tarjeta de credito", label: "Tarjeta de credito" },
     { value: "Tarjeta de Debito", label: "Tarjeta de debito" },
-    { value: "Efectivo", label: "Efectivo" }
-]);
+    { value: "Efectivo", label: "Efectivo" },
+  ]);
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [selectedPayMethod, setSelectedPayMethod] = useState(null);
+  const [selectedPayMethod, setSelectedPayMethod] = useState({
+    value: "Efectivo",
+    label: "Efectivo",
+  });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [transaccionId, setTransaccionId] = useState(null);
   const navigate = useNavigate();
@@ -60,6 +64,7 @@ function HomePage() {
   const [pendTran, setPendTran] = useState(false);
   const [filtroMes, setFiltroMes] = useState(""); // Ej: "10" para octubre
   const [filtroAno, setFiltroAno] = useState("2024"); //
+  const [filterEmpty, setFilterEmpty] = useState(false);
 
   useEffect(() => {
     getTransacciones(categoriaSeleccionada);
@@ -74,7 +79,7 @@ function HomePage() {
   }, [payCategories]);
   useEffect(() => {
     fetchPersonalTipoGastos();
-}, []);
+  }, []);
 
   const showTransactionsPendientes = async () => {
     const token = localStorage.getItem("token");
@@ -108,19 +113,28 @@ function HomePage() {
   const fetchPersonalTipoGastos = async () => {
     const token = localStorage.getItem("token");
     try {
-        const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/personal-tipo-gasto", {
-            headers: {
-                "Authorization": `Bearer ${token}`
-            }
-        });
-        
-        if (response.ok) {
-            const data = await response.json();
-            const customOptions = data.map(tipo => ({ label: tipo.nombre, value: tipo.nombre }));
-            setPayOptions([...payOptions, ...customOptions]);
+      const response = await fetch(
+        "https://two024-qwerty-back-2.onrender.com/api/personal-tipo-gasto",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        const customOptions = data.map((tipo) => ({
+          label: tipo.nombre,
+          value: tipo.nombre,
+        }));
+        setPayOptions([...payOptions, ...customOptions]);
+      }
     } catch (error) {
-        console.error("Error al obtener los tipos de gasto personalizados:", error);
+      console.error(
+        "Error al obtener los tipos de gasto personalizados:",
+        error
+      );
     }
   };
   const checkIfValidToken = async (token) => {
@@ -239,8 +253,10 @@ function HomePage() {
     setEdit(true);
     setMotivo(row.motivo);
     setValor(row.valor);
-    const selectedOption = payOptions.find(option => option.value === row.tipoGasto);
-        setSelectedPayMethod(selectedOption || null);
+    const selectedOption = payOptions.find(
+      (option) => option.value === row.tipoGasto
+    );
+    setSelectedPayMethod(selectedOption || null);
     const selectedPayCategory = payCategories.find(
       (option) => option.value == row.categoria
     );
@@ -419,24 +435,30 @@ function HomePage() {
   const handleCreateTP = async (inputValue) => {
     const token = localStorage.getItem("token");
     try {
-        const response = await fetch(`https://two024-qwerty-back-2.onrender.com/api/personal-tipo-gasto`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
-            },
-            body: JSON.stringify(inputValue)
-        });
-        
-        if (response.ok) {
-            const newTipoGasto = await response.json();
-            const newOption = { label: newTipoGasto.nombre, value: newTipoGasto.nombre };
-            setPayOptions(prevOptions => [...prevOptions, newOption]);
-            setSelectedPayMethod(newOption);
-            setTipoGasto(newTipoGasto.nombre);
+      const response = await fetch(
+        `https://two024-qwerty-back-2.onrender.com/api/personal-tipo-gasto`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(inputValue),
         }
+      );
+
+      if (response.ok) {
+        const newTipoGasto = await response.json();
+        const newOption = {
+          label: newTipoGasto.nombre,
+          value: newTipoGasto.nombre,
+        };
+        setPayOptions((prevOptions) => [...prevOptions, newOption]);
+        setSelectedPayMethod(newOption);
+        setTipoGasto(newTipoGasto.nombre);
+      }
     } catch (error) {
-        console.error("Error al agregar el tipo de gasto personalizado:", error);
+      console.error("Error al agregar el tipo de gasto personalizado:", error);
     }
   };
   const handleCreateCat = async (nombre, icono) => {
@@ -503,29 +525,22 @@ function HomePage() {
         payCategories={payCategories}
         setPayCategories={setPayCategories}
       />
-      <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6 mb-4">
-        <div className="flex flex-col w-full md:w-auto">
-          {/*<label
-            htmlFor="categorias"
-            className="text-lg font-medium text-gray-200"
-          >
-            Filtrar por categoría:
-          </label>*/}
-          <select
-            id="categorias"
-            value={categoriaSeleccionada}
-            onChange={handleChange}
-            className="block select select-bordered w-full md:w-48 max-w-xs"
-          >
-            {categoriasConTodas.map((cat) => (
-              <option key={cat.value} value={cat.value}>
-                {cat.label}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
+      <div className="flex flex-col md:flex-row items-start md:items-center md:gap-6 mb-4">
+        <div className="flex flex-col md:flex-row items-start md:items-center gap-3">
+          <div className="flex flex-col w-full md:w-auto">
+            <select
+              id="categorias"
+              value={categoriaSeleccionada}
+              onChange={handleChange}
+              className="block select select-bordered w-full md:w-48 max-w-xs"
+            >
+              {categoriasConTodas.map((cat) => (
+                <option key={cat.value} value={cat.value}>
+                  {cat.label}
+                </option>
+              ))}
+            </select>
+          </div>
           <select
             value={filtroMes}
             onChange={(e) => setFiltroMes(e.target.value)}
@@ -549,7 +564,7 @@ function HomePage() {
           <select
             value={filtroAno}
             onChange={(e) => setFiltroAno(e.target.value)}
-            className="select select-bordered w-full md:w-48 max-w-xs"
+            className="select select-bordered w-full md:w-48"
           >
             <option value="2021">2021</option>
             <option value="2022">2022</option>
@@ -566,11 +581,39 @@ function HomePage() {
             Borrar filtros
           </button>
         </div>
+        <div className="flex items-center join ml-auto">
+          <button
+            className="btn join-item w-auto mr-2 bg-yellow-500 bg-opacity-80 text-gray-950 text-xl rounded-lg hover:bg-yellow-700"
+            onClick={openModal}
+          >
+            Agregar Transacción
+          </button>
+          <button
+            className="btn join-item w-auto mr-2 bg-yellow-500 bg-opacity-80 text-gray-950 text-xl rounded-lg hover:bg-yellow-700"
+            onClick={() => document.getElementById("sendPayModal").showModal()}
+          >
+            Realizar Pago
+          </button>
+          <button
+            className="btn join-item w-auto mr-2 bg-yellow-500 bg-opacity-80 text-gray-950 text-xl rounded-lg hover:bg-yellow-700"
+            onClick={() =>
+              document.getElementById("generatePayModal").showModal()
+            }
+          >
+            Generar Cobro
+          </button>
+        </div>
       </div>
 
       {!showNoTransactions && (
         <>
+          <div className="flex items-center">
+            <h2 className="text-2xl py-2 font-bold text-gray-100">
+              Monto por Categoria
+            </h2>
+          </div>
           <MonthlyGraphic
+            type="categorias"
             transacciones={transacciones}
             payCategories={payCategories}
             filtroMes={filtroMes}
@@ -581,25 +624,6 @@ function HomePage() {
                 <h2 className="text-2xl py-2 font-bold text-gray-100">
                   Historial de Transacciones
                 </h2>
-              </div>
-              <div className="flex items-center join">
-                <button
-                  className="btn join-item w-auto mr-2 bg-yellow-500 bg-opacity-80 text-gray-950 text-xl rounded-lg hover:bg-yellow-700"
-                  onClick={openModal}
-                >
-                  Agregar Transacción
-                </button>
-                <button className="btn join-item w-auto mr-2 bg-yellow-500 bg-opacity-80 text-gray-950 text-xl rounded-lg hover:bg-yellow-700">
-                  Generar Cobro
-                </button>
-                <button
-                  className="btn join-item w-auto mr-2 bg-yellow-500 bg-opacity-80 text-gray-950 text-xl rounded-lg hover:bg-yellow-700"
-                  onClick={() =>
-                    document.getElementById("generatePayModal").showModal()
-                  }
-                >
-                  Realizar Pago
-                </button>
               </div>
             </div>
           </div>
@@ -679,6 +703,7 @@ function HomePage() {
         payOptions={payOptions}
         handleCreateTP={handleCreateTP}
       />
+      <ModalAskPayment payCategories={payCategories} />
       <ModalSendPayment payCategories={payCategories} />
       <AlertPending
         isOpen={pendTran}

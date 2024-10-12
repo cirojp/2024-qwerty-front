@@ -8,13 +8,22 @@ import logo from "../assets/logo-removebg-preview.png";
 import { useNavigate } from "react-router-dom";
 import ConfirmDeleteMedioDePago from "./ConfirmDeleteMedioDePago";
 import ModalMedioDePago from "./ModalMedioDePago";
+import MonthlyGraphic from "./MonthlyGraphic";
 
 function ProfilePage() {
   library.add(fas);
   const defaultMediosDePago = [
-    { value: "Tarjeta de credito", label: "Tarjeta de credito", textColor: "mr-2 text-yellow-500" },
-    { value: "Tarjeta de Debito", label: "Tarjeta de debito", textColor: "mr-2 text-yellow-500" },
-    { value: "Efectivo", label: "Efectivo" , textColor: "mr-2 text-yellow-500"},
+    {
+      value: "Tarjeta de credito",
+      label: "Tarjeta de credito",
+      textColor: "mr-2 text-yellow-500",
+    },
+    {
+      value: "Tarjeta de Debito",
+      label: "Tarjeta de debito",
+      textColor: "mr-2 text-yellow-500",
+    },
+    { value: "Efectivo", label: "Efectivo", textColor: "mr-2 text-yellow-500" },
   ];
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -23,7 +32,41 @@ function ProfilePage() {
   const [isEditMode, setIsEditMode] = useState(false);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState({});
+  const [transacciones, setTransacciones] = useState([]);
   const navigate = useNavigate();
+  useEffect(() => {
+    getTransacciones();
+  }, []);
+  const getTransacciones = async () => {
+    const token = localStorage.getItem("token");
+    if (await checkIfValidToken(token)) {
+      let url = `https://two024-qwerty-back-2.onrender.com/api/transacciones/user/filter`;
+      try {
+        const response = await fetch(url, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setTransacciones(data);
+      } catch (err) {
+        console.error("Error fetching transactions:", err);
+      } finally {
+        setIsLoadingFilter(false);
+      }
+      fetchPersonalCategorias();
+      showTransactionsPendientes();
+    } else {
+      console.log("deberia redirec");
+      navigate("/");
+    }
+  };
   const checkIfValidToken = async (token) => {
     try {
       const response = await fetch(
@@ -51,18 +94,28 @@ function ProfilePage() {
     const token = localStorage.getItem("token");
     if (await checkIfValidToken(token)) {
       try {
-          const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/personal-tipo-gasto", {
-              headers: {
-                  "Authorization": `Bearer ${token}`
-              }
-          });
-          if (response.ok) {
-              const data = await response.json();
-              const customOptions = data.map(tipo => ({ label: tipo.nombre, value: tipo.nombre, textColor: "mr-2 text-white" }));
-              setPayOptions([...defaultMediosDePago, ...customOptions]);
+        const response = await fetch(
+          "https://two024-qwerty-back-2.onrender.com/api/personal-tipo-gasto",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
+        );
+        if (response.ok) {
+          const data = await response.json();
+          const customOptions = data.map((tipo) => ({
+            label: tipo.nombre,
+            value: tipo.nombre,
+            textColor: "mr-2 text-white",
+          }));
+          setPayOptions([...defaultMediosDePago, ...customOptions]);
+        }
       } catch (error) {
-          console.error("Error al obtener los tipos de gasto personalizados:", error);
+        console.error(
+          "Error al obtener los tipos de gasto personalizados:",
+          error
+        );
       }
     } else {
       console.log("deberia redirec");
@@ -78,9 +131,9 @@ function ProfilePage() {
     const token = localStorage.getItem("token");
     const jsonResp = {
       nombreActual: medioPagoValue.label,
-      nombreNuevo: newName
+      nombreNuevo: newName,
     };
-  
+
     try {
       const response = await fetch(
         "https://two024-qwerty-back-2.onrender.com/api/personal-tipo-gasto/editar",
@@ -93,7 +146,7 @@ function ProfilePage() {
           body: JSON.stringify(jsonResp),
         }
       );
-      
+
       if (response.ok) {
         setPayOptions([]); // Limpiar las opciones
         await fetchPersonalTipoGastos(); // Volver a obtener los tipos de gasto actualizados
@@ -103,7 +156,6 @@ function ProfilePage() {
       console.log(err);
     }
   };
-  
 
   const handleDelete = async (medioPagoValue) => {
     const token = localStorage.getItem("token");
@@ -120,7 +172,7 @@ function ProfilePage() {
           body: JSON.stringify(medioPagoValue), // Enviamos directamente el nombre como string
         }
       );
-      
+
       if (response.ok) {
         setPayOptions([]); // Limpiar las opciones
         await fetchPersonalTipoGastos(); // Volver a obtener los tipos de gasto actualizados
@@ -129,9 +181,7 @@ function ProfilePage() {
       console.log(err);
     }
   };
-  
-  
-  
+
   const cancelDelete = () => {
     setConfirmDeleteOpen(false);
     setItemToDelete({});
@@ -140,23 +190,29 @@ function ProfilePage() {
   const handleCreateTP = async (inputValue) => {
     const token = localStorage.getItem("token");
     try {
-        const response = await fetch(`https://two024-qwerty-back-2.onrender.com/api/personal-tipo-gasto`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
-            },
-            body: JSON.stringify(inputValue)
-        });
-        
-        if (response.ok) {
-            const newTipoGasto = await response.json();
-            const newOption = { label: newTipoGasto.nombre, value: newTipoGasto.nombre };
-            setPayOptions(prevOptions => [...prevOptions, newOption]);
-            setSelectedPayMethod(newOption);
+      const response = await fetch(
+        `https://two024-qwerty-back-2.onrender.com/api/personal-tipo-gasto`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(inputValue),
         }
+      );
+
+      if (response.ok) {
+        const newTipoGasto = await response.json();
+        const newOption = {
+          label: newTipoGasto.nombre,
+          value: newTipoGasto.nombre,
+        };
+        setPayOptions((prevOptions) => [...prevOptions, newOption]);
+        setSelectedPayMethod(newOption);
+      }
     } catch (error) {
-        console.error("Error al agregar el tipo de gasto personalizado:", error);
+      console.error("Error al agregar el tipo de gasto personalizado:", error);
     }
   };
 
@@ -189,7 +245,9 @@ function ProfilePage() {
                 className="bg-gray-700 p-3 rounded-md shadow mb-3"
               >
                 <div className="flex items-center">
-                  <div className={medioDePago.textColor}>{medioDePago.label}</div>
+                  <div className={medioDePago.textColor}>
+                    {medioDePago.label}
+                  </div>
                 </div>
               </li>
             ))}
@@ -201,7 +259,9 @@ function ProfilePage() {
                 className="bg-gray-700 p-3 rounded-md shadow mb-3 flex justify-between"
               >
                 <div className="flex items-center">
-                  <div className={medioDePago.textColor}>{medioDePago.label}</div>
+                  <div className={medioDePago.textColor}>
+                    {medioDePago.label}
+                  </div>
                 </div>
                 <div className="flex items-center">
                   <button
@@ -236,7 +296,16 @@ function ProfilePage() {
             Agregar Medio de Pago
           </button>
         </div>
-
+        <div className="flex items-center">
+          <h2 className="text-2xl py-2 font-bold text-gray-100">
+            Monto por tipo de Gasto
+          </h2>
+        </div>
+        <MonthlyGraphic
+          type="tipoGasto"
+          transacciones={transacciones}
+          payCategories={payOptions}
+        />
         <div className="m-4">
           <ActionButtons />
         </div>

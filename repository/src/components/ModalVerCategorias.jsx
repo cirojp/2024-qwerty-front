@@ -225,6 +225,8 @@ function ModalVerCategorias({
         console.log(`Categoría agregada: ${newName}`);
         setPayCategories([]);
         await fetchPersonalCategorias();
+        setIsModalOpen(false);
+        setEditCategory({});
       } else {
         const errorMessage = await response.text();
         console.error("Error al agregar categoria:", errorMessage);
@@ -233,9 +235,7 @@ function ModalVerCategorias({
       }
     } catch (err) {
       console.log(err);
-      return "";
     }
-    return "";
   };
 
   const confirmDelete = (categoryValue) => {

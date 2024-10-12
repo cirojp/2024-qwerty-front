@@ -24,6 +24,7 @@ function ModalSendPayment({ isModalOpen = false, payCategories }) {
   const [valor, setValor] = useState(0);
   const [fecha, setFecha] = useState(new Date().toISOString().split("T")[0]);
   const [modalError, setModalError] = useState("");
+  const idReserva = 0;
 
   const fetchPersonalTipoGastos = async () => {
     const token = localStorage.getItem("token");
@@ -89,7 +90,7 @@ function ModalSendPayment({ isModalOpen = false, payCategories }) {
         console.log("Pago enviado");
       }
       cleanForm();
-      document.getElementById("sendPayModal").close();
+      document.getElementById("generatePayModal").close();
     }
   };
 
@@ -111,10 +112,13 @@ function ModalSendPayment({ isModalOpen = false, payCategories }) {
   };
 
   return (
-    <dialog id="sendPayModal" className={`modal ${isModalOpen ? "open" : ""}`}>
+    <dialog
+      id="generatePayModal"
+      className={`modal ${isModalOpen ? "open" : ""}`}
+    >
       <div className="modal-box">
         <h2 className="text-2xl font-bold text-center mb-1 text-gray-100">
-          Enviar Pago
+          Generar Cobro
         </h2>
         <form onSubmit={handleSubmit}>
           <div>
@@ -147,22 +151,7 @@ function ModalSendPayment({ isModalOpen = false, payCategories }) {
               required
             />
           </div>
-          <div>
-            <label className="text-gray-100 mb-6">Tipo de Gasto:</label>
-            <select
-              value={payOption}
-              onChange={(e) => setPayOption(e.target.value)}
-              className="select select-warning w-full mt-1 block text-white bg-gray-900"
-            >
-              <option value="">Selecciona una Tipo de Gasto</option>
-              {payOptions.map((cat) => (
-                <option key={cat.value} value={cat.value}>
-                  {cat.label}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
+          {/*<div>
             <label className="text-gray-100 mb-6">Categoría:</label>
             <select
               value={categoria}
@@ -176,7 +165,7 @@ function ModalSendPayment({ isModalOpen = false, payCategories }) {
                 </option>
               ))}
             </select>
-          </div>
+          </div>*/}
           <div>
             <label className="text-gray-100 mb-6">Fecha:</label>
             <input
@@ -196,7 +185,7 @@ function ModalSendPayment({ isModalOpen = false, payCategories }) {
               className="btn mr-2"
               onClick={() => {
                 cleanForm();
-                document.getElementById("sendPayModal").close();
+                document.getElementById("generatePayModal").close();
               }}
             >
               Cerrar

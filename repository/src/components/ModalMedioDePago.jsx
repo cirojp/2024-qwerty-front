@@ -60,18 +60,13 @@ const ModalMedioDePago = ({
     if (!edit) {
       errorMessage = await handleCreateTP(medioDePagoNombre);
     } else {
-      errorMessage = await handleEditTP(
-          editTP,
-          medioDePagoNombre
-      );
+      errorMessage = await handleEditTP(editTP, medioDePagoNombre);
     }
     if (errorMessage != "") {
       setError(errorMessage);
       return;
     }
-    setMedioDePagoNombre("");
-    setError("");
-    onRequestClose();
+    handleClose();
   };
 
   const handleClose = () => {

@@ -4,6 +4,31 @@ import ModalVerCategorias from "./ModalVerCategorias";
 import { useNavigate } from "react-router-dom";
 function Header({ payCategories, setPayCategories }) {
   const [isModalCategoriaOpen, setIsModalCategoriaOpen] = useState(false);
+  const [payCategoriesDefault, setPayCategoriesDefault] = useState([
+    {
+      value: "Impuestos y Servicios",
+      label: "Impuestos y Servicios",
+      iconPath: "fa-solid fa-file-invoice-dollar",
+    },
+    {
+      value: "Entretenimiento y Ocio",
+      label: "Entretenimiento y Ocio",
+      iconPath: "fa-solid fa-ticket",
+    },
+    {
+      value: "Hogar y Mercado",
+      label: "Hogar y Mercado",
+      iconPath: "fa-solid fa-house",
+    },
+    { value: "Antojos", label: "Antojos", iconPath: "fa-solid fa-candy-cane" },
+    {
+      value: "Electrodomesticos",
+      label: "Electrodomesticos",
+      iconPath: "fa-solid fa-blender",
+    },
+    { value: "Clase", label: "Clase", iconPath: "fa-solid fa-chalkboard-user" },
+  ]);
+
   //const [payCategories, setPayCategories] = useState([]);
   const navigate = useNavigate();
   const openModalCategoria = () => {

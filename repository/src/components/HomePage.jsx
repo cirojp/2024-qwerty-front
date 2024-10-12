@@ -16,6 +16,7 @@ function HomePage() {
   const [fecha, setFecha] = useState(new Date().toISOString().split("T")[0]);
   const [error, setError] = useState(null);
   const [edit, setEdit] = useState(false);
+  const [tipoGasto, setTipoGasto] = useState("");
   const [tranPendiente, setTranPendiente] = useState({});
   const [categoria, setCategoria] = useState("");
   const [payCategories, setPayCategories] = useState([]);
@@ -43,7 +44,13 @@ function HomePage() {
     },
     { value: "Clase", label: "Clase", iconPath: "fa-solid fa-chalkboard-user" },
   ]);
+  const [payOptions, setPayOptions] = useState([
+    { value: "credito", label: "Tarjeta de credito" },
+    { value: "debito", label: "Tarjeta de debito" },
+    { value: "efectivo", label: "Efectivo" }
+]);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedPayMethod, setSelectedPayMethod] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [transaccionId, setTransaccionId] = useState(null);
   const navigate = useNavigate();
@@ -65,6 +72,9 @@ function HomePage() {
       ]);
     }
   }, [payCategories]);
+  useEffect(() => {
+    fetchPersonalTipoGastos();
+}, []);
 
   const showTransactionsPendientes = async () => {
     const token = localStorage.getItem("token");
@@ -92,6 +102,25 @@ function HomePage() {
       console.error("Error fetching transactions:", err);
     } finally {
       setIsLoadingFilter(false);
+    }
+  };
+
+  const fetchPersonalTipoGastos = async () => {
+    const token = localStorage.getItem("token");
+    try {
+        const response = await fetch("http://localhost:8080/api/personal-tipo-gasto", {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            const customOptions = data.map(tipo => ({ label: tipo.nombre, value: tipo.nombre }));
+            setPayOptions([...payOptions, ...customOptions]);
+        }
+    } catch (error) {
+        console.error("Error al obtener los tipos de gasto personalizados:", error);
     }
   };
   const checkIfValidToken = async (token) => {
@@ -203,12 +232,15 @@ function HomePage() {
     setValor("");
     setFecha(new Date().toISOString().split("T")[0]);
     setSelectedCategory(null);
+    setSelectedPayMethod(null);
   };
 
   const editRow = (row) => {
     setEdit(true);
     setMotivo(row.motivo);
     setValor(row.valor);
+    const selectedOption = payOptions.find(option => option.value === row.tipoGasto);
+        setSelectedPayMethod(selectedOption || null);
     const selectedPayCategory = payCategories.find(
       (option) => option.value == row.categoria
     );
@@ -302,7 +334,7 @@ function HomePage() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ motivo, valor, fecha, categoria }),
+        body: JSON.stringify({ motivo, valor, fecha, categoria, tipoGasto }),
       });
 
       if (response.ok) {
@@ -380,7 +412,33 @@ function HomePage() {
     setCategoria(value ? value.value : "");
     setSelectedCategory(value);
   };
-
+  const handlePayChange = (value) => {
+    setTipoGasto(value ? value.value : "");
+    setSelectedPayMethod(value);
+  };
+  const handleCreateTP = async (inputValue) => {
+    const token = localStorage.getItem("token");
+    try {
+        const response = await fetch(`https://two024-qwerty-back-2.onrender.com/api/personal-tipo-gasto`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify(inputValue)
+        });
+        
+        if (response.ok) {
+            const newTipoGasto = await response.json();
+            const newOption = { label: newTipoGasto.nombre, value: newTipoGasto.nombre };
+            setPayOptions(prevOptions => [...prevOptions, newOption]);
+            setSelectedPayMethod(newOption);
+            setTipoGasto(newTipoGasto.nombre);
+        }
+    } catch (error) {
+        console.error("Error al agregar el tipo de gasto personalizado:", error);
+    }
+  };
   const handleCreateCat = async (nombre, icono) => {
     console.log("entre      ");
     const token = localStorage.getItem("token");
@@ -616,6 +674,10 @@ function HomePage() {
         handleCategoryChange={handleCategoryChange}
         handleCreateCat={handleCreateCat}
         setFecha={setFecha}
+        handlePayChange={handlePayChange}
+        selectedPayMethod={selectedPayMethod}
+        payOptions={payOptions}
+        handleCreateTP={handleCreateTP}
       />
       <ModalSendPayment payCategories={payCategories} />
       <AlertPending

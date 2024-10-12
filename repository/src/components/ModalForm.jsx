@@ -3,6 +3,7 @@ import Modal from "react-modal";
 import Select from "react-select";
 import "./styles/ModalForm.css";
 import ModalCategoria from "./ModalCategoria";
+import CreatableSelect from 'react-select/creatable';
 
 function ModalForm({
   isModalOpen,
@@ -19,6 +20,10 @@ function ModalForm({
   handleCategoryChange,
   handleCreateCat,
   setFecha,
+  handlePayChange, 
+  selectedPayMethod,
+  payOptions, 
+  handleCreateTP,
 }) {
   const customStyles = {
     overlay: {
@@ -141,6 +146,18 @@ function ModalForm({
             onChange={(e) => setValor(e.target.value)}
             className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
             required
+          />
+        </div>
+        <div>
+          <label className="text-center text-gray-100 mb-6">Tipo de Gasto:</label>
+          <CreatableSelect
+              options={payOptions}
+              onChange={handlePayChange}
+              onCreateOption={handleCreateTP}
+              value={selectedPayMethod}
+              className="custom-select mt-1 block w-full border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm border-transparent"
+              styles={customSelectStyles}
+              required
           />
         </div>
         <div>

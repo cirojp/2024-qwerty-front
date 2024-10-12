@@ -8,6 +8,7 @@ const ExpandedRow = ({data = {
     valor: "",
     categoria: "",
     fecha: "",
+    tipoGasto: "",
   },
   payCategories = [],
 }) => {
@@ -24,12 +25,15 @@ const ExpandedRow = ({data = {
         <div className="text-gray-200">{data.valor}</div>
 
         <div className="font-bold text-gray-300">Categoría:</div> 
+        
         <div>
         <>
               <FontAwesomeIcon icon={category.iconPath} className="mr-2" />
               {category.label}
             </>
         </div>
+        <div className="font-bold text-gray-300">Tipo de Gasto:</div>
+        <div className="text-gray-200">{data.tipoGasto}</div>
         <div className="font-bold text-gray-300">Fecha:</div>
         <div className="text-gray-200">{data.fecha}</div>
       </div>

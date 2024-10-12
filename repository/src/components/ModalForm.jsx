@@ -149,7 +149,7 @@ function ModalForm({
           />
         </div>
         <div>
-          <label className="text-center text-gray-100 mb-6">Tipo de Gasto:</label>
+          <label className="text-center text-gray-100 mb-6">Medio de Pago:</label>
           <CreatableSelect
               options={payOptions}
               onChange={handlePayChange}

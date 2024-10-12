@@ -32,7 +32,7 @@ const ExpandedRow = ({data = {
               {category.label}
             </>
         </div>
-        <div className="font-bold text-gray-300">Tipo de Gasto:</div>
+        <div className="font-bold text-gray-300">Medio De Pago:</div>
         <div className="text-gray-200">{data.tipoGasto}</div>
         <div className="font-bold text-gray-300">Fecha:</div>
         <div className="text-gray-200">{data.fecha}</div>

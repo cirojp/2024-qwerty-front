@@ -45,9 +45,9 @@ function HomePage() {
     { value: "Clase", label: "Clase", iconPath: "fa-solid fa-chalkboard-user" },
   ]);
   const [payOptions, setPayOptions] = useState([
-    { value: "credito", label: "Tarjeta de credito" },
-    { value: "debito", label: "Tarjeta de debito" },
-    { value: "efectivo", label: "Efectivo" }
+    { value: "Tarjeta de credito", label: "Tarjeta de credito" },
+    { value: "Tarjeta de Debito", label: "Tarjeta de debito" },
+    { value: "Efectivo", label: "Efectivo" }
 ]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedPayMethod, setSelectedPayMethod] = useState(null);
@@ -108,7 +108,7 @@ function HomePage() {
   const fetchPersonalTipoGastos = async () => {
     const token = localStorage.getItem("token");
     try {
-        const response = await fetch("http://localhost:8080/api/personal-tipo-gasto", {
+        const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/personal-tipo-gasto", {
             headers: {
                 "Authorization": `Bearer ${token}`
             }

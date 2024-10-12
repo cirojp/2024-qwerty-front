@@ -274,7 +274,7 @@ function ModalVerCategorias({
           </ul>
 
           <ul>
-            {payCategories.slice(6).map((category) => (
+            {payCategories.slice(7).map((category) => (
               <li
                 key={category.value}
                 className="bg-gray-700 p-3 rounded-md shadow mb-3 flex justify-between"

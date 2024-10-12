@@ -41,7 +41,7 @@ function Header({ payCategories, setPayCategories }) {
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(
-        "http://localhost:8080/api/personal-categoria",
+        "https://two024-qwerty-back-2.onrender.com/api/personal-categoria",
         {
           headers: {
             Authorization: `Bearer ${token}`,

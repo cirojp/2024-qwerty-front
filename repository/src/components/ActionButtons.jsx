@@ -11,13 +11,16 @@ function ActionButtons() {
   const deleteAccount = async () => {
     const token = localStorage.getItem("token");
     try {
-      const response = await fetch(`http://localhost:8080/api/auth`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      /*const response = await fetch(`http://localhost:8080/api/auth`, {
+      const response = await fetch(
+        `https://two024-qwerty-back-2.onrender.com/api/auth`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      /*const response = await fetch(`https://two024-qwerty-back-2.onrender.com/api/auth`, {
                 method: "DELETE",
                 headers: {
                     "Authorization": `Bearer ${token}`

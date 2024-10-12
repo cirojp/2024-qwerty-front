@@ -85,7 +85,7 @@ function HomePage() {
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(
-        "http://localhost:8080/api/transaccionesPendientes/user",
+        "https://two024-qwerty-back-2.onrender.com/api/transaccionesPendientes/user",
         {
           method: "GET",
           headers: {
@@ -114,7 +114,7 @@ function HomePage() {
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(
-        "http://localhost:8080/api/personal-tipo-gasto",
+        "https://two024-qwerty-back-2.onrender.com/api/personal-tipo-gasto",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -140,7 +140,7 @@ function HomePage() {
   const checkIfValidToken = async (token) => {
     try {
       const response = await fetch(
-        "http://localhost:8080/api/transacciones/userTest",
+        "https://two024-qwerty-back-2.onrender.com/api/transacciones/userTest",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -163,7 +163,7 @@ function HomePage() {
   const getTransacciones = async (filtrado = "Todas") => {
     const token = localStorage.getItem("token");
     if (await checkIfValidToken(token)) {
-      let url = `http://localhost:8080/api/transacciones/user/filter`;
+      let url = `https://two024-qwerty-back-2.onrender.com/api/transacciones/user/filter`;
       if (filtrado !== "Todas" || filtroMes || filtroAno) {
         url += `?categoria=${filtrado}`;
         if (filtroMes) url += `&mes=${filtroMes}`;
@@ -201,7 +201,7 @@ function HomePage() {
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(
-        "http://localhost:8080/api/personal-categoria",
+        "https://two024-qwerty-back-2.onrender.com/api/personal-categoria",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -280,7 +280,7 @@ function HomePage() {
   };
   const enviarRespuesta = async (resp, id_reserva) => {
     const token = localStorage.getItem("token");
-    const url = `http://localhost:8080/api/transaccionesPendientes/${resp}?id_reserva=${id_reserva}`;
+    const url = `https://two024-qwerty-back-2.onrender.com/api/transaccionesPendientes/${resp}?id_reserva=${id_reserva}`;
     const method = "POST";
     try {
       //hacer chequeos de que pase bien las cosas en el back!
@@ -301,7 +301,7 @@ function HomePage() {
   };
   const aceptarTransaccion = async (transaccion, categoria) => {
     const token = localStorage.getItem("token");
-    const url = "http://localhost:8080/api/transacciones";
+    const url = "https://two024-qwerty-back-2.onrender.com/api/transacciones";
     const method = "POST";
     let motivo = transaccion.motivo;
     let valor = transaccion.valor;
@@ -334,8 +334,8 @@ function HomePage() {
     const token = localStorage.getItem("token");
 
     const url = edit
-      ? `http://localhost:8080/api/transacciones/${transaccionId}`
-      : "http://localhost:8080/api/transacciones";
+      ? `https://two024-qwerty-back-2.onrender.com/api/transacciones/${transaccionId}`
+      : "https://two024-qwerty-back-2.onrender.com/api/transacciones";
 
     const method = edit ? "PUT" : "POST";
 
@@ -381,7 +381,7 @@ function HomePage() {
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(
-        `http://localhost:8080/api/transacciones/${id}`,
+        `https://two024-qwerty-back-2.onrender.com/api/transacciones/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -403,7 +403,7 @@ function HomePage() {
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(
-        `http://localhost:8080/api/transaccionesPendientes/${id}`,
+        `https://two024-qwerty-back-2.onrender.com/api/transaccionesPendientes/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -436,7 +436,7 @@ function HomePage() {
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(
-        `http://localhost:8080/api/personal-tipo-gasto`,
+        `https://two024-qwerty-back-2.onrender.com/api/personal-tipo-gasto`,
         {
           method: "POST",
           headers: {
@@ -474,7 +474,7 @@ function HomePage() {
         iconPath: icono,
       };
       const response = await fetch(
-        "http://localhost:8080/api/personal-categoria",
+        "https://two024-qwerty-back-2.onrender.com/api/personal-categoria",
         {
           method: "POST",
           headers: {

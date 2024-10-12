@@ -29,7 +29,7 @@ function ModalSendPayment({ isModalOpen = false, payCategories }) {
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(
-        "http://localhost:8080/api/personal-tipo-gasto",
+        "https://two024-qwerty-back-2.onrender.com/api/personal-tipo-gasto",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -79,7 +79,7 @@ function ModalSendPayment({ isModalOpen = false, payCategories }) {
     e.preventDefault();
     if (validateForm()) {
       const response = await fetch(
-        "http://localhost:8080/api/public/sendTransaccion",
+        "https://two024-qwerty-back-2.onrender.com/api/public/sendTransaccion",
         {
           method: "POST",
           body: JSON.stringify({ valor, emailReceptor, motivo, fecha }),

@@ -143,8 +143,7 @@ function ModalVerCategorias({
     };
     try {
       const response = await fetch(
-        "https://two024-qwerty-back-2.onrender.com/api/personal-categoria/" +
-          inputValue.nombre,
+        "http://localhost:8080/api/personal-categoria/" + inputValue.nombre,
         {
           method: "PUT",
           headers: {
@@ -177,7 +176,7 @@ function ModalVerCategorias({
     setConfirmDeleteOpen(false);
     try {
       const response = await fetch(
-        "https://two024-qwerty-back-2.onrender.com/api/personal-categoria",
+        "http://localhost:8080/api/personal-categoria",
         {
           method: "DELETE",
           headers: {
@@ -211,7 +210,7 @@ function ModalVerCategorias({
     };
     try {
       const response = await fetch(
-        "https://two024-qwerty-back-2.onrender.com/api/personal-categoria",
+        "http://localhost:8080/api/personal-categoria",
         {
           method: "POST",
           headers: {
@@ -225,6 +224,8 @@ function ModalVerCategorias({
         console.log(`Categoría agregada: ${newName}`);
         setPayCategories([]);
         await fetchPersonalCategorias();
+        setIsModalOpen(false);
+        setEditCategory({});
       } else {
         const errorMessage = await response.text();
         console.error("Error al agregar categoria:", errorMessage);
@@ -233,9 +234,7 @@ function ModalVerCategorias({
       }
     } catch (err) {
       console.log(err);
-      return "";
     }
-    return "";
   };
 
   const confirmDelete = (categoryValue) => {

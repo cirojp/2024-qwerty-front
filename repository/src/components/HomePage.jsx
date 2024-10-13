@@ -267,7 +267,7 @@ function HomePage() {
   };
 
   const isAccepted = async (transaction) => {
-    await aceptarTransaccion(transaction, "Otros");
+    await aceptarTransaccion(transaction, "Otros", "Pago");
     eliminarTransaccionPendiente(transaction.id);
     //enviarRespuesta("aceptada", transaction.id_reserva);
     setPendTran(false);
@@ -299,8 +299,36 @@ function HomePage() {
       // habria que avisar que hubo un error en aceptar la transaccion o algo
     }
   };
-  const aceptarTransaccion = async (transaccion, categoria) => {
+  const aceptarTransaccion = async (transaccion, categoria, tipo) => {
     const token = localStorage.getItem("token");
+    let url = "https://two024-qwerty-back-2.onrender.com/api/transacciones/";
+    if (tipo == "Pago") {
+      url += "crearPago/" + transaccion.sentByEmail;
+      const motivo = transaccion.motivo;
+      const valor = transaccion.valor;
+      const fecha = transaccion.fecha;
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ motivo, valor, fecha, categoria }),
+        });
+        if (response.ok) {
+          const data = await response.json();
+          const updatedTransacciones = [...transacciones, data];
+          updatedTransacciones.sort(
+            (a, b) => new Date(b.fecha) - new Date(a.fecha)
+          );
+          setTransacciones(updatedTransacciones);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    /*const token = localStorage.getItem("token");
     const url = "https://two024-qwerty-back-2.onrender.com/api/transacciones";
     const method = "POST";
     let motivo = transaccion.motivo;
@@ -327,7 +355,7 @@ function HomePage() {
       }
     } catch (err) {
       // habria que avisar que hubo un error en aceptar la transaccion o algo
-    }
+    }*/
   };
   const agregarTransaccion = async (e, categoria) => {
     e.preventDefault();

@@ -32,7 +32,12 @@ function AlertPending({
           Motivo: {pendingTransaction.motivo}
         </label>
         <label className="block mb-2">Valor: {pendingTransaction.valor}</label>
-        <label className="block mb-4">Fecha: {pendingTransaction.fecha}</label>
+        <label className="block mb-2">Fecha: {pendingTransaction.fecha}</label>
+        {pendingTransaction.sentByEmail != "" && (
+          <label className="block mb-4">
+            Enviado por: {pendingTransaction.sentByEmail}
+          </label>
+        )}
         <div className="flex justify-end">
           <button
             className="bg-yellow-500 hover:bg-yellow-800 text-black font-bold py-2 px-4 rounded mr-2"

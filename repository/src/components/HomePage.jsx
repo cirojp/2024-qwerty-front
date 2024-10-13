@@ -267,15 +267,15 @@ function HomePage() {
   };
 
   const isAccepted = async (transaction) => {
-    await aceptarTransaccion(transaction, "Clase");
+    await aceptarTransaccion(transaction, "Otros");
     eliminarTransaccionPendiente(transaction.id);
-    enviarRespuesta("aceptada", transaction.id_reserva);
+    //enviarRespuesta("aceptada", transaction.id_reserva);
     setPendTran(false);
   };
 
   const isRejected = (transaction) => {
     eliminarTransaccionPendiente(transaction.id);
-    enviarRespuesta("rechazada", transaction.id_reserva);
+    //enviarRespuesta("rechazada", transaction.id_reserva);
     setPendTran(false);
   };
   const enviarRespuesta = async (resp, id_reserva) => {

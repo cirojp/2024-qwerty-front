@@ -59,7 +59,7 @@ function ModalSendPayment({ isModalOpen = false, payCategories }) {
   }, []);
 
   const validateForm = () => {
-    if (!emailReceptor || !motivo || !valor || !categoria || !fecha) {
+    if (!emailReceptor || !motivo || !valor || !fecha) {
       setModalError("Todos los campos son obligatorios.");
       return false;
     }
@@ -78,12 +78,23 @@ function ModalSendPayment({ isModalOpen = false, payCategories }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const token = localStorage.getItem("token");
+    const transaccion = {
+      valor: valor,
+      email: emailReceptor,
+      motivo: motivo,
+      fecha: fecha,
+    };
     if (validateForm()) {
       const response = await fetch(
-        "https://two024-qwerty-back-2.onrender.com/api/public/sendTransaccion",
+        "https://two024-qwerty-back-2.onrender.com/api/transaccionesPendientes/askPayUser",
         {
           method: "POST",
-          body: JSON.stringify({ valor, emailReceptor, motivo, fecha }),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(transaccion),
         }
       );
       if (response.ok) {

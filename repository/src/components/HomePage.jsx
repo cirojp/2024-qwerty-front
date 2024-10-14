@@ -84,6 +84,7 @@ function HomePage() {
 
   const showTransactionsPendientes = async () => {
     const token = localStorage.getItem("token");
+    console.log("buscando pendientes");
     try {
       const response = await fetch(
         "https://two024-qwerty-back-2.onrender.com/api/transaccionesPendientes/user",
@@ -102,6 +103,7 @@ function HomePage() {
       const data = await response.json();
       if (data[0] != null) {
         setTranPendiente(data[0]);
+        console.log(data[0]);
         setPendTran(true);
       }
     } catch (err) {
@@ -311,9 +313,9 @@ function HomePage() {
   };
   const aceptarTransaccion = async (transaccion, categoria, tipoGasto) => {
     const token = localStorage.getItem("token");
-    let url = "https://two024-qwerty-back-2.onrender.com/api/transacciones/";
+    let url = "https://two024-qwerty-back-2.onrender.com/api/transacciones";
     if (transaccion.id_reserva == "Cobro") {
-      url += "crearPago/" + transaccion.sentByEmail;
+      url += "/crearPago/" + transaccion.sentByEmail;
       const motivo = transaccion.motivo;
       const valor = transaccion.valor;
       const fecha = transaccion.fecha;
@@ -339,6 +341,35 @@ function HomePage() {
       }
     } else if (transaccion.id_reserva == "Pago") {
       console.log("Transaccion Aprobada");
+    } else {
+        const method = "POST";
+        let motivo = transaccion.motivo;
+        let valor = transaccion.valor;
+        let fecha = transaccion.fecha;
+        categoria = "Clase";
+        try {
+          //hacer chequeos de que pase bien las cosas en el back!
+          const response = await fetch(url, {
+            method: method,
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ motivo, valor, fecha, categoria }),
+          });
+    
+          if (response.ok) {
+            const data = await response.json();
+            const updatedTransacciones = [...transacciones, data];
+            updatedTransacciones.sort(
+              (a, b) => new Date(b.fecha) - new Date(a.fecha)
+            );
+            setTransacciones(updatedTransacciones);
+          }
+        } catch (err) {
+          // habria que avisar que hubo un error en aceptar la transaccion o algo
+        }
+
     }
     /*const token = localStorage.getItem("token");
     const url = "https://two024-qwerty-back-2.onrender.com/api/transacciones";

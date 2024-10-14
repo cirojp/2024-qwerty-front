@@ -20,11 +20,16 @@ function MonthlyGraphic({
   payCategories = [],
   payOptions = [],
   filtroMes = "",
+  filtroCategoria,
 }) {
   library.add(fas);
 
+  // Filtrar solo las transacciones que no sean de la categoría "Ingreso de Dinero"
+  const gastos = filtroCategoria !== "Ingreso de Dinero" 
+  ? transacciones.filter((transaccion) => transaccion.categoria !== "Ingreso de Dinero")
+  : transacciones;
   // Calcular la suma por categoría
-  const sumaPorCategoria = transacciones.reduce((acc, transaccion) => {
+  const sumaPorCategoria = gastos.reduce((acc, transaccion) => {
     const categoria = transaccion.categoria;
     if (!acc[categoria]) {
       acc[categoria] = 0;
@@ -33,7 +38,7 @@ function MonthlyGraphic({
     return acc;
   }, {});
 
-  const sumaPorTipoGasto = transacciones.reduce((acc, transaccion) => {
+  const sumaPorTipoGasto = gastos.reduce((acc, transaccion) => {
     const tipoGasto = transaccion.tipoGasto;
     if (!acc[tipoGasto]) {
       acc[tipoGasto] = 0;
@@ -81,7 +86,7 @@ function MonthlyGraphic({
 
   if (filtroMes) {
     const selectedMonth = parseInt(filtroMes, 10) - 1;
-    const gastosPorDia = transacciones.reduce((acc, transaccion) => {
+    const gastosPorDia = gastos.reduce((acc, transaccion) => {
       const fecha = new Date(transaccion.fecha);
       const mes = fecha.getMonth();
       if (mes === selectedMonth) {
@@ -100,7 +105,7 @@ function MonthlyGraphic({
       total: gastosPorDia[index + 1] || 0,
     }));
   } else {
-    const gastosPorMes = transacciones.reduce((acc, transaccion) => {
+    const gastosPorMes = gastos.reduce((acc, transaccion) => {
       const mes = new Date(transaccion.fecha).getMonth();
       if (!acc[mes]) {
         acc[mes] = 0;

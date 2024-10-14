@@ -223,6 +223,11 @@ function HomePage() {
             label: "Otros",
             iconPath: "fa-solid fa-circle-dot",
           },
+          {
+            value: "Ingreso de Dinero",
+            label: "Ingreso de Dinero",
+            iconPath: "fa-solid fa-money-bill-transfer"
+          },
           ...payCategoriesDefault,
           ...customOptions,
         ]);
@@ -552,6 +557,13 @@ function HomePage() {
     setFiltroAno("2024");
     setFiltroMes("");
   };
+  const refershTransacciones = (transaccionNueva) => {
+    const updatedTransacciones = [...transacciones, transaccionNueva];
+          updatedTransacciones.sort(
+            (a, b) => new Date(b.fecha) - new Date(a.fecha)
+          );
+          setTransacciones(updatedTransacciones);
+  };
 
   return (
     <div className="container min-h-screen min-w-full max-w-full bg-black">
@@ -651,6 +663,7 @@ function HomePage() {
             transacciones={transacciones}
             payCategories={payCategories}
             filtroMes={filtroMes}
+            filtroCategoria={categoriaSeleccionada}
           />
           <div className="bg-black flex flex-col w-full">
             <div className="flex justify-between items-center w-full px-4 py-6">
@@ -738,7 +751,7 @@ function HomePage() {
         handleCreateTP={handleCreateTP}
       />
       <ModalAskPayment payCategories={payCategories} />
-      <ModalSendPayment payCategories={payCategories} />
+      <ModalSendPayment payCategories={payCategories} refreshTransacciones={refershTransacciones} />
       <AlertPending
         isOpen={pendTran}
         pendingTransaction={tranPendiente}

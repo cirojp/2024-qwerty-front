@@ -128,7 +128,7 @@ function ModalSendPayment({ isModalOpen = false, payCategories }) {
       id="generatePayModal"
       className={`modal ${isModalOpen ? "open" : ""}`}
     >
-      <div className="modal-box">
+      <div className="modal-box bg-black">
         <h2 className="text-2xl font-bold text-center mb-1 text-gray-100">
           Generar Cobro
         </h2>

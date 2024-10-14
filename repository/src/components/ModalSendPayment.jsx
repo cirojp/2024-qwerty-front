@@ -162,13 +162,13 @@ function ModalSendPayment({ isModalOpen = false, payCategories, refreshTransacci
             />
           </div>
           <div>
-            <label className="text-gray-100 mb-6">Tipo de Gasto:</label>
+            <label className="text-gray-100 mb-6">Medio de Pago:</label>
             <select
               value={payOption}
               onChange={(e) => setPayOption(e.target.value)}
               className="select select-warning w-full mt-1 block text-white bg-gray-900"
             >
-              <option value="">Selecciona una Tipo de Gasto</option>
+              <option value="">Selecciona un Medio De Pago</option>
               {payOptions.map((cat) => (
                 <option key={cat.value} value={cat.value}>
                   {cat.label}

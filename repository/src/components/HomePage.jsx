@@ -76,6 +76,7 @@ function HomePage() {
         ...payCategories,
       ]);
     }
+    //getTransacciones(categoriaSeleccionada);
   }, [payCategories]);
   useEffect(() => {
     fetchPersonalTipoGastos();
@@ -570,6 +571,8 @@ function HomePage() {
       <Header
         payCategories={payCategories}
         setPayCategories={setPayCategories}
+        fetchPersonalCategorias={fetchPersonalCategorias}
+        getTransacciones={getTransacciones}
       />
       <div className="flex flex-col md:flex-row items-start md:items-center md:gap-6 mb-4">
         <div className="flex flex-col md:flex-row items-start md:items-center gap-3">

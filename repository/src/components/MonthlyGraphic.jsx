@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   PieChart,
   Pie,
@@ -23,7 +23,8 @@ function MonthlyGraphic({
   filtroCategoria,
 }) {
   library.add(fas);
-
+  useEffect(() => {
+  }, [payCategories, transacciones]);
   // Filtrar solo las transacciones que no sean de la categoría "Ingreso de Dinero"
   const gastos = filtroCategoria !== "Ingreso de Dinero" 
   ? transacciones.filter((transaccion) => transaccion.categoria !== "Ingreso de Dinero")

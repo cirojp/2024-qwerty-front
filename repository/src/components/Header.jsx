@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import logo from "../assets/logo-removebg-preview.png";
 import ModalVerCategorias from "./ModalVerCategorias";
 import { useNavigate } from "react-router-dom";
-function Header({ payCategories, setPayCategories }) {
+function Header({ payCategories, setPayCategories, fetchPersonalCategorias, getTransacciones }) {
   const [isModalCategoriaOpen, setIsModalCategoriaOpen] = useState(false);
   const [payCategoriesDefault, setPayCategoriesDefault] = useState([
     {
@@ -37,7 +37,7 @@ function Header({ payCategories, setPayCategories }) {
   const closeModalCategoria = () => {
     setIsModalCategoriaOpen(false);
   };
-  const fetchPersonalCategorias = async () => {
+  /*const fetchPersonalCategorias = async () => {
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(
@@ -62,7 +62,7 @@ function Header({ payCategories, setPayCategories }) {
     } catch (error) {
       console.error("Error al obtener las categorías personalizadas:", error);
     }
-  };
+  };*/
 
   return (
     <div className="grid grid-cols-3 grid-rows-2 gap-0 w-full">
@@ -94,6 +94,7 @@ function Header({ payCategories, setPayCategories }) {
         //edit={edit}
         payCategories={payCategories}
         //handleCreateCat={handleCreateCat}
+        getTransacciones={getTransacciones}
       />
     </div>
   );

@@ -15,7 +15,11 @@ function ModalVerCategorias({
   payCategories,
   fetchPersonalCategorias,
   setPayCategories,
+  getTransacciones
 }) {
+  useEffect(() => {
+    //fetchPersonalCategorias();
+  }, [payCategories]);
   const customStyles = {
     overlay: {
       position: "fixed",
@@ -157,7 +161,7 @@ function ModalVerCategorias({
       if (response.ok) {
         console.log(`Categoría editada: ${categoryValue}`);
         setPayCategories([]);
-        await fetchPersonalCategorias();
+        await getTransacciones();
         setIsModalOpen(false);
       }
     } catch (err) {
@@ -190,7 +194,7 @@ function ModalVerCategorias({
       if (response.ok) {
         console.log(`Categoría eliminada: ${categoryValue}`);
         setPayCategories([]);
-        await fetchPersonalCategorias();
+        await getTransacciones();
       }
     } catch (err) {
       console.log(err);

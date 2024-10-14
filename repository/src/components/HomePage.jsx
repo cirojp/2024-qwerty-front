@@ -266,10 +266,12 @@ function HomePage() {
     openModal();
   };
 
-  const isAccepted = async (transaction) => {
-    await aceptarTransaccion(transaction, "Otros", "Pago");
+  const isAccepted = async (transaction, categoria, tipoGasto) => {
+    await aceptarTransaccion(transaction, categoria, tipoGasto);
     eliminarTransaccionPendiente(transaction.id);
-    //enviarRespuesta("aceptada", transaction.id_reserva);
+    if (transaction.id_reserva != "Cobro") {
+      enviarRespuesta("aceptada", transaction.id_reserva);
+    }
     setPendTran(false);
   };
 
@@ -299,10 +301,10 @@ function HomePage() {
       // habria que avisar que hubo un error en aceptar la transaccion o algo
     }
   };
-  const aceptarTransaccion = async (transaccion, categoria, tipo) => {
+  const aceptarTransaccion = async (transaccion, categoria, tipoGasto) => {
     const token = localStorage.getItem("token");
     let url = "https://two024-qwerty-back-2.onrender.com/api/transacciones/";
-    if (tipo == "Pago") {
+    if (transaccion.id_reserva == "Cobro") {
       url += "crearPago/" + transaccion.sentByEmail;
       const motivo = transaccion.motivo;
       const valor = transaccion.valor;
@@ -314,7 +316,7 @@ function HomePage() {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ motivo, valor, fecha, categoria }),
+          body: JSON.stringify({ motivo, valor, fecha, categoria, tipoGasto }),
         });
         if (response.ok) {
           const data = await response.json();
@@ -738,6 +740,7 @@ function HomePage() {
         pendingTransaction={tranPendiente}
         isAccepted={isAccepted}
         isRejected={isRejected}
+        payCategories={payCategories}
       />
     </div>
   );

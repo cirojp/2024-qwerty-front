@@ -83,6 +83,7 @@ function ModalSendPayment({ isModalOpen = false, payCategories }) {
       valor: valor,
       email: emailReceptor,
       motivo: motivo,
+      id_reserva: "Cobro",
       fecha: fecha,
     };
     if (validateForm()) {
@@ -162,21 +163,6 @@ function ModalSendPayment({ isModalOpen = false, payCategories }) {
               required
             />
           </div>
-          {/*<div>
-            <label className="text-gray-100 mb-6">Categoría:</label>
-            <select
-              value={categoria}
-              onChange={handleCategoryChange}
-              className="select select-warning w-full mt-1 block text-white bg-gray-900"
-            >
-              <option value="">Selecciona una categoría</option>
-              {payCategories.map((cat) => (
-                <option key={cat.value} value={cat.value}>
-                  {cat.label}
-                </option>
-              ))}
-            </select>
-          </div>*/}
           <div>
             <label className="text-gray-100 mb-6">Fecha:</label>
             <input

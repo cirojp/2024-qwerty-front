@@ -718,7 +718,7 @@ function HomePage() {
           {/* Si no hay transacciones para mostrar */}
           {showNoTransactions && (
             <div className="flex flex-col justify-center mb-0 items-center">
-              {categoriaSeleccionada !== "Todas" && (
+              {(categoriaSeleccionada !== "Todas" || filtroAno !== "2024") && (
                 <p className="text-red-500 font-bold mb-4">
                   Su filtro no coincide con ninguna transacción
                 </p>
@@ -727,7 +727,7 @@ function HomePage() {
                 className="bg-yellow-500 bg-opacity-80 text-gray-950 font-extrabold py-6 px-16 rounded-lg hover:bg-yellow-700"
                 onClick={openModal}
               >
-                Ingrese una transacción
+                Ingrese una transacción {categoriaSeleccionada !== "Todas"}
               </button>
             </div>
           )}

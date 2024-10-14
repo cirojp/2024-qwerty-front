@@ -77,12 +77,25 @@ function ModalSendPayment({ isModalOpen = false, payCategories }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const token = localStorage.getItem("token");
+    const transaccion = {
+      valor: valor,
+      motivo: motivo,
+      fecha: fecha,
+      categoria: categoria,
+      tipoGasto: payOption,
+    };
     if (validateForm()) {
       const response = await fetch(
-        "https://two024-qwerty-back-2.onrender.com/api/public/sendTransaccion",
+        "https://two024-qwerty-back-2.onrender.com/api/transacciones/enviarPago/" +
+          emailReceptor,
         {
           method: "POST",
-          body: JSON.stringify({ valor, emailReceptor, motivo, fecha }),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(transaccion),
         }
       );
       if (response.ok) {

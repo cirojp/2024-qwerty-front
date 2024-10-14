@@ -269,7 +269,7 @@ function HomePage() {
   const isAccepted = async (transaction, categoria, tipoGasto) => {
     await aceptarTransaccion(transaction, categoria, tipoGasto);
     eliminarTransaccionPendiente(transaction.id);
-    if (transaction.id_reserva != "Cobro") {
+    if (transaction.id_reserva != "Cobro" && transaction.id_reserva != "Pago") {
       enviarRespuesta("aceptada", transaction.id_reserva);
     }
     setPendTran(false);
@@ -277,7 +277,9 @@ function HomePage() {
 
   const isRejected = (transaction) => {
     eliminarTransaccionPendiente(transaction.id);
-    //enviarRespuesta("rechazada", transaction.id_reserva);
+    if (transaction.id_reserva != "Cobro" && transaction.id_reserva != "Pago") {
+      enviarRespuesta("rechazada", transaction.id_reserva);
+    }
     setPendTran(false);
   };
   const enviarRespuesta = async (resp, id_reserva) => {
@@ -329,6 +331,8 @@ function HomePage() {
       } catch (err) {
         console.log(err);
       }
+    } else if (transaccion.id_reserva == "Pago") {
+      console.log("Transaccion Aprobada");
     }
     /*const token = localStorage.getItem("token");
     const url = "https://two024-qwerty-back-2.onrender.com/api/transacciones";

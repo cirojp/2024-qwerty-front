@@ -49,7 +49,7 @@ const ModalMedioDePago = ({
       setMedioDePagoNombre(editTP.value);
     }
     console.log(editTP);
-  }, [editTP]);
+  }, [isOpen]);
 
   const handleSubmit = async () => {
     if (!medioDePagoNombre) {

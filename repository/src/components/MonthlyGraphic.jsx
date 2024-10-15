@@ -23,12 +23,14 @@ function MonthlyGraphic({
   filtroCategoria,
 }) {
   library.add(fas);
-  useEffect(() => {
-  }, [payCategories, transacciones]);
+  useEffect(() => {}, [payCategories, transacciones]);
   // Filtrar solo las transacciones que no sean de la categoría "Ingreso de Dinero"
-  const gastos = filtroCategoria !== "Ingreso de Dinero" 
-  ? transacciones.filter((transaccion) => transaccion.categoria !== "Ingreso de Dinero")
-  : transacciones;
+  const gastos =
+    filtroCategoria !== "Ingreso de Dinero"
+      ? transacciones.filter(
+          (transaccion) => transaccion.categoria !== "Ingreso de Dinero"
+        )
+      : transacciones;
   // Calcular la suma por categoría
   const sumaPorCategoria = gastos.reduce((acc, transaccion) => {
     const categoria = transaccion.categoria;
@@ -191,6 +193,7 @@ function MonthlyGraphic({
 export default MonthlyGraphic;
 
 // Función para renderizar etiquetas personalizadas en el gráfico de pie
+// Función para renderizar etiquetas personalizadas en el gráfico de pie
 const renderCustomizedLabel = ({
   cx,
   cy,
@@ -205,6 +208,9 @@ const renderCustomizedLabel = ({
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
+  // Si el porcentaje es menor a 1%, mostrar "<1%" en lugar del porcentaje
+  const displayText = percent < 0.01 ? "<1%" : `${(percent * 100).toFixed(0)}%`;
+
   return (
     <text
       x={x}
@@ -213,7 +219,7 @@ const renderCustomizedLabel = ({
       textAnchor={x > cx ? "start" : "end"}
       dominantBaseline="central"
     >
-      {`${(percent * 100).toFixed(0)}%`}
+      {displayText}
     </text>
   );
 };

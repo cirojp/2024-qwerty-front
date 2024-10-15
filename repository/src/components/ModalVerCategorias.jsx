@@ -15,7 +15,7 @@ function ModalVerCategorias({
   payCategories,
   fetchPersonalCategorias,
   setPayCategories,
-  getTransacciones
+  getTransacciones,
 }) {
   useEffect(() => {
     //fetchPersonalCategorias();
@@ -125,6 +125,12 @@ function ModalVerCategorias({
       value: "Clase",
       label: "Clase",
       iconPath: "fa-solid fa-chalkboard-user",
+      textColor: "mr-2 text-yellow-500",
+    },
+    {
+      value: "Ingreso de Dinero",
+      label: "Ingreso de Dinero",
+      iconPath: "fa-solid fa-money-bill",
       textColor: "mr-2 text-yellow-500",
     },
   ];

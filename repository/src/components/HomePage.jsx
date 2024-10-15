@@ -44,6 +44,11 @@ function HomePage() {
       iconPath: "fa-solid fa-blender",
     },
     { value: "Clase", label: "Clase", iconPath: "fa-solid fa-chalkboard-user" },
+    {
+      value: "Ingreso de Dinero",
+      label: "Ingreso de Dinero",
+      iconPath: "fa-solid fa-money-bill",
+    },
   ]);
   const [payOptions, setPayOptions] = useState([
     { value: "Tarjeta de credito", label: "Tarjeta de credito" },
@@ -229,7 +234,7 @@ function HomePage() {
           {
             value: "Ingreso de Dinero",
             label: "Ingreso de Dinero",
-            iconPath: "fa-solid fa-money-bill-transfer"
+            iconPath: "fa-solid fa-money-bill-transfer",
           },
           ...payCategoriesDefault,
           ...customOptions,
@@ -342,34 +347,33 @@ function HomePage() {
     } else if (transaccion.id_reserva == "Pago") {
       console.log("Transaccion Aprobada");
     } else {
-        const method = "POST";
-        let motivo = transaccion.motivo;
-        let valor = transaccion.valor;
-        let fecha = transaccion.fecha;
-        categoria = "Clase";
-        try {
-          //hacer chequeos de que pase bien las cosas en el back!
-          const response = await fetch(url, {
-            method: method,
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({ motivo, valor, fecha, categoria }),
-          });
-    
-          if (response.ok) {
-            const data = await response.json();
-            const updatedTransacciones = [...transacciones, data];
-            updatedTransacciones.sort(
-              (a, b) => new Date(b.fecha) - new Date(a.fecha)
-            );
-            setTransacciones(updatedTransacciones);
-          }
-        } catch (err) {
-          // habria que avisar que hubo un error en aceptar la transaccion o algo
-        }
+      const method = "POST";
+      let motivo = transaccion.motivo;
+      let valor = transaccion.valor;
+      let fecha = transaccion.fecha;
+      categoria = "Clase";
+      try {
+        //hacer chequeos de que pase bien las cosas en el back!
+        const response = await fetch(url, {
+          method: method,
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ motivo, valor, fecha, categoria }),
+        });
 
+        if (response.ok) {
+          const data = await response.json();
+          const updatedTransacciones = [...transacciones, data];
+          updatedTransacciones.sort(
+            (a, b) => new Date(b.fecha) - new Date(a.fecha)
+          );
+          setTransacciones(updatedTransacciones);
+        }
+      } catch (err) {
+        // habria que avisar que hubo un error en aceptar la transaccion o algo
+      }
     }
     /*const token = localStorage.getItem("token");
     const url = "https://two024-qwerty-back-2.onrender.com/api/transacciones";
@@ -591,10 +595,8 @@ function HomePage() {
   };
   const refershTransacciones = (transaccionNueva) => {
     const updatedTransacciones = [...transacciones, transaccionNueva];
-          updatedTransacciones.sort(
-            (a, b) => new Date(b.fecha) - new Date(a.fecha)
-          );
-          setTransacciones(updatedTransacciones);
+    updatedTransacciones.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+    setTransacciones(updatedTransacciones);
   };
 
   return (
@@ -785,7 +787,10 @@ function HomePage() {
         handleCreateTP={handleCreateTP}
       />
       <ModalAskPayment payCategories={payCategories} />
-      <ModalSendPayment payCategories={payCategories} refreshTransacciones={refershTransacciones} />
+      <ModalSendPayment
+        payCategories={payCategories}
+        refreshTransacciones={refershTransacciones}
+      />
       <AlertPending
         isOpen={pendTran}
         pendingTransaction={tranPendiente}

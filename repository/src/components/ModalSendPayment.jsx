@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import CreatableSelect from "react-select/creatable";
 
-function ModalSendPayment({ isModalOpen = false, payCategories, refreshTransacciones }) {
+function ModalSendPayment({
+  isModalOpen = false,
+  payCategories,
+  refreshTransacciones,
+}) {
   const defaultMediosDePago = [
     {
       value: "Tarjeta de credito",

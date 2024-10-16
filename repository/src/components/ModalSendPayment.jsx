@@ -79,11 +79,12 @@ function ModalSendPayment({
     return true;
   };
   const userExists = async (mail) => {
-    let url = "https://two024-qwerty-back-2.onrender.com/api/public/exists/" + mail;
+    let url =
+      "https://two024-qwerty-back-2.onrender.com/api/public/exists/" + mail;
     const response = await fetch(url);
     if (response.ok) {
       const exists = await response.json();
-      return exists; 
+      return exists;
     } else {
       console.error("Error al verificar el usuario");
       return false;
@@ -100,7 +101,7 @@ function ModalSendPayment({
       categoria: categoria,
       tipoGasto: payOption,
     };
-    if(await userExists(emailReceptor) ){  
+    if (await userExists(emailReceptor)) {
       if (validateForm()) {
         const response = await fetch(
           "https://two024-qwerty-back-2.onrender.com/api/transacciones/enviarPago/" +

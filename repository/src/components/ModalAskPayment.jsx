@@ -76,11 +76,12 @@ function ModalSendPayment({ isModalOpen = false, payCategories }) {
     return true;
   };
   const userExists = async (mail) => {
-    let url = "https://two024-qwerty-back-2.onrender.com/api/public/exists/" + mail;
+    let url =
+      "https://two024-qwerty-back-2.onrender.com/api/public/exists/" + mail;
     const response = await fetch(url);
     if (response.ok) {
       const exists = await response.json();
-      return exists; 
+      return exists;
     } else {
       console.error("Error al verificar el usuario");
       return false;
@@ -97,7 +98,7 @@ function ModalSendPayment({ isModalOpen = false, payCategories }) {
       id_reserva: "Cobro",
       fecha: fecha,
     };
-    if(await userExists(emailReceptor)){  
+    if (await userExists(emailReceptor)) {
       console.log("vino aca igual");
       if (validateForm()) {
         const response = await fetch(
@@ -117,7 +118,7 @@ function ModalSendPayment({ isModalOpen = false, payCategories }) {
         cleanForm();
         document.getElementById("generatePayModal").close();
       }
-    } else{
+    } else {
       setModalError("El mail no pertenece a un usuario de este sitio");
     }
   };

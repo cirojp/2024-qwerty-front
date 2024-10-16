@@ -596,14 +596,18 @@ function HomePage() {
 
   return (
     <div className="container min-h-screen min-w-full max-w-full bg-black">
+      {/* Header */}
       <Header
         payCategories={payCategories}
         setPayCategories={setPayCategories}
         fetchPersonalCategorias={fetchPersonalCategorias}
         getTransacciones={getTransacciones}
       />
+
+      {/* Filtros */}
       <div className="flex flex-col md:flex-row items-start md:items-center md:gap-6 mb-4">
-        <div className="flex flex-col md:flex-row items-start md:items-center gap-3">
+        <div className="flex flex-col md:flex-row items-start md:items-center gap-3 w-full md:w-auto">
+          {/* Select de Categorías */}
           <div className="flex flex-col w-full md:w-auto">
             <select
               id="categorias"
@@ -618,6 +622,8 @@ function HomePage() {
               ))}
             </select>
           </div>
+
+          {/* Select de Mes */}
           <select
             value={filtroMes}
             onChange={(e) => setFiltroMes(e.target.value)}
@@ -638,6 +644,7 @@ function HomePage() {
             <option value="12">Diciembre</option>
           </select>
 
+          {/* Select de Año */}
           <select
             value={filtroAno}
             onChange={(e) => setFiltroAno(e.target.value)}
@@ -651,28 +658,31 @@ function HomePage() {
             <option value="2026">2026</option>
           </select>
 
+          {/* Botón para borrar filtros */}
           <button
             onClick={() => resetFilters()}
-            className="btn btn-warning w-full md:w-auto"
+            className="btn btn-warning w-full md:w-auto mt-2 md:mt-0"
           >
             Borrar filtros
           </button>
         </div>
-        <div className="flex items-center join ml-auto">
+
+        {/* Botones de acciones */}
+        <div className="flex flex-col md:flex-row items-center gap-2 mt-4 md:mt-0 ml-auto">
           <button
-            className="btn join-item w-auto mr-2 bg-yellow-500 bg-opacity-80 text-gray-950 text-xl rounded-lg hover:bg-yellow-700"
+            className="btn w-full md:w-auto bg-yellow-500 text-gray-950 text-lg md:text-xl rounded-lg hover:bg-yellow-700"
             onClick={openModal}
           >
             Agregar Transacción
           </button>
           <button
-            className="btn join-item w-auto mr-2 bg-yellow-500 bg-opacity-80 text-gray-950 text-xl rounded-lg hover:bg-yellow-700"
+            className="btn w-full md:w-auto bg-yellow-500 text-gray-950 text-lg md:text-xl rounded-lg hover:bg-yellow-700"
             onClick={() => document.getElementById("sendPayModal").showModal()}
           >
             Realizar Pago
           </button>
           <button
-            className="btn join-item w-auto mr-2 bg-yellow-500 bg-opacity-80 text-gray-950 text-xl rounded-lg hover:bg-yellow-700"
+            className="btn w-full md:w-auto bg-yellow-500 text-gray-950 text-lg md:text-xl rounded-lg hover:bg-yellow-700"
             onClick={() =>
               document.getElementById("generatePayModal").showModal()
             }
@@ -682,13 +692,16 @@ function HomePage() {
         </div>
       </div>
 
+      {/* Monto por Categoria */}
       {!showNoTransactions && (
         <>
           <div className="flex items-center">
-            <h2 className="text-2xl py-2 font-bold text-gray-100">
+            <h2 className="text-xl md:text-2xl py-2 font-bold text-gray-100">
               Monto por Categoria
             </h2>
           </div>
+
+          {/* Gráfico */}
           <MonthlyGraphic
             type="categorias"
             transacciones={transacciones}
@@ -696,10 +709,12 @@ function HomePage() {
             filtroMes={filtroMes}
             filtroCategoria={categoriaSeleccionada}
           />
-          <div className="bg-black flex flex-col w-full">
+
+          {/* Historial de Transacciones */}
+          <div className="bg-black flex flex-col w-full overflow-x-auto">
             <div className="flex justify-between items-center w-full px-4 py-6">
               <div className="flex items-center">
-                <h2 className="text-2xl py-2 font-bold text-gray-100">
+                <h2 className="text-xl md:text-2xl py-2 font-bold text-gray-100">
                   Historial de Transacciones
                 </h2>
               </div>
@@ -708,10 +723,11 @@ function HomePage() {
         </>
       )}
 
+      {/* Cargando Spinner */}
       {isLoadingFilter ? (
         <div className="flex justify-center items-center">
           <svg
-            className="animate-spin h-10 w-10 text-yellow-500"
+            className="animate-spin h-8 w-8 md:h-10 md:w-10 text-yellow-500"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -743,26 +759,28 @@ function HomePage() {
             onTransactions={() => setShowNoTransactions(false)}
           />
 
-          {/* Si no hay transacciones para mostrar */}
+          {/* Si no hay transacciones */}
           {showNoTransactions && (
-            <div className="flex flex-col justify-center mb-0 items-center">
+            <div className="flex flex-col justify-center items-center mb-0">
               {(categoriaSeleccionada !== "Todas" ||
                 filtroAno !== "2024" ||
-                filtroMes != "") && (
+                filtroMes !== "") && (
                 <p className="text-red-500 font-bold mb-4">
                   Su filtro no coincide con ninguna transacción
                 </p>
               )}
               <button
-                className="bg-yellow-500 bg-opacity-80 text-gray-950 font-extrabold py-6 px-16 rounded-lg hover:bg-yellow-700"
+                className="bg-yellow-500 text-gray-950 font-extrabold py-4 px-8 rounded-lg hover:bg-yellow-700"
                 onClick={openModal}
               >
-                Ingrese una transacción {categoriaSeleccionada !== "Todas"}
+                Ingrese una transacción
               </button>
             </div>
           )}
         </>
       )}
+
+      {/* Modales */}
       <ModalForm
         isModalOpen={isModalOpen}
         closeModal={closeModal}

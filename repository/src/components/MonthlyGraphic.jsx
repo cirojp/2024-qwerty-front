@@ -23,15 +23,16 @@ function MonthlyGraphic({
   filtroCategoria,
 }) {
   library.add(fas);
+
   useEffect(() => {}, [payCategories, transacciones]);
-  // Filtrar solo las transacciones que no sean de la categoría "Ingreso de Dinero"
+
   const gastos =
     filtroCategoria !== "Ingreso de Dinero"
       ? transacciones.filter(
           (transaccion) => transaccion.categoria !== "Ingreso de Dinero"
         )
       : transacciones;
-  // Calcular la suma por categoría
+
   const sumaPorCategoria = gastos.reduce((acc, transaccion) => {
     const categoria = transaccion.categoria;
     if (!acc[categoria]) {
@@ -50,7 +51,6 @@ function MonthlyGraphic({
     return acc;
   }, {});
 
-  // Preparar los datos para el gráfico de pie
   const data = Object.entries(sumaPorCategoria).map(([categoria, monto]) => ({
     name: categoria,
     value: monto,
@@ -63,7 +63,6 @@ function MonthlyGraphic({
     })
   );
 
-  // Definir los colores
   const COLORS = [
     "#0088FE",
     "#00C49F",
@@ -73,18 +72,15 @@ function MonthlyGraphic({
     "#a500fe",
   ];
 
-  // Obtener el ícono correspondiente a la categoría
   const getCategoryIcon = (categoryName) => {
     const category = payCategories.find((cat) => cat.value === categoryName);
     return category ? category.iconPath : null;
   };
 
-  // Array con todos los meses
   const allMonths = Array.from({ length: 12 }, (_, index) =>
     new Date(2024, index).toLocaleString("default", { month: "short" })
   );
 
-  // Si hay un filtro de mes, cambiar a gráfico diario
   let dataLine = [];
 
   if (filtroMes) {
@@ -124,76 +120,80 @@ function MonthlyGraphic({
   }
 
   return (
-    <div className="flex justify-center items-center py-4 bg-gray-950 h-full w-full">
-      <PieChart width={400} height={400}>
-        <Pie
-          data={type === "categorias" ? data : dataPay} // Usamos comparación con ===
-          cx="50%"
-          cy="50%"
-          labelLine={false}
-          label={renderCustomizedLabel}
-          outerRadius={80}
-          fill="#8884d8"
-          dataKey="value"
-        >
-          {(type === "categorias" ? data : dataPay).map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-          ))}
-        </Pie>
-      </PieChart>
-
-      {/* Leyenda debajo del gráfico */}
-      <div className="legend flex flex-col mt-4">
-        {type === "categorias" &&
-          data.map((entry, index) => {
-            const iconPath = getCategoryIcon(entry.name);
-            return (
-              <div
-                key={`legend-item-${index}`}
-                className="flex items-center mb-2 text-white"
-              >
-                {iconPath && (
-                  <FontAwesomeIcon
-                    icon={iconPath}
-                    className="mr-2"
-                    style={{ color: COLORS[index % COLORS.length] }}
-                  />
-                )}
-                <span>{entry.name}</span>
-              </div>
-            );
-          })}
-
-        {type === "tipoGasto" &&
-          dataPay.map((entry, index) => {
-            return (
-              <div
-                key={`legend-item-${index}`}
-                className="flex items-center mb-2 text-white"
-              >
-                <span>{entry.name}</span>
-              </div>
-            );
-          })}
+    <div className="flex flex-col justify-center items-center py-4 bg-gray-950 h-full w-full">
+      <div className="flex flex-col md:flex-row justify-center items-center">
+        <div className="flex justify-center items-center">
+          <PieChart width={300} height={300}>
+            <Pie
+              data={type === "categorias" ? data : dataPay}
+              cx="50%"
+              cy="50%"
+              labelLine={false}
+              label={renderCustomizedLabel}
+              outerRadius={80}
+              fill="#8884d8"
+              dataKey="value"
+            >
+              {(type === "categorias" ? data : dataPay).map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={COLORS[index % COLORS.length]}
+                />
+              ))}
+            </Pie>
+          </PieChart>
+        </div>
+        <div className="flex flex-col justify-center items-center mt-4 md:mt-0 md:ml-4">
+          <div className="legend flex flex-col">
+            {type === "categorias" &&
+              data.map((entry, index) => {
+                const iconPath = getCategoryIcon(entry.name);
+                return (
+                  <div
+                    key={`legend-item-${index}`}
+                    className="flex items-center mb-2 text-white"
+                  >
+                    {iconPath && (
+                      <FontAwesomeIcon
+                        icon={iconPath}
+                        className="mr-2"
+                        style={{ color: COLORS[index % COLORS.length] }}
+                      />
+                    )}
+                    <span>{entry.name}</span>
+                  </div>
+                );
+              })}
+            {type === "tipoGasto" &&
+              dataPay.map((entry, index) => {
+                return (
+                  <div
+                    key={`legend-item-${index}`}
+                    className="flex items-center mb-2 text-white"
+                  >
+                    <span>{entry.name}</span>
+                  </div>
+                );
+              })}
+          </div>
+        </div>
       </div>
-
-      {/* Gráfico de líneas */}
-      <ResponsiveContainer width={500} height={400}>
-        <LineChart data={dataLine}>
-          <XAxis dataKey={filtroMes ? "day" : "month"} stroke="#ffffff" />
-          <YAxis stroke="#ffffff" />
-          <Tooltip />
-          <Line type="monotone" dataKey="total" stroke="#82ca9d" />
-        </LineChart>
-      </ResponsiveContainer>
+      <div className="flex justify-center items-center mt-4">
+        <ResponsiveContainer width={300} height={300}>
+          <LineChart data={dataLine}>
+            <XAxis dataKey={filtroMes ? "day" : "month"} stroke="#ffffff" />
+            <YAxis stroke="#ffffff" />
+            <Tooltip />
+            <Line type="monotone" dataKey="total" stroke="#82ca9d" />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 }
 
 export default MonthlyGraphic;
 
-// Función para renderizar etiquetas personalizadas en el gráfico de pie
-// Función para renderizar etiquetas personalizadas en el gráfico de pie
 const renderCustomizedLabel = ({
   cx,
   cy,
@@ -208,7 +208,6 @@ const renderCustomizedLabel = ({
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
-  // Si el porcentaje es menor a 1%, mostrar "<1%" en lugar del porcentaje
   const displayText = percent < 0.01 ? "<1%" : `${(percent * 100).toFixed(0)}%`;
 
   return (

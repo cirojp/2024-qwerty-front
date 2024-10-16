@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import logo from "../assets/logo-removebg-preview.png";
 import ModalVerCategorias from "./ModalVerCategorias";
 import { useNavigate } from "react-router-dom";
+
 function Header({
   payCategories,
   setPayCategories,
@@ -36,72 +37,45 @@ function Header({
 
   //const [payCategories, setPayCategories] = useState([]);
   const navigate = useNavigate();
+
   const openModalCategoria = () => {
     setIsModalCategoriaOpen(true);
   };
   const closeModalCategoria = () => {
     setIsModalCategoriaOpen(false);
   };
-  /*const fetchPersonalCategorias = async () => {
-    const token = localStorage.getItem("token");
-    try {
-      const response = await fetch(
-        "https://two024-qwerty-back-2.onrender.com/api/personal-categoria",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        const customOptions = data.map((cat) => ({
-          label: cat.nombre,
-          value: cat.nombre,
-          iconPath: cat.iconPath,
-        }));
-
-        setPayCategories([...payCategoriesDefault, ...customOptions]);
-      }
-    } catch (error) {
-      console.error("Error al obtener las categorías personalizadas:", error);
-    }
-  };*/
 
   return (
-    <div className="grid grid-cols-3 grid-rows-2 gap-0 w-full">
-      <div className="flex items-center px-8">
-        <div className="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border-4 border-yellow-600">
+    <header className="flex flex-col md:flex-row justify-between items-center w-full py-4 md:py-6 px-4 md:px-8 shadow">
+      <div className="flex items-center">
+        <div className="w-14 h-14 md:w-20 md:h-20 rounded-full overflow-hidden border-4 border-yellow-600">
           <img src={logo} alt="logo" className="w-full h-full object-cover" />
         </div>
       </div>
-      <div></div>
-      <div className="flex justify-end items-center px-4 md:px-20 join">
+      <div className="flex flex-col md:flex-row md:space-x-2 mt-2 md:mt-0">
         <button
-          className="btn join-item w-auto mr-2 bg-yellow-500 bg-opacity-80 text-gray-950 text-sm   rounded-lg hover:bg-yellow-700"
+          className="w-full md:w-auto px-3 py-2 text-xs md:text-sm bg-yellow-500 bg-opacity-80 text-gray-950 rounded-lg hover:bg-yellow-700 transition duration-200"
           onClick={() => navigate("/profile")}
         >
           Mi Cuenta
         </button>
         <button
-          className="btn join-item w-auto bg-yellow-500 bg-opacity-80 text-gray-950 text-sm  rounded-lg hover:bg-yellow-700"
+          className="w-full md:w-auto px-3 py-2 text-xs md:text-sm bg-yellow-500 bg-opacity-80 text-gray-950 rounded-lg hover:bg-yellow-700 transition duration-200"
           onClick={openModalCategoria}
         >
           Categorias
         </button>
       </div>
+
       <ModalVerCategorias
         isModalCategoriaOpen={isModalCategoriaOpen}
         closeModalCategoria={closeModalCategoria}
         fetchPersonalCategorias={fetchPersonalCategorias}
         setPayCategories={setPayCategories}
-        //edit={edit}
         payCategories={payCategories}
-        //handleCreateCat={handleCreateCat}
         getTransacciones={getTransacciones}
       />
-    </div>
+    </header>
   );
 }
 

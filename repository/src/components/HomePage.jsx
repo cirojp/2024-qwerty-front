@@ -746,7 +746,9 @@ function HomePage() {
           {/* Si no hay transacciones para mostrar */}
           {showNoTransactions && (
             <div className="flex flex-col justify-center mb-0 items-center">
-              {(categoriaSeleccionada !== "Todas" || filtroAno !== "2024" || filtroMes != "") && (
+              {(categoriaSeleccionada !== "Todas" ||
+                filtroAno !== "2024" ||
+                filtroMes != "") && (
                 <p className="text-red-500 font-bold mb-4">
                   Su filtro no coincide con ninguna transacción
                 </p>

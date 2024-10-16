@@ -47,10 +47,13 @@ const ModalCategoria = ({
 
   useEffect(() => {
     if (edit) {
-      setCategoriaNombre(editCat.value);
+      setCategoriaNombre(editCat.value || "");
       setIconoSeleccionado(editCat.iconPath || "");
+    } else {
+      setCategoriaNombre("");
+      setIconoSeleccionado("");
     }
-  }, [editCat]);
+  }, [editCat, edit, isOpen]);
 
   const handleSubmit = async () => {
     if (!categoriaNombre || !iconoSeleccionado) {

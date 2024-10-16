@@ -78,6 +78,17 @@ function ModalSendPayment({
     setModalError("");
     return true;
   };
+  const userExists = async (mail) => {
+    let url = "https://two024-qwerty-back-2.onrender.com/api/public/exists/" + mail;
+    const response = await fetch(url);
+    if (response.ok) {
+      const exists = await response.json();
+      return exists; 
+    } else {
+      console.error("Error al verificar el usuario");
+      return false;
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -89,25 +100,29 @@ function ModalSendPayment({
       categoria: categoria,
       tipoGasto: payOption,
     };
-    if (validateForm()) {
-      const response = await fetch(
-        "https://two024-qwerty-back-2.onrender.com/api/transacciones/enviarPago/" +
-          emailReceptor,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(transaccion),
+    if(await userExists(emailReceptor) ){  
+      if (validateForm()) {
+        const response = await fetch(
+          "https://two024-qwerty-back-2.onrender.com/api/transacciones/enviarPago/" +
+            emailReceptor,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(transaccion),
+          }
+        );
+        if (response.ok) {
+          console.log("Pago enviado");
+          refreshTransacciones(transaccion);
         }
-      );
-      if (response.ok) {
-        console.log("Pago enviado");
-        refreshTransacciones(transaccion);
+        cleanForm();
+        document.getElementById("sendPayModal").close();
       }
-      cleanForm();
-      document.getElementById("sendPayModal").close();
+    } else {
+      setModalError("El mail no pertenece a un usuario de este sitio");
     }
   };
 

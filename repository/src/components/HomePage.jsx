@@ -17,7 +17,7 @@ function HomePage() {
   const [fecha, setFecha] = useState(new Date().toISOString().split("T")[0]);
   const [error, setError] = useState(null);
   const [edit, setEdit] = useState(false);
-  const [tipoGasto, setTipoGasto] = useState("");
+  const [tipoGasto, setTipoGasto] = useState("Efectivo");
   const [tranPendiente, setTranPendiente] = useState({});
   const [categoria, setCategoria] = useState("");
   const [payCategories, setPayCategories] = useState([]);
@@ -254,7 +254,11 @@ function HomePage() {
     setValor("");
     setFecha(new Date().toISOString().split("T")[0]);
     setSelectedCategory(null);
-    setSelectedPayMethod(null);
+    setTipoGasto("Efectivo");
+    setSelectedPayMethod({
+      value: "Efectivo",
+      label: "Efectivo",
+    });
   };
 
   const editRow = (row) => {

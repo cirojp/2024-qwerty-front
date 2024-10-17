@@ -121,8 +121,8 @@ function MonthlyGraphic({
 
   return (
     <div className="flex flex-col justify-center items-center py-4 bg-gray-950 h-full w-full">
-    <div className="flex flex-col md:flex-row justify-center items-center">
-      <div className="flex justify-center items-center">
+      <div className="flex flex-col md:flex-row justify-center items-center">
+        <div className="flex justify-center items-center md:w-1/2">
           <PieChart width={300} height={300}>
             <Pie
               data={type === "categorias" ? data : dataPay}
@@ -142,8 +142,6 @@ function MonthlyGraphic({
               ))}
             </Pie>
           </PieChart>
-        </div>
-        <div className="flex flex-col justify-center items-center mt-4 md:mt-0 md:ml-4">
           <div className="legend flex flex-col">
             {type === "categorias" &&
               data.map((entry, index) => {
@@ -172,32 +170,30 @@ function MonthlyGraphic({
                     className="flex items-center mb-2 text-white"
                   >
                     <div
-                style={{
-                  width: "12px",
-                  height: "12px",
-                  backgroundColor: COLORS[index % COLORS.length],
-                  marginRight: "8px",
-                }}
-              ></div>
+                      style={{
+                        width: "12px",
+                        height: "12px",
+                        backgroundColor: COLORS[index % COLORS.length],
+                        marginRight: "8px",
+                      }}
+                    ></div>
                     <span>{entry.name}</span>
                   </div>
                 );
               })}
           </div>
         </div>
+        <div className="flex justify-center items-center md:w-1/2">
+          <ResponsiveContainer width={300} height={300}>
+            <BarChart data={dataLine}>
+              <XAxis dataKey={filtroMes ? "day" : "month"} stroke="#ffffff" />
+              <YAxis stroke="#ffffff" />
+              <Tooltip />
+              <Bar type="monotone" dataKey="total" fill="#FFD700" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
       </div>
-      {type !== "tipoGasto" && (
-      <div className="flex justify-center items-center mt-4">
-        <ResponsiveContainer width={300} height={300}>
-          <BarChart data={dataLine}>
-            <XAxis dataKey={filtroMes ? "day" : "month"} stroke="#ffffff" />
-            <YAxis stroke="#ffffff" />
-            <Tooltip />
-            <Bar type="monotone" dataKey="total" fill="#FFD700" />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
-       )}
     </div>
   );
 }

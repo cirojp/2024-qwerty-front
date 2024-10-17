@@ -121,75 +121,6 @@ function MonthlyGraphic({
 
   return (
     <div className="flex justify-center items-center py-4 bg-gray-950 h-full w-full">
-      <PieChart width={400} height={400}>
-        <Pie
-          data={type === "categorias" ? data : dataPay} // Usamos comparación con ===
-          cx="50%"
-          cy="50%"
-          labelLine={false}
-          label={renderCustomizedLabel}
-          outerRadius={80}
-          fill="#8884d8"
-          dataKey="value"
-        >
-          {(type === "categorias" ? data : dataPay).map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-          ))}
-        </Pie>
-      </PieChart>
-
-      {/* Leyenda debajo del gráfico */}
-      <div className="legend flex flex-col mt-4">
-        {type === "categorias" &&
-          data.map((entry, index) => {
-            const iconPath = getCategoryIcon(entry.name);
-            return (
-              <div
-                key={`legend-item-${index}`}
-                className="flex items-center mb-2 text-white"
-              >
-                {iconPath && (
-                  <FontAwesomeIcon
-                    icon={iconPath}
-                    className="mr-2"
-                    style={{ color: COLORS[index % COLORS.length] }}
-                  />
-                )}
-                <span>{entry.name}</span>
-              </div>
-            );
-          })}
-
-        {type === "tipoGasto" &&
-          dataPay.map((entry, index) => {
-            return (
-              <div
-                key={`legend-item-${index}`}
-                className="flex items-center mb-2 text-white"
-              >
-                <div
-                style={{
-                  width: "12px",
-                  height: "12px",
-                  backgroundColor: COLORS[index % COLORS.length],
-                  marginRight: "8px",
-                }}
-              ></div>
-                <span>{entry.name}</span>
-              </div>
-            );
-          })}
-      </div>
-
-      {/* Gráfico de líneas */}
-      <ResponsiveContainer width={500} height={400}>
-        <BarChart data={dataLine}>
-          <XAxis dataKey={filtroMes ? "day" : "month"} stroke="#ffffff" />
-          <YAxis stroke="#ffffff" />
-          <Tooltip />
-          <Bar  dataKey="total"  fill="#FFD700"/>
-        </BarChart>
-      </ResponsiveContainer>
     <div className="flex flex-col justify-center items-center py-4 bg-gray-950 h-full w-full">
       <div className="flex flex-col md:flex-row justify-center items-center">
         <div className="flex justify-center items-center">
@@ -241,6 +172,14 @@ function MonthlyGraphic({
                     key={`legend-item-${index}`}
                     className="flex items-center mb-2 text-white"
                   >
+                    <div
+                style={{
+                  width: "12px",
+                  height: "12px",
+                  backgroundColor: COLORS[index % COLORS.length],
+                  marginRight: "8px",
+                }}
+              ></div>
                     <span>{entry.name}</span>
                   </div>
                 );
@@ -254,7 +193,7 @@ function MonthlyGraphic({
             <XAxis dataKey={filtroMes ? "day" : "month"} stroke="#ffffff" />
             <YAxis stroke="#ffffff" />
             <Tooltip />
-            <Bar type="monotone" dataKey="total" stroke="#82ca9d" />
+            <Bar type="monotone" dataKey="total" fill="#FFD700" />
           </BarChart>
         </ResponsiveContainer>
       </div>

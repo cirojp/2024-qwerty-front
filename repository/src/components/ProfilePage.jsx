@@ -298,7 +298,7 @@ function ProfilePage() {
         </div>
         <div className="flex items-center">
           <h2 className="text-2xl py-2 font-bold text-gray-100">
-            Monto por tipo de Gasto
+            Monto por Medio de Pago
           </h2>
         </div>
         <MonthlyGraphic

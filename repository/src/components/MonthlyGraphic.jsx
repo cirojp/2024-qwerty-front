@@ -4,8 +4,8 @@ import {
   Pie,
   Cell,
   ResponsiveContainer,
-  LineChart,
-  Line,
+  BarChart,
+  Bar,
   XAxis,
   YAxis,
   Tooltip,
@@ -171,6 +171,14 @@ function MonthlyGraphic({
                 key={`legend-item-${index}`}
                 className="flex items-center mb-2 text-white"
               >
+                <div
+                style={{
+                  width: "12px",
+                  height: "12px",
+                  backgroundColor: COLORS[index % COLORS.length],
+                  marginRight: "8px",
+                }}
+              ></div>
                 <span>{entry.name}</span>
               </div>
             );
@@ -179,12 +187,12 @@ function MonthlyGraphic({
 
       {/* Gráfico de líneas */}
       <ResponsiveContainer width={500} height={400}>
-        <LineChart data={dataLine}>
+        <BarChart data={dataLine}>
           <XAxis dataKey={filtroMes ? "day" : "month"} stroke="#ffffff" />
           <YAxis stroke="#ffffff" />
           <Tooltip />
-          <Line type="monotone" dataKey="total" stroke="#82ca9d" />
-        </LineChart>
+          <Bar  dataKey="total"  fill="#FFD700"/>
+        </BarChart>
       </ResponsiveContainer>
     </div>
   );

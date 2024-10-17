@@ -120,10 +120,9 @@ function MonthlyGraphic({
   }
 
   return (
-    <div className="flex justify-center items-center py-4 bg-gray-950 h-full w-full">
     <div className="flex flex-col justify-center items-center py-4 bg-gray-950 h-full w-full">
-      <div className="flex flex-col md:flex-row justify-center items-center">
-        <div className="flex justify-center items-center">
+    <div className="flex flex-col md:flex-row justify-center items-center">
+      <div className="flex justify-center items-center">
           <PieChart width={300} height={300}>
             <Pie
               data={type === "categorias" ? data : dataPay}
@@ -187,6 +186,7 @@ function MonthlyGraphic({
           </div>
         </div>
       </div>
+      {type !== "tipoGasto" && (
       <div className="flex justify-center items-center mt-4">
         <ResponsiveContainer width={300} height={300}>
           <BarChart data={dataLine}>
@@ -197,7 +197,7 @@ function MonthlyGraphic({
           </BarChart>
         </ResponsiveContainer>
       </div>
-    </div>
+       )}
     </div>
   );
 }

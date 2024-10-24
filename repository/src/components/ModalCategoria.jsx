@@ -44,6 +44,7 @@ const ModalCategoria = ({
   const [categoriaNombre, setCategoriaNombre] = useState("");
   const [iconoSeleccionado, setIconoSeleccionado] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (edit) {
@@ -56,28 +57,45 @@ const ModalCategoria = ({
   }, [editCat, edit, isOpen]);
 
   const handleSubmit = async () => {
+    setIsLoading(true); // Inicia el estado de carga
+
     if (!categoriaNombre || !iconoSeleccionado) {
       setError("Debes ingresar un nombre y seleccionar un icono.");
+      setIsLoading(false); // Aseguramos que se desactiva isLoading en caso de error
       return;
     }
+
     let errorMessage = "";
-    if (!edit) {
-      errorMessage = await handleCreateCat(categoriaNombre, iconoSeleccionado);
-    } else {
-      errorMessage = await handleEditCat(
-        editCat,
-        categoriaNombre,
-        iconoSeleccionado
-      );
+    try {
+      if (!edit) {
+        errorMessage = await handleCreateCat(
+          categoriaNombre,
+          iconoSeleccionado
+        );
+      } else {
+        errorMessage = await handleEditCat(
+          editCat,
+          categoriaNombre,
+          iconoSeleccionado
+        );
+      }
+
+      if (errorMessage !== "") {
+        setError(errorMessage);
+        setIsLoading(false); // Desactivar loading en caso de error de API
+        return;
+      }
+
+      // Si todo está bien, limpiamos el estado
+      setCategoriaNombre("");
+      setIconoSeleccionado("");
+      setError("");
+      onRequestClose();
+    } catch (error) {
+      setError("Ocurrió un error al procesar la solicitud.");
+    } finally {
+      setIsLoading(false); // Aseguramos que siempre desactivamos isLoading
     }
-    if (errorMessage != "") {
-      setError(errorMessage);
-      return;
-    }
-    setCategoriaNombre("");
-    setIconoSeleccionado("");
-    setError("");
-    onRequestClose();
   };
 
   const handleClose = () => {
@@ -141,9 +159,19 @@ const ModalCategoria = ({
 
       <button
         onClick={handleSubmit}
+        disabled={isLoading}
         className="mt-4 mr-2 w-full sm:w-auto bg-yellow-500 text-black font-bold py-2 px-4 rounded hover:bg-green-600 transition duration-300"
       >
-        {edit ? "Editar Categoría" : "Crear Categoría"}
+        {isLoading ? (
+          <div>
+            <span className="loading loading-spinner loading-sm"></span>
+            Cargando...
+          </div>
+        ) : edit ? (
+          "Editar Categoría"
+        ) : (
+          "Crear Categoría"
+        )}
       </button>
       <button
         onClick={() => handleClose()}

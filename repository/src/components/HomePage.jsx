@@ -70,9 +70,11 @@ function HomePage() {
   const [filtroMes, setFiltroMes] = useState(""); // Ej: "10" para octubre
   const [filtroAno, setFiltroAno] = useState("2024"); //
   const [filterEmpty, setFilterEmpty] = useState(false);
+  const [loadGraphic, setLoadGraphic] = useState(true);
 
   useEffect(() => {
     getTransacciones(categoriaSeleccionada);
+    setLoadGraphic(false);
   }, [categoriaSeleccionada, filtroMes, filtroAno]);
   useEffect(() => {
     if (payCategories.length > 0) {
@@ -650,7 +652,6 @@ function HomePage() {
             </select>
           </div>
 
-          {/* Select de Año */}
           <div className="flex flex-col w-full md:w-1/3">
             <select
               value={filtroAno}
@@ -666,7 +667,6 @@ function HomePage() {
             </select>
           </div>
 
-          {/* Botón para borrar filtros */}
           <button
             onClick={() => resetFilters()}
             className="btn btn-warning w-full md:w-auto mt-2 md:mt-0"
@@ -716,6 +716,7 @@ function HomePage() {
             payCategories={payCategories}
             filtroMes={filtroMes}
             filtroCategoria={categoriaSeleccionada}
+            loading={loadGraphic}
           />
 
           {/* Historial de Transacciones */}

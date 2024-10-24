@@ -33,9 +33,11 @@ function ProfilePage() {
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState({});
   const [transacciones, setTransacciones] = useState([]);
+  const [loadingGraphic, setLoadingGraphic] = useState(true);
   const navigate = useNavigate();
   useEffect(() => {
     getTransacciones();
+    setLoadingGraphic(false);
   }, []);
   const getTransacciones = async () => {
     const token = localStorage.getItem("token");
@@ -160,6 +162,7 @@ function ProfilePage() {
   const handleDelete = async (medioPagoValue) => {
     const token = localStorage.getItem("token");
     setConfirmDeleteOpen(false);
+    setLoadingGraphic(true);
     try {
       const response = await fetch(
         "https://two024-qwerty-back-2.onrender.com/api/personal-tipo-gasto/eliminar",
@@ -179,6 +182,8 @@ function ProfilePage() {
       }
     } catch (err) {
       console.log(err);
+    } finally {
+      setLoadingGraphic(false);
     }
   };
 
@@ -305,6 +310,7 @@ function ProfilePage() {
           type="tipoGasto"
           transacciones={transacciones}
           payCategories={payOptions}
+          loading={loadingGraphic}
         />
         <div className="m-4">
           <ActionButtons />

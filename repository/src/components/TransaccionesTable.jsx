@@ -78,6 +78,19 @@ function TransaccionesTable({
     },
   ];
 
+  const conditionalRowStyles = [
+    {
+      when: (row) => row.categoria == "Ingreso de Dinero",
+      style: {
+        backgroundColor: "rgba(44, 148, 30, 1)",
+        color: "white",
+        "&:hover": {
+          cursor: "pointer",
+        },
+      },
+    },
+  ];
+
   // Verificar si hay transacciones
   if (transacciones[0] == null) {
     onTableEmpty();
@@ -91,8 +104,11 @@ function TransaccionesTable({
         data={transacciones}
         pagination
         expandableRows={true}
-        expandableRowsComponent={({ data }) => <ExpandedRow data={data} />}
+        expandableRowsComponent={({ data }) => (
+          <ExpandedRow data={data} payCategories={payCategories} />
+        )}
         theme="dark"
+        conditionalRowStyles={conditionalRowStyles}
         responsive
         noHeader
       />

@@ -3,9 +3,11 @@ import { useNavigate } from "react-router-dom";
 import TransaccionesTable from "./TransaccionesTable";
 import ModalForm from "./ModalForm";
 import "./styles/HomePage.css";
-import logo from "../assets/logo-removebg-preview.png";
 import AlertPending from "./AlertPending";
-import ModalVerCategorias from "./ModalVerCategorias";
+import MonthlyGraphic from "./MonthlyGraphic";
+import Header from "./Header";
+import ModalAskPayment from "./ModalAskPayment";
+import ModalSendPayment from "./ModalSendPayment";
 
 function HomePage() {
   const [transacciones, setTransacciones] = useState([]);
@@ -15,6 +17,7 @@ function HomePage() {
   const [fecha, setFecha] = useState(new Date().toISOString().split("T")[0]);
   const [error, setError] = useState(null);
   const [edit, setEdit] = useState(false);
+  const [tipoGasto, setTipoGasto] = useState("Efectivo");
   const [tranPendiente, setTranPendiente] = useState({});
   const [categoria, setCategoria] = useState("");
   const [payCategories, setPayCategories] = useState([]);
@@ -41,32 +44,52 @@ function HomePage() {
       iconPath: "fa-solid fa-blender",
     },
     { value: "Clase", label: "Clase", iconPath: "fa-solid fa-chalkboard-user" },
+    {
+      value: "Ingreso de Dinero",
+      label: "Ingreso de Dinero",
+      iconPath: "fa-solid fa-money-bill",
+    },
+  ]);
+  const [payOptions, setPayOptions] = useState([
+    { value: "Tarjeta de credito", label: "Tarjeta de credito" },
+    { value: "Tarjeta de Debito", label: "Tarjeta de debito" },
+    { value: "Efectivo", label: "Efectivo" },
   ]);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedPayMethod, setSelectedPayMethod] = useState({
+    value: "Efectivo",
+    label: "Efectivo",
+  });
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isModalCategoriaOpen, setIsModalCategoriaOpen] = useState(false);
   const [transaccionId, setTransaccionId] = useState(null);
   const navigate = useNavigate();
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("Todas");
   const [categoriasConTodas, setCategoriasConTodas] = useState([]);
   const [isLoadingFilter, setIsLoadingFilter] = useState(false);
   const [pendTran, setPendTran] = useState(false);
+  const [filtroMes, setFiltroMes] = useState(""); // Ej: "10" para octubre
+  const [filtroAno, setFiltroAno] = useState("2024"); //
+  const [filterEmpty, setFilterEmpty] = useState(false);
 
   useEffect(() => {
-    getTransacciones();
-  }, []);
+    getTransacciones(categoriaSeleccionada);
+  }, [categoriaSeleccionada, filtroMes, filtroAno]);
   useEffect(() => {
     if (payCategories.length > 0) {
       setCategoriasConTodas([
-        { value: "Todas", label: "Todas" },
-        { value: "Otros", label: "Otros" },
+        { value: "Todas", label: "Todas las Categorias" },
         ...payCategories,
       ]);
     }
+    //getTransacciones(categoriaSeleccionada);
   }, [payCategories]);
+  useEffect(() => {
+    fetchPersonalTipoGastos();
+  }, []);
 
   const showTransactionsPendientes = async () => {
     const token = localStorage.getItem("token");
+    console.log("buscando pendientes");
     try {
       const response = await fetch(
         "https://two024-qwerty-back-2.onrender.com/api/transaccionesPendientes/user",
@@ -83,15 +106,43 @@ function HomePage() {
       }
 
       const data = await response.json();
-      console.log(data[0]);
       if (data[0] != null) {
         setTranPendiente(data[0]);
+        console.log(data[0]);
         setPendTran(true);
       }
     } catch (err) {
       console.error("Error fetching transactions:", err);
     } finally {
       setIsLoadingFilter(false);
+    }
+  };
+
+  const fetchPersonalTipoGastos = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await fetch(
+        "https://two024-qwerty-back-2.onrender.com/api/personal-tipo-gasto",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        const customOptions = data.map((tipo) => ({
+          label: tipo.nombre,
+          value: tipo.nombre,
+        }));
+        setPayOptions([...payOptions, ...customOptions]);
+      }
+    } catch (error) {
+      console.error(
+        "Error al obtener los tipos de gasto personalizados:",
+        error
+      );
     }
   };
   const checkIfValidToken = async (token) => {
@@ -120,12 +171,12 @@ function HomePage() {
   const getTransacciones = async (filtrado = "Todas") => {
     const token = localStorage.getItem("token");
     if (await checkIfValidToken(token)) {
-      let url = "";
-      if (filtrado === "Todas") {
-        url =
-          "https://two024-qwerty-back-2.onrender.com/api/transacciones/user";
-      } else {
-        url = `https://two024-qwerty-back-2.onrender.com/api/transacciones/user/filter?categoria=${filtrado}`;
+      let url = `https://two024-qwerty-back-2.onrender.com/api/transacciones/user/filter`;
+      if (filtrado !== "Todas" || filtroMes || filtroAno) {
+        url += `?categoria=${filtrado}`;
+        if (filtroMes) url += `&mes=${filtroMes}`;
+        if (filtroAno) url += `&anio=${filtroAno}`;
+        console.log(url);
       }
       try {
         const response = await fetch(url, {
@@ -174,7 +225,15 @@ function HomePage() {
           iconPath: cat.iconPath,
         }));
 
-        setPayCategories([...payCategoriesDefault, ...customOptions]);
+        setPayCategories([
+          {
+            value: "Otros",
+            label: "Otros",
+            iconPath: "fa-solid fa-circle-dot",
+          },
+          ...payCategoriesDefault,
+          ...customOptions,
+        ]);
       }
     } catch (error) {
       console.error("Error al obtener las categorías personalizadas:", error);
@@ -189,24 +248,27 @@ function HomePage() {
     clearForm();
     setEdit(false);
   };
-  const openModalCategoria = () => {
-    setIsModalCategoriaOpen(true);
-  };
-  const closeModalCategoria = () => {
-    setIsModalCategoriaOpen(false);
-  };
 
   const clearForm = () => {
     setMotivo("");
     setValor("");
     setFecha(new Date().toISOString().split("T")[0]);
     setSelectedCategory(null);
+    setTipoGasto("Efectivo");
+    setSelectedPayMethod({
+      value: "Efectivo",
+      label: "Efectivo",
+    });
   };
 
   const editRow = (row) => {
     setEdit(true);
     setMotivo(row.motivo);
     setValor(row.valor);
+    const selectedOption = payOptions.find(
+      (option) => option.value === row.tipoGasto
+    );
+    setSelectedPayMethod(selectedOption || null);
     const selectedPayCategory = payCategories.find(
       (option) => option.value == row.categoria
     );
@@ -216,16 +278,20 @@ function HomePage() {
     openModal();
   };
 
-  const isAccepted = async (transaction) => {
-    await aceptarTransaccion(transaction, "Clase");
+  const isAccepted = async (transaction, categoria, tipoGasto) => {
+    await aceptarTransaccion(transaction, categoria, tipoGasto);
     eliminarTransaccionPendiente(transaction.id);
-    enviarRespuesta("aceptada", transaction.id_reserva);
+    if (transaction.id_reserva != "Cobro" && transaction.id_reserva != "Pago") {
+      enviarRespuesta("aceptada", transaction.id_reserva);
+    }
     setPendTran(false);
   };
 
   const isRejected = (transaction) => {
     eliminarTransaccionPendiente(transaction.id);
-    enviarRespuesta("rechazada", transaction.id_reserva);
+    if (transaction.id_reserva != "Cobro" && transaction.id_reserva != "Pago") {
+      enviarRespuesta("rechazada", transaction.id_reserva);
+    }
     setPendTran(false);
   };
   const enviarRespuesta = async (resp, id_reserva) => {
@@ -249,8 +315,66 @@ function HomePage() {
       // habria que avisar que hubo un error en aceptar la transaccion o algo
     }
   };
-  const aceptarTransaccion = async (transaccion, categoria) => {
+  const aceptarTransaccion = async (transaccion, categoria, tipoGasto) => {
     const token = localStorage.getItem("token");
+    let url = "https://two024-qwerty-back-2.onrender.com/api/transacciones";
+    if (transaccion.id_reserva == "Cobro") {
+      url += "/crearPago/" + transaccion.sentByEmail;
+      const motivo = transaccion.motivo;
+      const valor = transaccion.valor;
+      const fecha = transaccion.fecha;
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ motivo, valor, fecha, categoria, tipoGasto }),
+        });
+        if (response.ok) {
+          const data = await response.json();
+          const updatedTransacciones = [...transacciones, data];
+          updatedTransacciones.sort(
+            (a, b) => new Date(b.fecha) - new Date(a.fecha)
+          );
+          setTransacciones(updatedTransacciones);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    } else if (transaccion.id_reserva == "Pago") {
+      console.log("Transaccion Aprobada");
+    } else {
+      const method = "POST";
+      let motivo = transaccion.motivo;
+      let valor = transaccion.valor;
+      let fecha = transaccion.fecha;
+      categoria = "Clase";
+      try {
+        //hacer chequeos de que pase bien las cosas en el back!
+        const response = await fetch(url, {
+          method: method,
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ motivo, valor, fecha, categoria }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          const updatedTransacciones = [...transacciones, data];
+          updatedTransacciones.sort(
+            (a, b) => new Date(b.fecha) - new Date(a.fecha)
+          );
+          setTransacciones(updatedTransacciones);
+        }
+      } catch (err) {
+        // habria que avisar que hubo un error en aceptar la transaccion o algo
+      }
+    }
+    /*const token = localStorage.getItem("token");
     const url = "https://two024-qwerty-back-2.onrender.com/api/transacciones";
     const method = "POST";
     let motivo = transaccion.motivo;
@@ -277,7 +401,7 @@ function HomePage() {
       }
     } catch (err) {
       // habria que avisar que hubo un error en aceptar la transaccion o algo
-    }
+    }*/
   };
   const agregarTransaccion = async (e, categoria) => {
     e.preventDefault();
@@ -300,7 +424,7 @@ function HomePage() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ motivo, valor, fecha, categoria }),
+        body: JSON.stringify({ motivo, valor, fecha, categoria, tipoGasto }),
       });
 
       if (response.ok) {
@@ -378,7 +502,39 @@ function HomePage() {
     setCategoria(value ? value.value : "");
     setSelectedCategory(value);
   };
+  const handlePayChange = (value) => {
+    setTipoGasto(value ? value.value : "");
+    setSelectedPayMethod(value);
+  };
+  const handleCreateTP = async (inputValue) => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await fetch(
+        `https://two024-qwerty-back-2.onrender.com/api/personal-tipo-gasto`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(inputValue),
+        }
+      );
 
+      if (response.ok) {
+        const newTipoGasto = await response.json();
+        const newOption = {
+          label: newTipoGasto.nombre,
+          value: newTipoGasto.nombre,
+        };
+        setPayOptions((prevOptions) => [...prevOptions, newOption]);
+        setSelectedPayMethod(newOption);
+        setTipoGasto(newTipoGasto.nombre);
+      }
+    } catch (error) {
+      console.error("Error al agregar el tipo de gasto personalizado:", error);
+    }
+  };
   const handleCreateCat = async (nombre, icono) => {
     console.log("entre      ");
     const token = localStorage.getItem("token");
@@ -431,85 +587,155 @@ function HomePage() {
     setCategoriaSeleccionada(cat);
     getTransacciones(cat);
   };
+  const resetFilters = () => {
+    setCategoriaSeleccionada("Todas");
+    setFiltroAno("2024");
+    setFiltroMes("");
+  };
+  const refershTransacciones = (transaccionNueva) => {
+    const updatedTransacciones = [...transacciones, transaccionNueva];
+    updatedTransacciones.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+    setTransacciones(updatedTransacciones);
+  };
 
   return (
     <div className="container min-h-screen min-w-full max-w-full bg-black">
-      <div className="bg-black flex items-center justify-center w-full">
-        <div className="grid grid-cols-3 grid-rows-2 gap-0 w-full">
-          <div className="flex items-center px-8">
-            {" "}
-            {/* Ajustar tamaño del logo */}
-            <div className="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border-4 border-yellow-600">
-              {" "}
-              {/* Cambié de w-24 a w-16 para pantallas pequeñas */}
-              <img
-                src={logo}
-                alt="logo"
-                className="w-full h-full object-cover"
-              />
-            </div>
-          </div>
-          <div></div>
-          <div className="flex justify-end items-center px-4 md:px-20">
-            {" "}
-            {/* Ajustar padding */}
-            <button
-              className="w-auto mr-2 bg-yellow-500 bg-opacity-80 text-gray-950 text-sm py-2 px-4 rounded-lg hover:bg-yellow-700"
-              onClick={() => navigate("/profile")}
+      {/* Header */}
+      <Header
+        payCategories={payCategories}
+        setPayCategories={setPayCategories}
+        fetchPersonalCategorias={fetchPersonalCategorias}
+        getTransacciones={getTransacciones}
+      />
+
+      {/* Filtros */}
+      <div className="flex flex-col md:flex-row items-start md:items-center md:gap-6 mb-4">
+        <div className="flex flex-col md:flex-row md:items-center gap-3 w-full">
+          {/* Select de Categorías */}
+          <div className="flex flex-col w-full md:w-1/3">
+            <select
+              id="categorias"
+              value={categoriaSeleccionada}
+              onChange={handleChange}
+              className="block select select-bordered w-full max-w-full"
             >
-              Mi Cuenta
-            </button>
-            <button
-              className="w-auto bg-yellow-500 bg-opacity-80 text-gray-950 text-sm py-2 px-4 rounded-lg hover:bg-yellow-700"
-              onClick={openModalCategoria}
+              {categoriasConTodas.map((cat) => (
+                <option key={cat.value} value={cat.value}>
+                  {cat.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Select de Mes */}
+          <div className="flex flex-col w-full md:w-1/3">
+            <select
+              value={filtroMes}
+              onChange={(e) => setFiltroMes(e.target.value)}
+              className="select select-bordered w-full max-w-full"
             >
-              Categorias
-            </button>
+              <option value="">Mes</option>
+              <option value="01">Enero</option>
+              <option value="02">Febrero</option>
+              <option value="03">Marzo</option>
+              <option value="04">Abril</option>
+              <option value="05">Mayo</option>
+              <option value="06">Junio</option>
+              <option value="07">Julio</option>
+              <option value="08">Agosto</option>
+              <option value="09">Septiembre</option>
+              <option value="10">Octubre</option>
+              <option value="11">Noviembre</option>
+              <option value="12">Diciembre</option>
+            </select>
           </div>
-          <div className="flex justify-start items-center px-6">
-            <h2 className="text-2xl py-2 font-bold text-gray-100">
-              Historial de Transacciones
-            </h2>
-          </div>
-          <div className="flex justify-center items-center py-4">
-            <button
-              className="bg-yellow-500 bg-opacity-80 text-gray-900 py-4 px-6 rounded-lg hover:bg-red-700 w-full md:w-auto text-xl"
-              onClick={openModal}
+
+          {/* Select de Año */}
+          <div className="flex flex-col w-full md:w-1/3">
+            <select
+              value={filtroAno}
+              onChange={(e) => setFiltroAno(e.target.value)}
+              className="select select-bordered w-full max-w-full"
             >
-              Agregar Transacción
-            </button>
+              <option value="2021">2021</option>
+              <option value="2022">2022</option>
+              <option value="2023">2023</option>
+              <option value="2024">2024</option>
+              <option value="2025">2025</option>
+              <option value="2026">2026</option>
+            </select>
           </div>
-          <div className="flex justify-end items-center px-4 md:px-6">
-            {" "}
-            {/* Ajustamos el padding en pantallas pequeñas */}
-            <div className="flex flex-col">
-              <label
-                htmlFor="categorias"
-                className="mb-2 text-lg font-medium text-gray-200"
-              >
-                Filtrar por categoría:
-              </label>
-              <select
-                id="categorias"
-                value={categoriaSeleccionada}
-                onChange={handleChange}
-                className="block w-full md:w-64 px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                {categoriasConTodas.map((cat) => (
-                  <option key={cat.value} value={cat.value}>
-                    {cat.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
+
+          {/* Botón para borrar filtros */}
+          <button
+            onClick={() => resetFilters()}
+            className="btn btn-warning w-full md:w-auto mt-2 md:mt-0"
+          >
+            Borrar filtros
+          </button>
+        </div>
+
+        {/* Botones de acciones */}
+        <div className="flex flex-col md:flex-row items-center justify-end gap-2 mt-4 w-full">
+          <button
+            className="btn w-full md:w-auto bg-yellow-500 text-gray-950 text-lg md:text-xl rounded-lg hover:bg-yellow-700"
+            onClick={openModal}
+          >
+            Agregar Transacción
+          </button>
+          <button
+            className="btn w-full md:w-auto bg-yellow-500 text-gray-950 text-lg md:text-xl rounded-lg hover:bg-yellow-700"
+            onClick={() => document.getElementById("sendPayModal").showModal()}
+          >
+            Realizar Pago
+          </button>
+          <button
+            className="btn w-full md:w-auto bg-yellow-500 text-gray-950 text-lg md:text-xl rounded-lg hover:bg-yellow-700"
+            onClick={() =>
+              document.getElementById("generatePayModal").showModal()
+            }
+          >
+            Generar Cobro
+          </button>
         </div>
       </div>
+
+      {/* Monto por Categoria */}
+      {!showNoTransactions && (
+        <>
+          <div className="flex items-center">
+            <h2 className="text-xl md:text-2xl py-2 font-bold text-gray-100">
+              Monto por Categoria
+            </h2>
+          </div>
+
+          {/* Gráfico */}
+          <MonthlyGraphic
+            type="categorias"
+            transacciones={transacciones}
+            payCategories={payCategories}
+            filtroMes={filtroMes}
+            filtroCategoria={categoriaSeleccionada}
+          />
+
+          {/* Historial de Transacciones */}
+          <div className="bg-black flex flex-col w-full overflow-x-auto">
+            <div className="flex justify-between items-center w-full px-4 py-6">
+              <div className="flex items-center">
+                <h2 className="text-xl md:text-2xl py-2 font-bold text-gray-100">
+                  Historial de Transacciones
+                </h2>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Cargando Spinner */}
       {isLoadingFilter ? (
         <div className="flex justify-center items-center">
-          {/* Spinner o ícono de carga */}
           <svg
-            className="animate-spin h-10 w-10 text-yellow-500"
+            className="animate-spin h-8 w-8 md:h-10 md:w-10 text-yellow-500"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -532,7 +758,6 @@ function HomePage() {
         </div>
       ) : (
         <>
-          {/* Mostrar la tabla de transacciones si no está cargando */}
           <TransaccionesTable
             transacciones={transacciones}
             payCategories={payCategories}
@@ -542,16 +767,18 @@ function HomePage() {
             onTransactions={() => setShowNoTransactions(false)}
           />
 
-          {/* Si no hay transacciones para mostrar */}
+          {/* Si no hay transacciones */}
           {showNoTransactions && (
-            <div className="flex flex-col justify-center mb-0 items-center">
-              {categoriaSeleccionada !== "Todas" && (
+            <div className="flex flex-col justify-center items-center mb-0">
+              {(categoriaSeleccionada !== "Todas" ||
+                filtroAno !== "2024" ||
+                filtroMes !== "") && (
                 <p className="text-red-500 font-bold mb-4">
                   Su filtro no coincide con ninguna transacción
                 </p>
               )}
               <button
-                className="bg-yellow-500 bg-opacity-80 text-gray-950 font-extrabold py-6 px-16 rounded-lg hover:bg-yellow-700"
+                className="bg-yellow-500 text-gray-950 font-extrabold py-4 px-8 rounded-lg hover:bg-yellow-700"
                 onClick={openModal}
               >
                 Ingrese una transacción
@@ -560,6 +787,8 @@ function HomePage() {
           )}
         </>
       )}
+
+      {/* Modales */}
       <ModalForm
         isModalOpen={isModalOpen}
         closeModal={closeModal}
@@ -575,21 +804,22 @@ function HomePage() {
         handleCategoryChange={handleCategoryChange}
         handleCreateCat={handleCreateCat}
         setFecha={setFecha}
+        handlePayChange={handlePayChange}
+        selectedPayMethod={selectedPayMethod}
+        payOptions={payOptions}
+        handleCreateTP={handleCreateTP}
       />
-      <ModalVerCategorias
-        isModalCategoriaOpen={isModalCategoriaOpen}
-        closeModalCategoria={closeModalCategoria}
-        fetchPersonalCategorias={fetchPersonalCategorias}
-        setPayCategories={setPayCategories}
-        //edit={edit}
+      <ModalAskPayment payCategories={payCategories} />
+      <ModalSendPayment
         payCategories={payCategories}
-        //handleCreateCat={handleCreateCat}
+        refreshTransacciones={refershTransacciones}
       />
       <AlertPending
         isOpen={pendTran}
         pendingTransaction={tranPendiente}
         isAccepted={isAccepted}
         isRejected={isRejected}
+        payCategories={payCategories}
       />
     </div>
   );

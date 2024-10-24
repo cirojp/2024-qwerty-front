@@ -15,7 +15,11 @@ function ModalVerCategorias({
   payCategories,
   fetchPersonalCategorias,
   setPayCategories,
+  getTransacciones,
 }) {
+  useEffect(() => {
+    //fetchPersonalCategorias();
+  }, [payCategories]);
   const customStyles = {
     overlay: {
       position: "fixed",
@@ -123,6 +127,12 @@ function ModalVerCategorias({
       iconPath: "fa-solid fa-chalkboard-user",
       textColor: "mr-2 text-yellow-500",
     },
+    {
+      value: "Ingreso de Dinero",
+      label: "Ingreso de Dinero",
+      iconPath: "fa-solid fa-money-bill",
+      textColor: "mr-2 text-yellow-500",
+    },
   ];
   const closeWindow = () => {
     setModalError("");
@@ -157,7 +167,7 @@ function ModalVerCategorias({
       if (response.ok) {
         console.log(`Categoría editada: ${categoryValue}`);
         setPayCategories([]);
-        await fetchPersonalCategorias();
+        await getTransacciones();
         setIsModalOpen(false);
       }
     } catch (err) {
@@ -190,7 +200,7 @@ function ModalVerCategorias({
       if (response.ok) {
         console.log(`Categoría eliminada: ${categoryValue}`);
         setPayCategories([]);
-        await fetchPersonalCategorias();
+        await getTransacciones();
       }
     } catch (err) {
       console.log(err);
@@ -225,6 +235,8 @@ function ModalVerCategorias({
         console.log(`Categoría agregada: ${newName}`);
         setPayCategories([]);
         await fetchPersonalCategorias();
+        setIsModalOpen(false);
+        setEditCategory({});
       } else {
         const errorMessage = await response.text();
         console.error("Error al agregar categoria:", errorMessage);
@@ -233,9 +245,7 @@ function ModalVerCategorias({
       }
     } catch (err) {
       console.log(err);
-      return "";
     }
-    return "";
   };
 
   const confirmDelete = (categoryValue) => {
@@ -274,7 +284,7 @@ function ModalVerCategorias({
           </ul>
 
           <ul>
-            {payCategories.slice(6).map((category) => (
+            {payCategories.slice(8).map((category) => (
               <li
                 key={category.value}
                 className="bg-gray-700 p-3 rounded-md shadow mb-3 flex justify-between"

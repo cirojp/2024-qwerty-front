@@ -4,13 +4,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 
-const ModalCategoria = ({
+const ModalMedioDePago = ({
   isOpen = false,
   onRequestClose = () => {},
-  handleCreateCat = () => {},
-  handleEditCat = () => {},
+  handleCreateTP = () => {},
+  handleEditTP = () => {},
   edit = false,
-  editCat = {},
+  editTP = {},
 }) => {
   library.add(fas);
   // Estilos del Modal
@@ -41,109 +41,64 @@ const ModalCategoria = ({
     },
   };
 
-  const [categoriaNombre, setCategoriaNombre] = useState("");
-  const [iconoSeleccionado, setIconoSeleccionado] = useState("");
+  const [medioDePagoNombre, setMedioDePagoNombre] = useState("");
   const [error, setError] = useState("");
 
   useEffect(() => {
     if (edit) {
-      setCategoriaNombre(editCat.value || "");
-      setIconoSeleccionado(editCat.iconPath || "");
-    } else {
-      setCategoriaNombre("");
-      setIconoSeleccionado("");
+      setMedioDePagoNombre(editTP.value);
     }
-  }, [editCat, edit, isOpen]);
+    console.log(editTP);
+  }, [isOpen]);
 
   const handleSubmit = async () => {
-    if (!categoriaNombre || !iconoSeleccionado) {
+    if (!medioDePagoNombre) {
       setError("Debes ingresar un nombre y seleccionar un icono.");
       return;
     }
     let errorMessage = "";
     if (!edit) {
-      errorMessage = await handleCreateCat(categoriaNombre, iconoSeleccionado);
+      errorMessage = await handleCreateTP(medioDePagoNombre);
     } else {
-      errorMessage = await handleEditCat(
-        editCat,
-        categoriaNombre,
-        iconoSeleccionado
-      );
+      errorMessage = await handleEditTP(editTP, medioDePagoNombre);
     }
-    if (errorMessage != "") {
+    /*if (errorMessage != "") {
       setError(errorMessage);
       return;
-    }
-    setCategoriaNombre("");
-    setIconoSeleccionado("");
-    setError("");
-    onRequestClose();
+    }*/
+    handleClose();
   };
 
   const handleClose = () => {
     setError("");
-    setCategoriaNombre("");
-    setIconoSeleccionado("");
+    setMedioDePagoNombre("");
     onRequestClose();
   };
-
-  const iconos = [
-    { alt: "faUser", faIcon: "fa-solid fa-user" },
-    { alt: "faImage", faIcon: "fa-solid fa-image" },
-    { alt: "faStar", faIcon: "fa-solid fa-star" },
-    { alt: "faMusic", faIcon: "fa-solid fa-music" },
-    { alt: "faHeart", faIcon: "fa-solid fa-heart" },
-    { alt: "faCameraRetro", faIcon: "fa-solid fa-camera-retro" },
-    { alt: "faCar", faIcon: "fa-solid fa-car" },
-    { alt: "faMugHot", faIcon: "fa-solid fa-mug-hot" },
-    { alt: "faBook", faIcon: "fa-solid fa-book" },
-  ];
 
   return (
     <Modal
       isOpen={isOpen}
       onRequestClose={onRequestClose}
-      contentLabel={edit ? "Editar Categoría" : "Crear Categoría"}
+      contentLabel={edit ? "Editar Medio De Pago" : "Crear Medio de Pago"}
       style={customStyles}
       className="bg-gray-900 text-white p-4 sm:p-2 rounded-lg shadow-lg"
     >
       <h2 className="text-xl sm:text-lg font-bold mb-4">
-        {edit ? "Editar Categoría" : "Crear Nueva Categoría"}
+        {edit ? "Editar Medio De Pago" : "Crear Medio de Pago"}
       </h2>
       <input
         type="text"
-        placeholder="Nombre de la categoría"
-        value={categoriaNombre}
-        onChange={(e) => setCategoriaNombre(e.target.value)}
+        placeholder="Medio de Pago"
+        value={medioDePagoNombre}
+        onChange={(e) => setMedioDePagoNombre(e.target.value)}
         className="mt-1 block w-full p-2 border border-gray-600 bg-gray-800 text-white rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
       />
       {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-
-      <label className="mt-4 block">Selecciona un icono:</label>
-      <div className="grid grid-cols-3 gap-0 sm:grid-cols-4">
-        {iconos.map((icono) => (
-          <div
-            key={icono.alt}
-            className={`p-1 border rounded-md cursor-pointer transition duration-200 ease-in-out 
-                        ${
-                          iconoSeleccionado === icono.faIcon
-                            ? "border-yellow-500"
-                            : "border-transparent"
-                        } 
-                        hover:border-yellow-500`}
-            onClick={() => setIconoSeleccionado(icono.faIcon)}
-          >
-            <FontAwesomeIcon icon={icono.faIcon} className="fa-2x sm:fa-2xs" />{" "}
-            {/* Tamaño del icono */}
-          </div>
-        ))}
-      </div>
-
       <button
         onClick={handleSubmit}
         className="mt-4 mr-2 w-full sm:w-auto bg-yellow-500 text-black font-bold py-2 px-4 rounded hover:bg-green-600 transition duration-300"
       >
-        {edit ? "Editar Categoría" : "Crear Categoría"}
+        {edit ? "Editar Medio De Pago" : "Crear Medio de Pago"}
       </button>
       <button
         onClick={() => handleClose()}
@@ -155,4 +110,4 @@ const ModalCategoria = ({
   );
 };
 
-export default ModalCategoria;
+export default ModalMedioDePago;

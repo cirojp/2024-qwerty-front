@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 function RegisterForm() {
   const navigate = useNavigate();
@@ -18,7 +18,8 @@ function RegisterForm() {
   const validatePassword = (password) => {
     // Contraseña mínima de 8 caracteres, al menos un número, un carácter especial,
     // una letra mayúscula, una letra minúscula y que no contenga caracteres prohibidos.
-    const passwordRegex = /^(?!.*['"\\/|])(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const passwordRegex =
+      /^(?!.*['"\\/|])(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     return passwordRegex.test(password);
   };
 
@@ -27,28 +28,35 @@ function RegisterForm() {
     setLoading(true);
 
     if (!validatePassword(password)) {
-      setError("La contraseña debe tener al menos 8 caracteres, una mayuscula y minuscula, un número, un carácter especial y no puede contener comillas simples, dobles, barra vertical, barra inclinada o barra invertida.");
+      setError(
+        "La contraseña debe tener al menos 8 caracteres, una mayuscula y minuscula, un número, un carácter especial y no puede contener comillas simples, dobles, barra vertical, barra inclinada o barra invertida."
+      );
       setLoading(false);
       return;
     }
 
     try {
-      const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-        }),
-      });
-      
+      const response = await fetch(
+        "https://two024-qwerty-back-2.onrender.com/api/auth/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: email,
+            password: password,
+          }),
+        }
+      );
+
       if (response.ok) {
-        navigate("/"); 
+        navigate("/");
       } else {
         if (response.status === 409) {
-          setError("Email ya en uso. Intente iniciar sesión o utilizar otro e-mail.");
+          setError(
+            "Email ya en uso. Intente iniciar sesión o utilizar otro e-mail."
+          );
         } else {
           setError("Ocurrió un error. Intenta nuevamente.");
         }
@@ -57,18 +65,22 @@ function RegisterForm() {
       console.error("Error during registration:", err);
       setError("Ocurrió un error. Intenta nuevamente.");
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-black p-6">
       <div className="bg-gray-950 shadow-md rounded-lg p-8 max-w-md w-full">
-        <h2 className="text-2xl font-bold text-center mb-6 text-gray-100">BIENVENIDO</h2>
+        <h2 className="text-2xl font-bold text-center mb-6 text-gray-100">
+          BIENVENIDO
+        </h2>
         <p className="text-center text-gray-100 mb-6">Crea una nueva cuenta</p>
         <form onSubmit={onRegister} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-100">Email:</label>
+            <label className="block text-sm font-medium text-gray-100">
+              Email:
+            </label>
             <input
               type="email"
               className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
@@ -79,7 +91,9 @@ function RegisterForm() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-100">Contraseña:</label>
+            <label className="block text-sm font-medium text-gray-100">
+              Contraseña:
+            </label>
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
@@ -100,33 +114,40 @@ function RegisterForm() {
           </div>
           <div className="text-gray-400 text-sm text-center">
             La contraseña debe tener:
-            </div>
-            <ul className="text-gray-400 text-sm text-left">
-              <li>Al menos 8 caracteres</li>
-              <li>Una mayuscula y minuscula</li>
-              <li>Un número</li>
-              <li>Un carácter especial</li>
-              <li>No puede contener comillas simples, dobles, 
-              barra vertical, barra inclinada o barra invertida.</li>
-            </ul>
-          {error && <div className="text-red-500 text-sm text-center">{error}</div>}
-            <button
-              type="submit"
-              className="w-full bg-yellow-500 bg-opacity-80 text-gray-950 py-2 px-4 rounded-lg hover:bg-yellow-700 flex justify-center items-center"
-              disabled={loading}
-            >
-              {loading ? (
-                  <>
-                      <div className="loading-circle border-4 border-t-yellow-600 border-gray-200 rounded-full w-6 h-6 animate-spin mr-2"></div>
-                      Cargando...
-                  </>
-              ) : (
-                "Crear Cuenta"
-              )}
-            </button>
+          </div>
+          <ul className="text-gray-400 text-sm text-left">
+            <li>Al menos 8 caracteres</li>
+            <li>Una mayuscula y minuscula</li>
+            <li>Un número</li>
+            <li>Un carácter especial</li>
+            <li>
+              No puede contener comillas simples, dobles, barra vertical, barra
+              inclinada o barra invertida.
+            </li>
+          </ul>
+          {error && (
+            <div className="text-red-500 text-sm text-center">{error}</div>
+          )}
+          <button
+            type="submit"
+            className="w-full bg-yellow-500 bg-opacity-80 text-gray-950 py-2 px-4 rounded-lg hover:bg-yellow-700 flex justify-center items-center"
+            disabled={loading}
+          >
+            {loading ? (
+              <>
+                <div className="loading-circle border-4 border-t-yellow-600 border-gray-200 rounded-full w-6 h-6 animate-spin mr-2"></div>
+                Cargando...
+              </>
+            ) : (
+              "Crear Cuenta"
+            )}
+          </button>
         </form>
         <div className="mt-4 text-center text-gray-400">
-        ¿Ya tienes una cuenta? <a href="/" className="text-yellow-500 hover:underline">Inicia sesión</a>
+          ¿Ya tienes una cuenta?{" "}
+          <a href="/" className="text-yellow-500 hover:underline">
+            Inicia sesión
+          </a>
         </div>
       </div>
     </div>

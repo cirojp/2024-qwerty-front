@@ -599,7 +599,8 @@ function HomePage() {
     updatedTransacciones.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
     setTransacciones(updatedTransacciones);
   };
-
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   return (
     <div className="container min-h-screen min-w-full max-w-full bg-black">
       {/* Header */}
@@ -610,96 +611,129 @@ function HomePage() {
         getTransacciones={getTransacciones}
       />
 
-      {/* Filtros */}
-      <div className="flex flex-col md:flex-row items-start md:items-center md:gap-6 mb-4">
-        <div className="flex flex-col md:flex-row md:items-center gap-3 w-full">
-          {/* Select de Categorías */}
-          <div className="flex flex-col w-full md:w-1/3">
-            <select
-              id="categorias"
-              value={categoriaSeleccionada}
-              onChange={handleChange}
-              className="block select select-bordered w-full max-w-full"
-            >
-              {categoriasConTodas.map((cat) => (
-                <option key={cat.value} value={cat.value}>
-                  {cat.label}
-                </option>
-              ))}
-            </select>
-          </div>
+      {/* Menú hamburguesa en móviles */}
+      <div className="flex  justify-end w-full p-4">
+        <button
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          className="text-yellow-500 text-2xl"
+        >
+          ☰
+        </button>
+      </div>
 
-          {/* Select de Mes */}
-          <div className="flex flex-col w-full md:w-1/3">
-            <select
-              value={filtroMes}
-              onChange={(e) => setFiltroMes(e.target.value)}
-              className="select select-bordered w-full max-w-full"
-            >
-              <option value="">Mes</option>
-              <option value="01">Enero</option>
-              <option value="02">Febrero</option>
-              <option value="03">Marzo</option>
-              <option value="04">Abril</option>
-              <option value="05">Mayo</option>
-              <option value="06">Junio</option>
-              <option value="07">Julio</option>
-              <option value="08">Agosto</option>
-              <option value="09">Septiembre</option>
-              <option value="10">Octubre</option>
-              <option value="11">Noviembre</option>
-              <option value="12">Diciembre</option>
-            </select>
-          </div>
-
-          <div className="flex flex-col w-full md:w-1/3">
-            <select
-              value={filtroAno}
-              onChange={(e) => setFiltroAno(e.target.value)}
-              className="select select-bordered w-full max-w-full"
-            >
-              <option value="2021">2021</option>
-              <option value="2022">2022</option>
-              <option value="2023">2023</option>
-              <option value="2024">2024</option>
-              <option value="2025">2025</option>
-              <option value="2026">2026</option>
-            </select>
-          </div>
-
+      {/* Menú de botones desplegable en móviles */}
+      {isMenuOpen && (
+        <div className="flex flex-col items-start p-4 space-y-2 bg-gray-800 rounded-md shadow-lg w-full mb-2">
           <button
-            onClick={() => resetFilters()}
-            className="btn btn-warning w-full md:w-auto mt-2 md:mt-0"
-          >
-            Borrar filtros
-          </button>
-        </div>
-
-        {/* Botones de acciones */}
-        <div className="flex flex-col md:flex-row items-center justify-end gap-2 mt-4 w-full">
-          <button
-            className="btn w-full md:w-auto bg-yellow-500 text-gray-950 text-lg md:text-xl rounded-lg hover:bg-yellow-700"
-            onClick={openModal}
+            className="btn w-full bg-yellow-500 text-gray-950 text-lg rounded-lg hover:bg-yellow-700"
+            onClick={() => {
+              openModal();
+              setIsMenuOpen(false);
+            }}
           >
             Agregar Transacción
           </button>
           <button
-            className="btn w-full md:w-auto bg-yellow-500 text-gray-950 text-lg md:text-xl rounded-lg hover:bg-yellow-700"
-            onClick={() => document.getElementById("sendPayModal").showModal()}
+            className="btn w-full bg-yellow-500 text-gray-950 text-lg rounded-lg hover:bg-yellow-700"
+            onClick={() => {
+              document.getElementById("sendPayModal").showModal();
+              setIsMenuOpen(false);
+            }}
           >
             Realizar Pago
           </button>
           <button
-            className="btn w-full md:w-auto bg-yellow-500 text-gray-950 text-lg md:text-xl rounded-lg hover:bg-yellow-700"
-            onClick={() =>
-              document.getElementById("generatePayModal").showModal()
-            }
+            className="btn w-full bg-yellow-500 text-gray-950 text-lg rounded-lg hover:bg-yellow-700"
+            onClick={() => {
+              document.getElementById("generatePayModal").showModal();
+              setIsMenuOpen(false);
+            }}
           >
             Generar Cobro
           </button>
         </div>
+      )}
+
+      {/* Botón para mostrar/ocultar filtros en móviles */}
+      <div className="flex md:hidden justify-end w-full p-4">
+        <button
+          onClick={() => setIsFiltersOpen(!isFiltersOpen)}
+          className="btn btn-warning w-full"
+        >
+          {isFiltersOpen ? "Ocultar Filtros" : "Mostrar Filtros"}
+        </button>
       </div>
 
+      {/* Filtros */}
+      {(isFiltersOpen || window.innerWidth >= 768) && (
+        <div className="flex flex-col md:flex-row items-start md:items-center md:gap-6 mb-4">
+          <div className="flex flex-col md:flex-row md:items-center gap-3 w-full">
+            {/* Select de Categorías */}
+            <div className="flex flex-col w-full md:w-1/3">
+              <select
+                id="categorias"
+                value={categoriaSeleccionada}
+                onChange={handleChange}
+                className="block select select-bordered w-full max-w-full"
+              >
+                {categoriasConTodas.map((cat) => (
+                  <option key={cat.value} value={cat.value}>
+                    {cat.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Select de Mes */}
+            <div className="flex flex-col w-full md:w-1/3">
+              <select
+                value={filtroMes}
+                onChange={(e) => setFiltroMes(e.target.value)}
+                className="select select-bordered w-full max-w-full"
+              >
+                <option value="">Mes</option>
+                <option value="01">Enero</option>
+                <option value="02">Febrero</option>
+                <option value="03">Marzo</option>
+                <option value="04">Abril</option>
+                <option value="05">Mayo</option>
+                <option value="06">Junio</option>
+                <option value="07">Julio</option>
+                <option value="08">Agosto</option>
+                <option value="09">Septiembre</option>
+                <option value="10">Octubre</option>
+                <option value="11">Noviembre</option>
+                <option value="12">Diciembre</option>
+              </select>
+            </div>
+
+            {/* Select de Año */}
+            <div className="flex flex-col w-full md:w-1/3">
+              <select
+                value={filtroAno}
+                onChange={(e) => setFiltroAno(e.target.value)}
+                className="select select-bordered w-full max-w-full"
+              >
+                <option value="2021">2021</option>
+                <option value="2022">2022</option>
+                <option value="2023">2023</option>
+                <option value="2024">2024</option>
+                <option value="2025">2025</option>
+                <option value="2026">2026</option>
+              </select>
+            </div>
+
+            <button
+              onClick={() => resetFilters()}
+              className="btn btn-warning w-full md:w-auto mt-2 md:mt-0"
+            >
+              Borrar filtros
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Resto del contenido */}
       {/* Monto por Categoria */}
       {!showNoTransactions && (
         <>

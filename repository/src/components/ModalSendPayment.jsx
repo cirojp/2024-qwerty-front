@@ -28,6 +28,7 @@ function ModalSendPayment({
   const [valor, setValor] = useState(0);
   const [fecha, setFecha] = useState(new Date().toISOString().split("T")[0]);
   const [modalError, setModalError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchPersonalTipoGastos = async () => {
     const token = localStorage.getItem("token");
@@ -92,6 +93,7 @@ function ModalSendPayment({
   };
 
   const handleSubmit = async (e) => {
+    setIsLoading(true);
     e.preventDefault();
     const token = localStorage.getItem("token");
     const transaccion = {
@@ -141,6 +143,7 @@ function ModalSendPayment({
     setValor(0);
     setPayOption("");
     setCategoria("");
+    setIsLoading(false);
     setFecha(new Date().toISOString().split("T")[0]);
   };
 
@@ -224,10 +227,10 @@ function ModalSendPayment({
           {modalError && (
             <div className="text-red-500 text-sm text-center">{modalError}</div>
           )}
-          <div className="flex justify-end mt-4">
+          <div className="flex flex-col md:flex-row justify-end mt-4 space-y-2 md:space-y-0 md:space-x-2">
             <button
               type="button"
-              className="btn mr-2"
+              className="btn w-full md:w-auto bg-gray-700 text-white"
               onClick={() => {
                 cleanForm();
                 document.getElementById("sendPayModal").close();
@@ -235,8 +238,19 @@ function ModalSendPayment({
             >
               Cerrar
             </button>
-            <button type="submit" className="btn bg-yellow-500 text-black">
-              Enviar
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="btn w-full sm:w-auto bg-yellow-500 text-black"
+            >
+              {isLoading ? (
+                <div>
+                  <span className="loading loading-spinner loading-sm text-white"></span>
+                  <div className="text-white p-0 m-0">Cargando...</div>
+                </div>
+              ) : (
+                "Enviar"
+              )}
             </button>
           </div>
         </form>

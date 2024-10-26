@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import TransaccionesTable from "./TransaccionesTable";
-import ModalForm from "./ModalForm";
+import TransaccionesTable from "./components/TransaccionesTable";
+import ModalForm from "./components/ModalForm";
 import "./styles/HomePage.css";
-import AlertPending from "./AlertPending";
-import MonthlyGraphic from "./MonthlyGraphic";
-import Header from "./Header";
-import ModalAskPayment from "./ModalAskPayment";
-import ModalSendPayment from "./ModalSendPayment";
+import AlertPending from "./components/AlertPending";
+import MonthlyGraphic from "./components/MonthlyGraphic";
+import Header from "./components/Header";
+import ModalAskPayment from "./components/ModalAskPayment";
+import ModalSendPayment from "./components/ModalSendPayment";
 
 function HomePage() {
   const [transacciones, setTransacciones] = useState([]);
@@ -376,34 +376,6 @@ function HomePage() {
         // habria que avisar que hubo un error en aceptar la transaccion o algo
       }
     }
-    /*const token = localStorage.getItem("token");
-    const url = "https://two024-qwerty-back-2.onrender.com/api/transacciones";
-    const method = "POST";
-    let motivo = transaccion.motivo;
-    let valor = transaccion.valor;
-    let fecha = transaccion.fecha;
-    try {
-      //hacer chequeos de que pase bien las cosas en el back!
-      const response = await fetch(url, {
-        method: method,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ motivo, valor, fecha, categoria }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        const updatedTransacciones = [...transacciones, data];
-        updatedTransacciones.sort(
-          (a, b) => new Date(b.fecha) - new Date(a.fecha)
-        );
-        setTransacciones(updatedTransacciones);
-      }
-    } catch (err) {
-      // habria que avisar que hubo un error en aceptar la transaccion o algo
-    }*/
   };
   const agregarTransaccion = async (e, categoria) => {
     e.preventDefault();
@@ -603,58 +575,14 @@ function HomePage() {
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   return (
     <div className="container min-h-screen min-w-full max-w-full bg-black">
-      {/* Header */}
       <Header
         payCategories={payCategories}
         setPayCategories={setPayCategories}
         fetchPersonalCategorias={fetchPersonalCategorias}
         getTransacciones={getTransacciones}
+        openModal={openModal}
       />
 
-      {/* Menú hamburguesa en móviles */}
-      <div className="flex  justify-end w-full p-4">
-        <button
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="text-yellow-500 text-2xl"
-        >
-          ☰
-        </button>
-      </div>
-
-      {/* Menú de botones desplegable en móviles */}
-      {isMenuOpen && (
-        <div className="flex flex-col items-start p-4 space-y-2 bg-gray-800 rounded-md shadow-lg w-full mb-2">
-          <button
-            className="btn w-full bg-yellow-500 text-gray-950 text-lg rounded-lg hover:bg-yellow-700"
-            onClick={() => {
-              openModal();
-              setIsMenuOpen(false);
-            }}
-          >
-            Agregar Transacción
-          </button>
-          <button
-            className="btn w-full bg-yellow-500 text-gray-950 text-lg rounded-lg hover:bg-yellow-700"
-            onClick={() => {
-              document.getElementById("sendPayModal").showModal();
-              setIsMenuOpen(false);
-            }}
-          >
-            Realizar Pago
-          </button>
-          <button
-            className="btn w-full bg-yellow-500 text-gray-950 text-lg rounded-lg hover:bg-yellow-700"
-            onClick={() => {
-              document.getElementById("generatePayModal").showModal();
-              setIsMenuOpen(false);
-            }}
-          >
-            Generar Cobro
-          </button>
-        </div>
-      )}
-
-      {/* Botón para mostrar/ocultar filtros en móviles */}
       <div className="flex md:hidden justify-end w-full p-4">
         <button
           onClick={() => setIsFiltersOpen(!isFiltersOpen)}
@@ -664,11 +592,9 @@ function HomePage() {
         </button>
       </div>
 
-      {/* Filtros */}
       {(isFiltersOpen || window.innerWidth >= 768) && (
         <div className="flex flex-col md:flex-row items-start md:items-center md:gap-6 mb-4">
           <div className="flex flex-col md:flex-row md:items-center gap-3 w-full">
-            {/* Select de Categorías */}
             <div className="flex flex-col w-full md:w-1/3">
               <select
                 id="categorias"
@@ -733,8 +659,6 @@ function HomePage() {
         </div>
       )}
 
-      {/* Resto del contenido */}
-      {/* Monto por Categoria */}
       {!showNoTransactions && (
         <>
           <div className="flex items-center">

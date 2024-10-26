@@ -1,8 +1,8 @@
 import React from "react";
 import DataTable, { createTheme } from "react-data-table-component";
 import ExpandedRow from "./ExpandedRow";
-import deleteIcon from "../assets/delete-icon.png";
-import editIcon from "../assets/edit-icon.png";
+import deleteIcon from "../../assets/delete-icon.png";
+import editIcon from "../../assets/edit-icon.png";
 
 function TransaccionesTable({
   transacciones,

@@ -3,7 +3,7 @@ import Modal from "react-modal";
 import Select from "react-select";
 import "./styles/ModalForm.css";
 import ModalCategoria from "./ModalCategoria";
-import CreatableSelect from 'react-select/creatable';
+import CreatableSelect from "react-select/creatable";
 
 function ModalForm({
   isModalOpen,
@@ -20,9 +20,9 @@ function ModalForm({
   handleCategoryChange,
   handleCreateCat,
   setFecha,
-  handlePayChange, 
+  handlePayChange,
   selectedPayMethod,
-  payOptions, 
+  payOptions,
   handleCreateTP,
 }) {
   const customStyles = {
@@ -149,15 +149,17 @@ function ModalForm({
           />
         </div>
         <div>
-          <label className="text-center text-gray-100 mb-6">Medio de Pago:</label>
+          <label className="text-center text-gray-100 mb-6">
+            Medio de Pago:
+          </label>
           <CreatableSelect
-              options={payOptions}
-              onChange={handlePayChange}
-              onCreateOption={handleCreateTP}
-              value={selectedPayMethod}
-              className="custom-select mt-1 block w-full border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm border-transparent"
-              styles={customSelectStyles}
-              required
+            options={payOptions}
+            onChange={handlePayChange}
+            onCreateOption={handleCreateTP}
+            value={selectedPayMethod}
+            className="custom-select mt-1 block w-full border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm border-transparent"
+            styles={customSelectStyles}
+            required
           />
         </div>
         <div>

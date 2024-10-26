@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
-import ActionButtons from "./ActionButtons";
+import ActionButtons from "./components/ActionButtons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import "./styles/ProfilePage.css";
 import logo from "../assets/logo-removebg-preview.png";
 import { useNavigate } from "react-router-dom";
-import ConfirmDeleteMedioDePago from "./ConfirmDeleteMedioDePago";
-import ModalMedioDePago from "./ModalMedioDePago";
-import MonthlyGraphic from "./MonthlyGraphic";
+import ConfirmDeleteMedioDePago from "./components/ConfirmDeleteMedioDePago";
+import ModalMedioDePago from "./components/ModalMedioDePago";
+import MonthlyGraphic from "./components/MonthlyGraphic";
 
 function ProfilePage() {
   library.add(fas);

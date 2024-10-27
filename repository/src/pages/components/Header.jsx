@@ -21,7 +21,12 @@ function Header({
       {/* Logo */}
       <div className="flex items-center">
         <div className="w-16 h-16 md:w-24 md:h-24 rounded-full overflow-hidden border-4 border-yellow-600 shadow-md">
-          <img src={logo} alt="logo" className="w-full h-full object-cover" />
+          <img
+            src={logo}
+            alt="logo"
+            onClick={() => navigate("/")}
+            className="w-full h-full object-cover"
+          />
         </div>
       </div>
 

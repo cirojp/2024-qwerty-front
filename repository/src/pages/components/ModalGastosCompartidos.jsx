@@ -9,13 +9,48 @@ import { fas } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import ConfirmDeleteCategory from "./ConfirmDeleteCategory";
 
-function ModalGastosCompartidos({
-  isModalGastosOpen,
-  closeModalGastos,
-}) {
-  /*useEffect(() => {
-    
-  }, );*/
+function ModalGastosCompartidos({ isModalGastosOpen, closeModalGastos }) {
+  const [modalError, setModalError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [grupos, setGrupos] = useState([]); // Estado para grupos
+
+  const fetchGrupos = async () => {
+    setIsLoading(true);
+    console.log("entre al")
+    const token = localStorage.getItem("token");
+    try {
+      const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/grupos/mis-grupos", {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Error al obtener los grupos.");
+      }
+
+      const data = await response.json();
+      setGrupos(data); // Guardar los grupos en el estado
+    } catch (error) {
+      setError("Ocurrió un error al obtener los grupos.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isModalGastosOpen) {
+        fetchGrupos(); // Fetch groups when modal opens
+    }
+  }, [isModalGastosOpen]);
+
+  const closeWindow = () => {
+    setModalError("");
+    closeModalGastos();
+  };
+
   const customStyles = {
     overlay: {
       position: "fixed",
@@ -34,58 +69,14 @@ function ModalGastosCompartidos({
       borderRadius: "0.75rem",
       width: "90vw",
       maxWidth: "500px",
-      maxHeight: "80vh", // Limita la altura del modal
+      maxHeight: "80vh",
       margin: "auto",
       display: "flex",
       flexDirection: "column",
       gap: "1.5rem",
-      overflowY: "auto", // Habilita scroll si el contenido excede el tamaño
+      overflowY: "auto",
       zIndex: 1001,
     },
-  };
-  const customSelectStyles = {
-    control: (provided) => ({
-      ...provided,
-      backgroundColor: "#111827",
-      color: "white",
-    }),
-    menu: (provided) => ({
-      ...provided,
-      backgroundColor: "#111827",
-    }),
-    option: (provided, state) => ({
-      ...provided,
-      backgroundColor: state.isSelected ? "#eab308" : "#111827",
-      color: state.isSelected ? "black" : "white",
-    }),
-    singleValue: (provided) => ({
-      ...provided,
-      color: "white",
-    }),
-    placeholder: (provided) => ({
-      ...provided,
-      color: "white",
-    }),
-    input: (provided) => ({
-      ...provided,
-      color: "white",
-    }),
-    indicatorSeparator: (provided) => ({
-      ...provided,
-      backgroundColor: "transparent",
-    }),
-    dropdownIndicator: (provided) => ({
-      ...provided,
-      color: "white",
-    }),
-  };
-  const [modalError, setModalError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  
-  const closeWindow = () => {
-    setModalError("");
-    closeModalGastos();
   };
 
   return (
@@ -101,6 +92,25 @@ function ModalGastosCompartidos({
       </div>
       <div className="flex flex-col flex-grow px-4">
         <div className="bg-gray-800 p-4 rounded-lg shadow-lg text-white">
+          {/* Display user groups */}
+          <div className="mb-4">
+            <h3 className="text-lg font-semibold">Grupos a los que perteneces:</h3>
+            {isLoading ? (
+              <p>Cargando grupos...</p>
+            ) : (
+              <ul>
+                {grupos.length > 0 ? (
+                  grupos.map(grupo => (
+                    <li key={grupo.id} className="py-1">
+                      {grupo.nombre}
+                    </li>
+                  ))
+                ) : (
+                  <li>No perteneces a ningún grupo.</li>
+                )}
+              </ul>
+            )}
+          </div>
           
           <button
             className="mt-4 px-4 py-3 bg-yellow-500 text-black rounded-md hover:bg-yellow-700 mr-2"
@@ -116,13 +126,12 @@ function ModalGastosCompartidos({
           >
             Cerrar
           </button>
-        </div>{" "}
+        </div>
       </div>
 
       <ModalCrearGrupo
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}
-        //handleCreateGroup={handleCreateGroup}
       />
     </Modal>
   );

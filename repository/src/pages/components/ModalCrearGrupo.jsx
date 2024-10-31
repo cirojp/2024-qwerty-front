@@ -59,17 +59,20 @@ const ModalCrearGrupo = ({
 
   const handleSubmit = async () => {
     setIsLoading(true);
+    const token = localStorage.getItem("token");
     if (!grupoNombre || usuarios.length === 0) {
       setError("Debes ingresar un nombre de grupo y al menos un usuario.");
       setIsLoading(false);
       return;
     }
     try {
+        console.log(usuarios);
       // Aquí iría la lógica para crear el grupo usando `grupoNombre` y `usuarios`
-      const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/grupos", { // Ajusta la URL según tu endpoint
+      const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/grupos/crear", { // Ajusta la URL según tu endpoint
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           nombre: grupoNombre,

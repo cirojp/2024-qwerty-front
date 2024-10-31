@@ -111,6 +111,7 @@ function HomePage() {
       if (data[0] != null) {
         setTranPendiente(data[0]);
         console.log(data[0]);
+        console.log("hay data");
         setPendTran(true);
       }
     } catch (err) {
@@ -347,6 +348,26 @@ function HomePage() {
       }
     } else if (transaccion.id_reserva == "Pago") {
       console.log("Transaccion Aprobada");
+    } else if (transaccion.id_reserva == "Grupo") {
+      url = "https://two024-qwerty-back-2.onrender.com/api/grupos/agregar-usuario";
+        const grupoId = transaccion.grupo_id; 
+        try {
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ grupo_id: grupoId }),
+            });
+            if (response.ok) {
+                console.log("Usuario agregado al grupo exitosamente.");
+            } else {
+                console.log("Hubo un problema al agregar el usuario al grupo.");
+            }
+        } catch (err) {
+            console.log("Error en la solicitud de agregar usuario al grupo:", err);
+        }
     } else {
       const method = "POST";
       let motivo = transaccion.motivo;

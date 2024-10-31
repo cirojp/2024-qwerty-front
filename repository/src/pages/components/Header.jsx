@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import logo from "../../assets/logo-removebg-preview.png";
 import ModalVerCategorias from "./ModalVerCategorias";
 import { useNavigate } from "react-router-dom";
+import ModalGastosCompartidos from "./ModalGastosCompartidos";
 
 function Header({
   payCategories,
@@ -11,10 +12,13 @@ function Header({
   openModal = () => {},
 }) {
   const [isModalCategoriaOpen, setIsModalCategoriaOpen] = useState(false);
+  const [isModalGastosOpen, setIsModalGastosOpen] = useState(false);
   const navigate = useNavigate();
 
   const openModalCategoria = () => setIsModalCategoriaOpen(true);
   const closeModalCategoria = () => setIsModalCategoriaOpen(false);
+  const openModalGastos = () => setIsModalGastosOpen(true);
+  const closeModalGastos = () => setIsModalGastosOpen(false);
 
   return (
     <header className="flex flex-col md:flex-row justify-between items-center w-full py-4 md:py-6 px-6 md:px-10">
@@ -108,7 +112,7 @@ function Header({
               <li>
                 <button
                   className="btn mt-3 w-full bg-yellow-500 text-gray-950 text-lg rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out"
-                  onClick={() => {}}
+                  onClick={() => {openModalGastos()}}
                 >
                   Gastos Compartidos
                 </button>
@@ -126,6 +130,10 @@ function Header({
         setPayCategories={setPayCategories}
         payCategories={payCategories}
         getTransacciones={getTransacciones}
+      />
+      <ModalGastosCompartidos
+        isModalGastosOpen={isModalGastosOpen}
+        closeModalGastos={closeModalGastos}
       />
     </header>
   );

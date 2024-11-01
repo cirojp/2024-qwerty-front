@@ -24,6 +24,9 @@ function ModalForm({
   selectedPayMethod,
   payOptions,
   handleCreateTP,
+  handleGroupChange,
+  selectedGroup,
+  grupos,
 }) {
   const customStyles = {
     overlay: {
@@ -190,6 +193,21 @@ function ModalForm({
             onChange={(e) => setFecha(e.target.value)}
             className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
             required
+          />
+        </div>
+        <div>
+          <label className="text-center text-gray-100 mb-6">
+            Si es un gasto grupal seleccione el grupo:
+          </label>
+          <Select
+            options={[
+              { value: null, label: "Select..." }, // Opción predeterminada
+              ...grupos.map(grupo => ({ value: grupo.id, label: grupo.nombre }))
+            ]}
+            onChange={handleGroupChange} 
+            value={selectedGroup} // Este valor debe ser null para mostrar "Personal"
+            className="custom-select mt-1 block w-full border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm border-transparent"
+            styles={customSelectStyles}
           />
         </div>
         {modalError && (

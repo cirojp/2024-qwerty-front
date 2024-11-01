@@ -71,6 +71,15 @@ function HomePage() {
   const [filtroAno, setFiltroAno] = useState("2024"); //
   const [filterEmpty, setFilterEmpty] = useState(false);
   const [loadGraphic, setLoadGraphic] = useState(true);
+  const [grupos, setGrupos] = useState([]);
+  const [selectedGroup, setSelectedGroup] = useState(null);
+  const handleGroupChange = (selectedOption) => {
+    if (selectedOption && selectedOption.value === null) {
+      setSelectedGroup(null); // Restablecer a null si se selecciona "Personal"
+    } else {
+      setSelectedGroup(selectedOption); // Asignar el grupo seleccionado
+    }
+  };
 
   useEffect(() => {
     getTransacciones(categoriaSeleccionada);
@@ -87,7 +96,31 @@ function HomePage() {
   }, [payCategories]);
   useEffect(() => {
     fetchPersonalTipoGastos();
+    fetchGrupos();
   }, []);
+
+  const fetchGrupos = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/grupos/mis-grupos", {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Error al obtener los grupos.");
+      }
+
+      const data = await response.json();
+      setGrupos(data); // Guardar los grupos en el estado
+    } catch (error) {
+      setError("Ocurrió un error al obtener los grupos.");
+    } finally {
+      //loading?
+    }
+  };
 
   const showTransactionsPendientes = async () => {
     const token = localStorage.getItem("token");
@@ -400,49 +433,57 @@ function HomePage() {
   };
   const agregarTransaccion = async (e, categoria) => {
     e.preventDefault();
+    console.log("mira aca bot, " + selectedGroup);
     const token = localStorage.getItem("token");
-
-    const url = edit
+    let bodyJson = "";
+    let url = "";
+    if(selectedGroup==null){
+      bodyJson = JSON.stringify({ motivo, valor, fecha, categoria, tipoGasto });
+    url = edit
       ? `https://two024-qwerty-back-2.onrender.com/api/transacciones/${transaccionId}`
       : "https://two024-qwerty-back-2.onrender.com/api/transacciones";
-
+    } else {
+      const grupo = selectedGroup.value;
+      bodyJson = JSON.stringify({ motivo, valor, fecha, categoria, tipoGasto, grupo });
+    url = edit
+      ? `https://two024-qwerty-back-2.onrender.com/api/grupos/transaccion/${transaccionId}`
+      : "https://two024-qwerty-back-2.onrender.com/api/grupos/transaccion";
+    }
     const method = edit ? "PUT" : "POST";
-
+    console.log(bodyJson);
     try {
-      if (valor <= 0) {
-        setModalError("El valor debe ser mayor a 0");
-        return;
-      }
       const response = await fetch(url, {
         method: method,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ motivo, valor, fecha, categoria, tipoGasto }),
+        body: bodyJson,
       });
-
       if (response.ok) {
+        console.log("la respuesta fue ok");
         const data = await response.json();
-        if (edit) {
-          const updatedTransacciones = transacciones.map((t) =>
-            t.id === data.id ? data : t
-          );
-          setTransacciones(updatedTransacciones);
-        } else {
-          const updatedTransacciones = [...transacciones, data];
-          updatedTransacciones.sort(
-            (a, b) => new Date(b.fecha) - new Date(a.fecha)
-          );
-          setTransacciones(updatedTransacciones);
-        }
-        setModalError("");
+        if(selectedGroup== null){  
+          if (edit) {
+            const updatedTransacciones = transacciones.map((t) =>
+              t.id === data.id ? data : t
+            );
+            setTransacciones(updatedTransacciones);
+          } else {
+            const updatedTransacciones = [...transacciones, data];
+            updatedTransacciones.sort(
+              (a, b) => new Date(b.fecha) - new Date(a.fecha)
+            );
+            setTransacciones(updatedTransacciones);
+          }}
         closeModal();
+        setSelectedGroup(null);
       } else {
-        setModalError("Error al agregar o actualizar la transacción");
+        console.log("la respuesta no fue ok");
       }
     } catch (err) {
-      setModalError("Ocurrió un error. Intenta nuevamente.");
+      console.log("la respuesta fue error");
+      console.log(err);
     }
   };
 
@@ -788,6 +829,9 @@ function HomePage() {
         selectedPayMethod={selectedPayMethod}
         payOptions={payOptions}
         handleCreateTP={handleCreateTP}
+        handleGroupChange={handleGroupChange}
+        selectedGroup={selectedGroup}
+        grupos={grupos}
       />
       <ModalAskPayment payCategories={payCategories} />
       <ModalSendPayment

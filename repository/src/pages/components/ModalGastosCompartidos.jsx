@@ -46,8 +46,11 @@ function ModalGastosCompartidos({ isModalGastosOpen, closeModalGastos }) {
     setModalError("");
     closeModalGastos();
   };
-  const openModalDetallesGrupo = (nombreGrupo, idGrupo) => {
-    setGrupoSeleccionado({ nombre: nombreGrupo, id: idGrupo });
+  const openModalDetallesGrupo = (grupo) => {
+    const nombreGrupo = grupo.nombre;
+    const idGrupo = grupo.id;
+    const estado = grupo.estado;
+    setGrupoSeleccionado({ nombre: nombreGrupo, id: idGrupo , estado: estado});
     setIsModalDetallesGrupoOpen(true);
   };
 
@@ -104,7 +107,7 @@ function ModalGastosCompartidos({ isModalGastosOpen, closeModalGastos }) {
                     <li
                       key={grupo.id}
                       className="py-1 cursor-pointer"
-                      onClick={() => openModalDetallesGrupo(grupo.nombre, grupo.id)}
+                      onClick={() => openModalDetallesGrupo(grupo)}
                     >
                       {grupo.nombre}
                     </li>
@@ -142,8 +145,8 @@ function ModalGastosCompartidos({ isModalGastosOpen, closeModalGastos }) {
         <ModalVerDetallesGrupo
           isModalDetallesGrupoOpen={isModalDetallesGrupoOpen}
           closeModalDetallesGrupo={closeModalDetallesGrupo}
-          nombreGrupo={grupoSeleccionado.nombre}
-          idGrupo={grupoSeleccionado.id} 
+          grupo={grupoSeleccionado}
+          setGrupoSeleccionado={setGrupoSeleccionado}
         />
       )}
     </Modal>

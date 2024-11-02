@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import Select from "react-select";
 import "./styles/ModalForm.css";
 import ModalCategoria from "./ModalCategoria";
 import CreatableSelect from "react-select/creatable";
+
 
 function ModalForm({
   isModalOpen,
@@ -91,7 +92,11 @@ function ModalForm({
   };
   const [modalError, setModalError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [activeGroups, setActiveGroups] = useState([]);
   const [isModalCategoriaOpen, setIsModalCategoriaOpen] = useState(false);
+  useEffect(() => {
+    setActiveGroups(grupos.filter(grupo => grupo.estado === true));
+  }, [grupos]);
   const openModalCategoria = () => {
     setIsModalCategoriaOpen(true);
   };
@@ -202,7 +207,7 @@ function ModalForm({
           <Select
             options={[
               { value: null, label: "Select..." }, // Opción predeterminada
-              ...grupos.map(grupo => ({ value: grupo.id, label: grupo.nombre }))
+              ...activeGroups.map(grupo => ({ value: grupo.id, label: grupo.nombre }))
             ]}
             onChange={handleGroupChange} 
             value={selectedGroup} // Este valor debe ser null para mostrar "Personal"

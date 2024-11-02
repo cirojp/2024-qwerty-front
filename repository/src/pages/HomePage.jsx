@@ -267,6 +267,11 @@ function HomePage() {
             label: "Otros",
             iconPath: "fa-solid fa-circle-dot",
           },
+          {
+            value: "Gasto Grupal",
+            label: "Gasto Grupal",
+            iconPath: "fa-solid fa-people-group",
+          },
           ...payCategoriesDefault,
           ...customOptions,
         ]);

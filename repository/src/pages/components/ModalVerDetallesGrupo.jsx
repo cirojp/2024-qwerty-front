@@ -170,6 +170,7 @@ function ModalVerDetallesGrupo({
         });
     });
     setDeudas(deudasCalculadas);
+    
   };
 
   const cerrarGrupo = async () => {

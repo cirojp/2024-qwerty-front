@@ -6,6 +6,7 @@ function BudgetPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [presupuestos, setPresupuestos] = useState([]);
   const [transacciones, setTransacciones] = useState([]);
+  const [filtro, setFiltro] = useState("Todos");
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -50,6 +51,7 @@ function BudgetPage() {
     setIsModalOpen(false);
     getPersonalPresupuestos();
   };
+
   const getPersonalPresupuestos = async () => {
     const token = localStorage.getItem("token");
     try {
@@ -70,30 +72,69 @@ function BudgetPage() {
       console.error("Error al obtener las categorías personalizadas:", error);
     }
   };
+
   useEffect(() => {
     getPersonalPresupuestos();
   }, []);
+
+  const handleFilterChange = (e) => {
+    setFiltro(e.target.value);
+  };
+
+  const filtrarPresupuestos = () => {
+    const fechaActual = new Date();
+    const mesActual = fechaActual.getMonth() + 1;
+    const añoActual = fechaActual.getFullYear();
+    const formatoMesActual = `${añoActual}-${mesActual
+      .toString()
+      .padStart(2, "0")}`;
+
+    return presupuestos.filter((presupuesto) => {
+      const budgetMonth = presupuesto.budgetMonth;
+
+      if (filtro === "Todos") return true;
+      if (filtro === "Pasados") return budgetMonth < formatoMesActual;
+      if (filtro === "Actuales") return budgetMonth === formatoMesActual;
+      if (filtro === "Futuros") return budgetMonth > formatoMesActual;
+
+      return true;
+    });
+  };
+
   return (
     <div className="container h-full mx-auto p-4 bg-black">
       <div className="text-2xl font-semibold text-center mb-4 text-white">
         Presupuestos Mensuales
       </div>
-      <div className="mb-6 mt-2 flex justify-left">
-        <button className="btn bg-yellow-400 text-black" onClick={openModal}>
-          Agregar Presupuesto
-        </button>
+      <div className="flex justify-between mb-6 mt-2">
+        <div className="flex justify-left">
+          <button className="btn bg-yellow-400 text-black" onClick={openModal}>
+            Agregar Presupuesto
+          </button>
+        </div>
+        <div className="flex justify-end">
+          <select
+            className="select select-bordered w-full max-w-xs bg-yellow-400 text-black"
+            value={filtro}
+            onChange={handleFilterChange}
+          >
+            <option value="Todos">Mostrar Todos</option>
+            <option value="Pasados">Pasados</option>
+            <option value="Actuales">Actuales</option>
+            <option value="Futuros">Futuros</option>
+          </select>
+        </div>
       </div>
+
       <div className="flex flex-col gap-6">
-        {presupuestos.map((budget) => {
-          console.log(budget);
-          return (
-            <BudgetCard
-              budget={budget}
-              transacciones={transacciones}
-              onDelete={handleDelete}
-            />
-          );
-        })}
+        {filtrarPresupuestos().map((budget) => (
+          <BudgetCard
+            key={budget.id}
+            budget={budget}
+            transacciones={transacciones}
+            onDelete={handleDelete}
+          />
+        ))}
       </div>
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">

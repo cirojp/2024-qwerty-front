@@ -6,9 +6,18 @@ function BudgetCard({ budget, transacciones, onDelete }) {
   const [totalGastado, setTotalGastado] = useState(0);
   const [porcentaje, setPorcentaje] = useState(0);
   const [remainingByCategory, setRemainingByCategory] = useState({});
+  const [isFutureBudget, setIsFutureBudget] = useState(false);
 
   useEffect(() => {
     const [budgetYear, budgetMonth] = budget.budgetMonth.split("-").map(Number);
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth() + 1;
+
+    setIsFutureBudget(
+      budgetYear > currentYear ||
+        (budgetYear === currentYear && budgetMonth > currentMonth)
+    );
 
     const filteredTransactions = transacciones.filter((transaccion) => {
       const transactionDate = new Date(transaccion.fecha);
@@ -25,14 +34,12 @@ function BudgetCard({ budget, transacciones, onDelete }) {
 
     setBudgetTransactions(filteredTransactions);
 
-    // Calcular el total gastado
     const total = filteredTransactions.reduce(
       (acc, transaccion) => acc + transaccion.valor,
       0
     );
     setTotalGastado(total);
 
-    // Calcular el porcentaje aquí después de calcular el total
     setPorcentaje((total / Number(budget.totalBudget)) * 100);
 
     const remaining = {};
@@ -45,33 +52,30 @@ function BudgetCard({ budget, transacciones, onDelete }) {
       remaining[category] = allocatedBudget - spentInCategory;
     }
     setRemainingByCategory(remaining);
+  }, [budget, transacciones]);
 
-    // Para depuración
-    console.log(total);
-    console.log((total / Number(budget.totalBudget)) * 100);
-  }, [budget, transacciones]); // Dependencias de useEffect
   function getFirstAndLastDayOfMonth(monthString) {
     const [year, month] = monthString.split("-").map(Number);
-
     const firstDay = new Date(year, month - 1, 1);
-
     const lastDay = new Date(year, month, 0);
-
     return {
       dateFrom: firstDay.toISOString().split("T")[0],
       dateTo: lastDay.toISOString().split("T")[0],
     };
   }
+
   const { dateFrom, dateTo } = getFirstAndLastDayOfMonth(budget.budgetMonth);
   const categoryNames = Object.keys(budget.categoryBudgets);
   const categoryString = categoryNames.join(", ");
+
   function handleDelete() {
     if (
       window.confirm("¿Estás seguro de que deseas eliminar este presupuesto?")
     ) {
-      onDelete(budget); // Llama a la función onDelete pasándole el id del presupuesto
+      onDelete(budget);
     }
   }
+
   return (
     <div className="card shadow-lg rounded-lg bg-[#1E2126] p-4 text-white">
       <div className="flex items-center gap-4 mb-2">
@@ -112,22 +116,24 @@ function BudgetCard({ budget, transacciones, onDelete }) {
             budget.totalBudget - totalGastado
           }`}</span>
           {Object.entries(remainingByCategory).map(([category, remaining]) => (
-            <div>
+            <div key={category}>
               <span className="text-sm font-semibold text-white">
                 {category}: ${remaining < 0 ? 0 : remaining}{" "}
               </span>
             </div>
           ))}
         </div>
-        <div className="flex gap-2">
-          <button className="btn btn-sm btn-outline btn-info">Edit</button>
-          <button
-            className="btn btn-sm btn-outline btn-error"
-            onClick={handleDelete}
-          >
-            Delete
-          </button>
-        </div>
+        {isFutureBudget && (
+          <div className="flex gap-2">
+            <button className="btn btn-sm btn-outline btn-info">Edit</button>
+            <button
+              className="btn btn-sm btn-outline btn-error"
+              onClick={handleDelete}
+            >
+              Delete
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -37,10 +37,10 @@ function ModalGastosCompartidos({ isModalGastosOpen, closeModalGastos }) {
   };
 
   useEffect(() => {
-    if (isModalGastosOpen) {
+    if (isModalGastosOpen && !isModalOpen) {
         fetchGrupos(); // Fetch groups when modal opens
     }
-  }, [isModalGastosOpen]);
+  }, [isModalGastosOpen,isModalOpen]);
 
   const closeWindow = () => {
     setModalError("");

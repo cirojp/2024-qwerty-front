@@ -282,6 +282,7 @@ function HomePage() {
   };
 
   const openModal = () => {
+    fetchGrupos();
     setIsModalOpen(true);
   };
   const closeModal = () => {

@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 
-function ModalCreateBudget({ closeModal = () => {} }) {
+function ModalCreateBudget({ closeModal = () => {}, initialBudget = null }) {
   library.add(fas);
   const [payCategories, setPayCategories] = useState([]);
   const [formMessage, setFormMessage] = useState("");
@@ -43,34 +43,43 @@ function ModalCreateBudget({ closeModal = () => {} }) {
   const [budgetName, setBudgetName] = useState("");
   const [budgetDate, setBudgetDate] = useState("");
 
-  const fetchPersonalCategorias = async () => {
-    const token = localStorage.getItem("token");
-    try {
-      const response = await fetch(
-        "https://two024-qwerty-back-2.onrender.com/api/personal-categoria",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        const customOptions = data.map((cat) => ({
-          label: cat.nombre,
-          value: cat.nombre,
-          iconPath: cat.iconPath,
-        }));
-
-        setPayCategories([...payCategoriesDefault, ...customOptions]);
-      }
-    } catch (error) {
-      console.error("Error al obtener las categorías personalizadas:", error);
-    }
-  };
-
   useEffect(() => {
+    const fetchPersonalCategorias = async () => {
+      const token = localStorage.getItem("token");
+      try {
+        const response = await fetch(
+          "https://two024-qwerty-back-2.onrender.com/api/personal-categoria",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          const customOptions = data.map((cat) => ({
+            label: cat.nombre,
+            value: cat.nombre,
+            iconPath: cat.iconPath,
+          }));
+
+          setPayCategories([...payCategoriesDefault, ...customOptions]);
+        }
+      } catch (error) {
+        console.error("Error al obtener las categorías personalizadas:", error);
+      }
+    };
+
     fetchPersonalCategorias();
   }, []);
+
+  useEffect(() => {
+    if (initialBudget) {
+      setBudgetName(initialBudget.nameBudget || "");
+      setBudgetDate(initialBudget.budgetMonth || "");
+      setTotalBudget(initialBudget.totalBudget || "");
+      setBudgetValues(initialBudget.categoryBudgets || {});
+    }
+  }, [initialBudget]);
 
   const handleInputChange = (value, category) => {
     const numericValue = parseFloat(value);
@@ -118,48 +127,71 @@ function ModalCreateBudget({ closeModal = () => {} }) {
       return;
     }
 
-    const formData = {
-      nameBudget: budgetName,
-      totalBudget: totalBudget,
-      budgetMonth: budgetDate,
-      categoryBudgets: budgetValues,
-    };
+    const formData = initialBudget
+      ? {
+          ...initialBudget,
+          nameBudget: budgetName,
+          totalBudget: totalBudget,
+          budgetMonth: budgetDate,
+          categoryBudgets: budgetValues,
+        }
+      : {
+          nameBudget: budgetName,
+          totalBudget: totalBudget,
+          budgetMonth: budgetDate,
+          categoryBudgets: budgetValues,
+        };
 
-    createNewBudget(formData);
+    createOrUpdateBudget(formData);
   };
 
-  const createNewBudget = async (budget) => {
+  const createOrUpdateBudget = async (budget) => {
     const token = localStorage.getItem("token");
-    console.log(JSON.stringify(budget));
+    const url = initialBudget
+      ? "https://two024-qwerty-back-2.onrender.com/api/presupuesto/editPresupuesto"
+      : "https://two024-qwerty-back-2.onrender.com/api/presupuesto";
+    const method = initialBudget ? "PUT" : "POST";
+
     try {
-      const response = await fetch(
-        "https://two024-qwerty-back-2.onrender.com/api/presupuesto",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(budget),
-        }
-      );
+      const response = await fetch(url, {
+        method: method,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(budget),
+      });
+
       if (response.ok) {
-        setFormMessage("Presupuesto creado!");
-        closeModal(); // Cierra el modal después de crear el presupuesto
+        setFormMessage(
+          initialBudget ? "Presupuesto actualizado!" : "Presupuesto creado!"
+        );
+        closeModal();
+      } else {
+        const errorMessage = await response.text();
+        console.error(
+          "Error en la respuesta del servidor",
+          response.status,
+          errorMessage
+        );
       }
     } catch (error) {
-      console.error("Error al crear el presupuesto:", error);
+      console.error(
+        initialBudget
+          ? "Error al actualizar el presupuesto:"
+          : "Error al crear el presupuesto:",
+        error
+      );
     }
   };
 
   return (
     <div className="modal-box w-full max-w-md p-6 bg-[#1E2126] rounded-lg shadow-lg">
       <h3 className="text-xl font-bold mb-4 text-white">
-        Agregar Nuevo Presupuesto
+        {initialBudget ? "Editar Presupuesto" : "Agregar Nuevo Presupuesto"}
       </h3>
 
       <form onSubmit={handleSubmit}>
-        {/* Input para el nombre del presupuesto */}
         <div className="mb-4">
           <label className="block text-sm font-semibold mb-1 text-white">
             Nombre del Presupuesto
@@ -174,7 +206,6 @@ function ModalCreateBudget({ closeModal = () => {} }) {
           />
         </div>
 
-        {/* Input para el mes y año */}
         <div className="mb-4">
           <label className="block text-sm font-semibold mb-1 text-white">
             Fecha (Mes y Año)
@@ -188,7 +219,6 @@ function ModalCreateBudget({ closeModal = () => {} }) {
           />
         </div>
 
-        {/* Input para el presupuesto total */}
         <div className="mb-4">
           <label className="block text-sm font-semibold mb-1 text-white">
             <FontAwesomeIcon
@@ -211,7 +241,6 @@ function ModalCreateBudget({ closeModal = () => {} }) {
           )}
         </div>
 
-        {/* Inputs para categorías */}
         {payCategories.map((category, index) => (
           <div className="mb-4" key={index}>
             <label className="block text-sm font-semibold mb-1 text-white">

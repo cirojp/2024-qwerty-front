@@ -8,6 +8,11 @@ function BudgetPage() {
   const [transacciones, setTransacciones] = useState([]);
   const [filtro, setFiltro] = useState("Todos");
 
+  const onEdit = () => {
+    setPresupuestos([]);
+    getPersonalPresupuestos();
+  };
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     fetch("https://two024-qwerty-back-2.onrender.com/api/transacciones/user", {
@@ -133,6 +138,7 @@ function BudgetPage() {
             budget={budget}
             transacciones={transacciones}
             onDelete={handleDelete}
+            onEdit={onEdit}
           />
         ))}
       </div>

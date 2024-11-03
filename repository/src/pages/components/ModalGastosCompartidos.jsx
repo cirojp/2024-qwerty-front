@@ -4,7 +4,11 @@ import ModalCrearGrupo from "./ModalCrearGrupo";
 import React, { useEffect, useState } from "react";
 import ModalVerDetallesGrupo from "./ModalVerDetallesGrupo";
 
-function ModalGastosCompartidos({ isModalGastosOpen, closeModalGastos, payCategories }) {
+function ModalGastosCompartidos({
+  isModalGastosOpen,
+  closeModalGastos,
+  payCategories,
+}) {
   const [modalError, setModalError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);

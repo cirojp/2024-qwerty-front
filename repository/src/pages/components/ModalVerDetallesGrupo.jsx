@@ -312,7 +312,13 @@ function ModalVerDetallesGrupo({
     const token = localStorage.getItem("token");
     console.log(transaccionId);
     let url = `https://two024-qwerty-back-2.onrender.com/api/grupos/transaccion/${transaccionId}`;
-    let bodyJson = JSON.stringify({ motivo, valor, fecha, categoria, tipoGasto });
+    let bodyJson = JSON.stringify({
+      motivo,
+      valor,
+      fecha,
+      categoria,
+      tipoGasto,
+    });
     const method = "PUT";
     try {
       const response = await fetch(url, {
@@ -327,10 +333,10 @@ function ModalVerDetallesGrupo({
         console.log("la respuesta fue ok");
         const data = await response.json();
         const updatedTransacciones = transacciones.map((t) =>
-            t.id === data.id ? data : t
+          t.id === data.id ? data : t
         );
         updatedTransacciones.sort(
-            (a, b) => new Date(b.fecha) - new Date(a.fecha)
+          (a, b) => new Date(b.fecha) - new Date(a.fecha)
         );
         setTransacciones(updatedTransacciones);
         closeModal();
@@ -447,11 +453,11 @@ function ModalVerDetallesGrupo({
             <p>Cargando transacciones...</p>
           ) : transacciones.length > 0 ? (
             <TransaccionesTable
-            transacciones={transacciones}
-            payCategories={payCategories}
-            editRow={editRow}
-            deleteRow={deleteRow}
-          />
+              transacciones={transacciones}
+              payCategories={payCategories}
+              editRow={editRow}
+              deleteRow={deleteRow}
+            />
           ) : (
             <p>No hay transacciones disponibles.</p>
           )}

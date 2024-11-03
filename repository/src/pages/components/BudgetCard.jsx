@@ -1,12 +1,14 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import ModalCreateBudget from "./ModalCreateBudget"; // Importa tu modal
 
-function BudgetCard({ budget, transacciones, onDelete }) {
+function BudgetCard({ budget, transacciones, onDelete, onEdit }) {
   const icon = "https://cdn-icons-png.freepik.com/256/781/781760.png";
   const [budgetTransactions, setBudgetTransactions] = useState([]);
   const [totalGastado, setTotalGastado] = useState(0);
   const [porcentaje, setPorcentaje] = useState(0);
   const [remainingByCategory, setRemainingByCategory] = useState({});
   const [isFutureBudget, setIsFutureBudget] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const [budgetYear, budgetMonth] = budget.budgetMonth.split("-").map(Number);
@@ -64,6 +66,15 @@ function BudgetCard({ budget, transacciones, onDelete }) {
     };
   }
 
+  function handleEdit() {
+    setIsModalOpen(true);
+  }
+
+  function closeModal() {
+    setIsModalOpen(false);
+    onEdit();
+  }
+
   const { dateFrom, dateTo } = getFirstAndLastDayOfMonth(budget.budgetMonth);
   const categoryNames = Object.keys(budget.categoryBudgets);
   const categoryString = categoryNames.join(", ");
@@ -89,17 +100,10 @@ function BudgetCard({ budget, transacciones, onDelete }) {
 
       <div className="flex items-center gap-2">
         <div className="w-full bg-gray-200 rounded-full h-4 relative">
-          {porcentaje > 100 ? (
-            <div
-              style={{ width: `100%` }}
-              className="absolute top-0 left-0 h-full bg-yellow-400 rounded-full transition-all"
-            />
-          ) : (
-            <div
-              style={{ width: `${porcentaje}%` }}
-              className="absolute top-0 left-0 h-full bg-yellow-400 rounded-full transition-all"
-            />
-          )}
+          <div
+            style={{ width: `${porcentaje > 100 ? 100 : porcentaje}%` }}
+            className="absolute top-0 left-0 h-full bg-yellow-400 rounded-full transition-all"
+          />
         </div>
         <div className="text-sm font-semibold">{porcentaje}%</div>
       </div>
@@ -125,7 +129,12 @@ function BudgetCard({ budget, transacciones, onDelete }) {
         </div>
         {isFutureBudget && (
           <div className="flex gap-2">
-            <button className="btn btn-sm btn-outline btn-info">Edit</button>
+            <button
+              className="btn btn-sm btn-outline btn-info"
+              onClick={handleEdit}
+            >
+              Edit
+            </button>
             <button
               className="btn btn-sm btn-outline btn-error"
               onClick={handleDelete}
@@ -135,6 +144,14 @@ function BudgetCard({ budget, transacciones, onDelete }) {
           </div>
         )}
       </div>
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <ModalCreateBudget
+            closeModal={() => closeModal()}
+            initialBudget={budget}
+          />
+        </div>
+      )}
     </div>
   );
 }

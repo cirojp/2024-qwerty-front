@@ -102,12 +102,15 @@ function HomePage() {
   const fetchGrupos = async () => {
     const token = localStorage.getItem("token");
     try {
-      const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/grupos/mis-grupos", {
-        method: "GET",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        "https://two024-qwerty-back-2.onrender.com/api/grupos/mis-grupos",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Error al obtener los grupos.");
@@ -387,25 +390,26 @@ function HomePage() {
     } else if (transaccion.id_reserva == "Pago") {
       console.log("Transaccion Aprobada");
     } else if (transaccion.id_reserva == "Grupo") {
-      url = "https://two024-qwerty-back-2.onrender.com/api/grupos/agregar-usuario";
-        const grupoId = transaccion.grupo_id; 
-        try {
-            const response = await fetch(url, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({ grupo_id: grupoId }),
-            });
-            if (response.ok) {
-                console.log("Usuario agregado al grupo exitosamente.");
-            } else {
-                console.log("Hubo un problema al agregar el usuario al grupo.");
-            }
-        } catch (err) {
-            console.log("Error en la solicitud de agregar usuario al grupo:", err);
+      url =
+        "https://two024-qwerty-back-2.onrender.com/api/grupos/agregar-usuario";
+      const grupoId = transaccion.grupo_id;
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ grupo_id: grupoId }),
+        });
+        if (response.ok) {
+          console.log("Usuario agregado al grupo exitosamente.");
+        } else {
+          console.log("Hubo un problema al agregar el usuario al grupo.");
         }
+      } catch (err) {
+        console.log("Error en la solicitud de agregar usuario al grupo:", err);
+      }
     } else {
       const method = "POST";
       let motivo = transaccion.motivo;
@@ -442,17 +446,24 @@ function HomePage() {
     const token = localStorage.getItem("token");
     let bodyJson = "";
     let url = "";
-    if(selectedGroup==null){
+    if (selectedGroup == null) {
       bodyJson = JSON.stringify({ motivo, valor, fecha, categoria, tipoGasto });
-    url = edit
-      ? `https://two024-qwerty-back-2.onrender.com/api/transacciones/${transaccionId}`
-      : "https://two024-qwerty-back-2.onrender.com/api/transacciones";
+      url = edit
+        ? `https://two024-qwerty-back-2.onrender.com/api/transacciones/${transaccionId}`
+        : "https://two024-qwerty-back-2.onrender.com/api/transacciones";
     } else {
       const grupo = selectedGroup.value;
-      bodyJson = JSON.stringify({ motivo, valor, fecha, categoria, tipoGasto, grupo });
-    url = edit
-      ? `https://two024-qwerty-back-2.onrender.com/api/grupos/transaccion/${transaccionId}`
-      : "https://two024-qwerty-back-2.onrender.com/api/grupos/transaccion";
+      bodyJson = JSON.stringify({
+        motivo,
+        valor,
+        fecha,
+        categoria,
+        tipoGasto,
+        grupo,
+      });
+      url = edit
+        ? `https://two024-qwerty-back-2.onrender.com/api/grupos/transaccion/${transaccionId}`
+        : "https://two024-qwerty-back-2.onrender.com/api/grupos/transaccion";
     }
     const method = edit ? "PUT" : "POST";
     console.log(bodyJson);
@@ -468,7 +479,7 @@ function HomePage() {
       if (response.ok) {
         console.log("la respuesta fue ok");
         const data = await response.json();
-        if(selectedGroup== null){  
+        if (selectedGroup == null) {
           if (edit) {
             const updatedTransacciones = transacciones.map((t) =>
               t.id === data.id ? data : t
@@ -480,7 +491,8 @@ function HomePage() {
               (a, b) => new Date(b.fecha) - new Date(a.fecha)
             );
             setTransacciones(updatedTransacciones);
-          }}
+          }
+        }
         closeModal();
         setSelectedGroup(null);
       } else {

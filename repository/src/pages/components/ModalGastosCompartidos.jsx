@@ -9,19 +9,23 @@ function ModalGastosCompartidos({ isModalGastosOpen, closeModalGastos }) {
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [grupos, setGrupos] = useState([]); // Estado para grupos
-  const [isModalDetallesGrupoOpen, setIsModalDetallesGrupoOpen] = useState(false);
+  const [isModalDetallesGrupoOpen, setIsModalDetallesGrupoOpen] =
+    useState(false);
   const closeModalDetallesGrupo = () => setIsModalDetallesGrupoOpen(false);
   const [grupoSeleccionado, setGrupoSeleccionado] = useState(null); // Estado para el nombre del grupo seleccionado
   const fetchGrupos = async () => {
     setIsLoading(true);
     const token = localStorage.getItem("token");
     try {
-      const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/grupos/mis-grupos", {
-        method: "GET",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        "https://two024-qwerty-back-2.onrender.com/api/grupos/mis-grupos",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Error al obtener los grupos.");
@@ -38,7 +42,7 @@ function ModalGastosCompartidos({ isModalGastosOpen, closeModalGastos }) {
 
   useEffect(() => {
     if (isModalGastosOpen) {
-        fetchGrupos(); // Fetch groups when modal opens
+      fetchGrupos(); // Fetch groups when modal opens
     }
   }, [isModalGastosOpen]);
 
@@ -50,7 +54,7 @@ function ModalGastosCompartidos({ isModalGastosOpen, closeModalGastos }) {
     const nombreGrupo = grupo.nombre;
     const idGrupo = grupo.id;
     const estado = grupo.estado;
-    setGrupoSeleccionado({ nombre: nombreGrupo, id: idGrupo , estado: estado});
+    setGrupoSeleccionado({ nombre: nombreGrupo, id: idGrupo, estado: estado });
     setIsModalDetallesGrupoOpen(true);
   };
 
@@ -97,13 +101,15 @@ function ModalGastosCompartidos({ isModalGastosOpen, closeModalGastos }) {
         <div className="bg-gray-800 p-4 rounded-lg shadow-lg text-white">
           {/* Display user groups */}
           <div className="mb-4">
-            <h3 className="text-lg font-semibold">Grupos a los que perteneces:</h3>
+            <h3 className="text-lg font-semibold">
+              Grupos a los que perteneces:
+            </h3>
             {isLoading ? (
               <p>Cargando grupos...</p>
             ) : (
-                <ul>
+              <ul>
                 {grupos.length > 0 ? (
-                  grupos.map(grupo => (
+                  grupos.map((grupo) => (
                     <li
                       key={grupo.id}
                       className="py-1 cursor-pointer"
@@ -118,7 +124,7 @@ function ModalGastosCompartidos({ isModalGastosOpen, closeModalGastos }) {
               </ul>
             )}
           </div>
-          
+
           <button
             className="mt-4 px-4 py-3 bg-yellow-500 text-black rounded-md hover:bg-yellow-700 mr-2"
             onClick={() => {
@@ -140,7 +146,7 @@ function ModalGastosCompartidos({ isModalGastosOpen, closeModalGastos }) {
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}
       />
-      
+
       {grupoSeleccionado && (
         <ModalVerDetallesGrupo
           isModalDetallesGrupoOpen={isModalDetallesGrupoOpen}

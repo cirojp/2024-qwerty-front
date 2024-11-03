@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 
-const ModalCrearGrupo = ({
-  isOpen = false,
-  onRequestClose = () => {},
-}) => {
+const ModalCrearGrupo = ({ isOpen = false, onRequestClose = () => {} }) => {
   const customStyles = {
     overlay: {
       position: "fixed",
@@ -66,24 +63,28 @@ const ModalCrearGrupo = ({
       return;
     }
     try {
-        console.log(usuarios);
+      console.log(usuarios);
       // Aquí iría la lógica para crear el grupo usando `grupoNombre` y `usuarios`
-      const response = await fetch("https://two024-qwerty-back-2.onrender.com/api/grupos/crear", { // Ajusta la URL según tu endpoint
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        "https://two024-qwerty-back-2.onrender.com/api/grupos/crear",
+        {
+          // Ajusta la URL según tu endpoint
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          nombre: grupoNombre,
-          usuarios: usuarios,
-        }),
-      });
-  
+          },
+          body: JSON.stringify({
+            nombre: grupoNombre,
+            usuarios: usuarios,
+          }),
+        }
+      );
+
       if (!response.ok) {
         throw new Error("Error al crear el grupo.");
       }
-  
+
       // Limpiar los campos y cerrar el modal si la solicitud fue exitosa
       setGrupoNombre("");
       setUsuarios([]);
@@ -95,8 +96,6 @@ const ModalCrearGrupo = ({
       setIsLoading(false);
     }
   };
-
-  
 
   const handleClose = () => {
     setError("");
@@ -113,7 +112,9 @@ const ModalCrearGrupo = ({
       style={customStyles}
       className="bg-gray-900 text-white p-4 sm:p-2 rounded-lg shadow-lg"
     >
-      <h2 className="text-xl sm:text-lg font-bold mb-4">{"Crear Nuevo Grupo"}</h2>
+      <h2 className="text-xl sm:text-lg font-bold mb-4">
+        {"Crear Nuevo Grupo"}
+      </h2>
       <input
         type="text"
         placeholder="Nombre del Grupo"
@@ -177,4 +178,3 @@ const ModalCrearGrupo = ({
 };
 
 export default ModalCrearGrupo;
-

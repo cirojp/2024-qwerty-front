@@ -145,8 +145,11 @@ function ModalCreateBudget({ closeModal = () => {} }) {
       );
       if (response.ok) {
         setFormMessage("Presupuesto creado!");
+        closeModal(); // Cierra el modal después de crear el presupuesto
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error al crear el presupuesto:", error);
+    }
   };
 
   return (

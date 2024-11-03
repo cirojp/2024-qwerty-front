@@ -13,14 +13,13 @@ function ModalVerDetallesGrupo({
   isModalDetallesGrupoOpen,
   closeModalDetallesGrupo,
   grupo,
-  setGrupoSeleccionado
+  setGrupoSeleccionado,
 }) {
   const [transacciones, setTransacciones] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [deudas, setDeudas] = useState([]);
   const [total, setTotal] = useState(0);
 
-  
   const customStyles = {
     overlay: {
       position: "fixed",
@@ -86,28 +85,28 @@ function ModalVerDetallesGrupo({
   };
   const fetchTransaccionesDelGrupo = async () => {
     setIsLoading(true);
-    const token = localStorage.getItem("token"); 
+    const token = localStorage.getItem("token");
     let url = `https://two024-qwerty-back-2.onrender.com/api/grupos/${grupo.id}/transacciones`;
     try {
-    const response = await fetch(url, {
+      const response = await fetch(url, {
         method: "GET",
         headers: {
-        Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
-    });
+      });
 
-    if (!response.ok) {
+      if (!response.ok) {
         setIsLoading(false);
         throw new Error(`Error: ${response.status}`);
-    }
+      }
 
-    const data = await response.json();
-    setTransacciones(data);
-    setIsLoading(false);
+      const data = await response.json();
+      setTransacciones(data);
+      setIsLoading(false);
     } catch (err) {
-    setIsLoading(false);
-    console.error("Error fetching transactions:", err);
-    } 
+      setIsLoading(false);
+      console.error("Error fetching transactions:", err);
+    }
     //fetchPersonalCategorias();
   };
   useEffect(() => {
@@ -115,20 +114,19 @@ function ModalVerDetallesGrupo({
       fetchTransaccionesDelGrupo();
     }
   }, [isModalDetallesGrupoOpen]);
-  
+
   useEffect(() => {
     if (!grupo.estado && transacciones.length > 0) {
       calcularDeudas();
     }
   }, [transacciones, grupo.estado]);
-  
+
   const closeWindow = () => {
     setDeudas([]);
     closeModalDetallesGrupo();
   };
 
   const calcularDeudas = () => {
-    
     const usuariosGastos = {};
     // Agrupamos el gasto total por usuario
     transacciones.forEach(({ valor, users }) => {
@@ -138,39 +136,43 @@ function ModalVerDetallesGrupo({
         usuariosGastos[users] = valor;
       }
     });
-    const totalGastos = Object.values(usuariosGastos).reduce((a, b) => a + b, 0);
+    const totalGastos = Object.values(usuariosGastos).reduce(
+      (a, b) => a + b,
+      0
+    );
     const gastoPorPersona = totalGastos / Object.keys(usuariosGastos).length;
     const deudasCalculadas = [];
     // Dividir usuarios en deudores y acreedores
     const deudores = [];
     const acreedores = [];
     Object.entries(usuariosGastos).forEach(([usuario, gasto]) => {
-        const diferencia = gastoPorPersona - gasto;
-        if (diferencia > 0) {
+      const diferencia = gastoPorPersona - gasto;
+      if (diferencia > 0) {
         // Usuario debe dinero
         deudores.push({ usuario, cantidad: diferencia });
-        } else if (diferencia < 0) {
+      } else if (diferencia < 0) {
         // Usuario tiene exceso de gasto (acreedor)
         acreedores.push({ usuario, cantidad: -diferencia });
-        }
+      }
     });
     // Distribuir deudas entre deudores y acreedores
     deudores.forEach((deudor) => {
-        let cantidadDeuda = deudor.cantidad;
-        acreedores.forEach((acreedor) => {
+      let cantidadDeuda = deudor.cantidad;
+      acreedores.forEach((acreedor) => {
         if (cantidadDeuda <= 0) return; // La deuda ya está saldada
         const cantidadAPagar = Math.min(cantidadDeuda, acreedor.cantidad);
         // Crear la descripción de la deuda
         deudasCalculadas.push(
-            `${deudor.usuario} le debe $${cantidadAPagar.toFixed(2)} a ${acreedor.usuario}`
+          `${deudor.usuario} le debe $${cantidadAPagar.toFixed(2)} a ${
+            acreedor.usuario
+          }`
         );
         // Actualizar cantidades pendientes
         cantidadDeuda -= cantidadAPagar;
         acreedor.cantidad -= cantidadAPagar;
-        });
+      });
     });
     setDeudas(deudasCalculadas);
-    
   };
 
   const cerrarGrupo = async () => {
@@ -183,19 +185,21 @@ function ModalVerDetallesGrupo({
           Authorization: `Bearer ${token}`,
         },
       });
-  
+
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
       }
       console.log("Grupo cerrado exitosamente");
       calcularDeudas();
-      setGrupoSeleccionado({ nombre: grupo.nombre, id: grupo.id , estado: false});
+      setGrupoSeleccionado({
+        nombre: grupo.nombre,
+        id: grupo.id,
+        estado: false,
+      });
     } catch (error) {
       console.error("Error al cerrar el grupo:", error);
     }
   };
-
-
 
   return (
     <Modal

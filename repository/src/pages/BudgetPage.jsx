@@ -5,10 +5,51 @@ import ModalCreateBudget from "./components/ModalCreateBudget";
 function BudgetPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [presupuestos, setPresupuestos] = useState([]);
+  const [transacciones, setTransacciones] = useState([]);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    fetch("https://two024-qwerty-back-2.onrender.com/api/transacciones/user", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => setTransacciones(data))
+      .catch((err) => console.log(err));
+  }, []);
+
+  const handleDelete = async (budget) => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await fetch(
+        `https://two024-qwerty-back-2.onrender.com/api/presupuesto/${budget.id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.ok) {
+        setTransacciones(presupuestos.filter((t) => t.id !== budget.id));
+      } else {
+        console.error("Error al eliminar el presupuesto");
+      }
+    } catch (err) {
+      console.error("Ocurrió un error. Intenta nuevamente: ", err);
+    } finally {
+      getPersonalPresupuestos();
+    }
+  };
 
   const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
-  const defaultIcon = "https://cdn-icons-png.freepik.com/256/781/781760.png";
+  const closeModal = () => {
+    setIsModalOpen(false);
+    getPersonalPresupuestos();
+  };
   const getPersonalPresupuestos = async () => {
     const token = localStorage.getItem("token");
     try {
@@ -44,17 +85,12 @@ function BudgetPage() {
       </div>
       <div className="flex flex-col gap-6">
         {presupuestos.map((budget) => {
-          const categoryNames = Object.keys(budget.categoryBudgets).join(", ");
+          console.log(budget);
           return (
             <BudgetCard
-              title={categoryNames}
-              icon={defaultIcon}
-              dateFrom="01/10/2024"
-              dateTo="31/10/2024"
-              percentage={0}
-              currentAmount="$0"
-              maxAmount={"$" + budget.totalBudget}
-              residualAmount={"$" + budget.totalBudget}
+              budget={budget}
+              transacciones={transacciones}
+              onDelete={handleDelete}
             />
           );
         })}

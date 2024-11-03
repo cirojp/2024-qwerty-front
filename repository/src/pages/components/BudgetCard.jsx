@@ -1,44 +1,132 @@
-function BudgetCard({
-  title,
-  icon,
-  dateFrom,
-  dateTo,
-  percentage,
-  currentAmount,
-  maxAmount,
-  residualAmount,
-}) {
+import { useEffect, useState } from "react";
+
+function BudgetCard({ budget, transacciones, onDelete }) {
+  const icon = "https://cdn-icons-png.freepik.com/256/781/781760.png";
+  const [budgetTransactions, setBudgetTransactions] = useState([]);
+  const [totalGastado, setTotalGastado] = useState(0);
+  const [porcentaje, setPorcentaje] = useState(0);
+  const [remainingByCategory, setRemainingByCategory] = useState({});
+
+  useEffect(() => {
+    const [budgetYear, budgetMonth] = budget.budgetMonth.split("-").map(Number);
+
+    const filteredTransactions = transacciones.filter((transaccion) => {
+      const transactionDate = new Date(transaccion.fecha);
+      const transactionYear = transactionDate.getFullYear();
+      const transactionMonth = transactionDate.getMonth() + 1;
+      const isSameMonth =
+        transactionYear === budgetYear && transactionMonth === budgetMonth;
+      const isCategoryValid = Object.keys(budget.categoryBudgets).includes(
+        transaccion.categoria
+      );
+
+      return isSameMonth && isCategoryValid;
+    });
+
+    setBudgetTransactions(filteredTransactions);
+
+    // Calcular el total gastado
+    const total = filteredTransactions.reduce(
+      (acc, transaccion) => acc + transaccion.valor,
+      0
+    );
+    setTotalGastado(total);
+
+    // Calcular el porcentaje aquí después de calcular el total
+    setPorcentaje((total / Number(budget.totalBudget)) * 100);
+
+    const remaining = {};
+    for (const [category, allocatedBudget] of Object.entries(
+      budget.categoryBudgets
+    )) {
+      const spentInCategory = filteredTransactions
+        .filter((transaccion) => transaccion.categoria === category)
+        .reduce((acc, transaccion) => acc + transaccion.valor, 0);
+      remaining[category] = allocatedBudget - spentInCategory;
+    }
+    setRemainingByCategory(remaining);
+
+    // Para depuración
+    console.log(total);
+    console.log((total / Number(budget.totalBudget)) * 100);
+  }, [budget, transacciones]); // Dependencias de useEffect
+  function getFirstAndLastDayOfMonth(monthString) {
+    const [year, month] = monthString.split("-").map(Number);
+
+    const firstDay = new Date(year, month - 1, 1);
+
+    const lastDay = new Date(year, month, 0);
+
+    return {
+      dateFrom: firstDay.toISOString().split("T")[0],
+      dateTo: lastDay.toISOString().split("T")[0],
+    };
+  }
+  const { dateFrom, dateTo } = getFirstAndLastDayOfMonth(budget.budgetMonth);
+  const categoryNames = Object.keys(budget.categoryBudgets);
+  const categoryString = categoryNames.join(", ");
+  function handleDelete() {
+    if (
+      window.confirm("¿Estás seguro de que deseas eliminar este presupuesto?")
+    ) {
+      onDelete(budget); // Llama a la función onDelete pasándole el id del presupuesto
+    }
+  }
   return (
     <div className="card shadow-lg rounded-lg bg-[#1E2126] p-4 text-white">
       <div className="flex items-center gap-4 mb-2">
-        <img src={icon} alt={title} className="w-10 h-10" />
+        <img src={icon} alt={budget.nameBudget} className="w-10 h-10" />
         <div className="flex-1">
-          <div className="text-xl font-semibold">{title}</div>
-          <div className="text-sm text-white">{`${dateFrom} - ${dateTo}`}</div>
+          <div className="text-xl font-semibold">{budget.nameBudget}</div>
+          <div className="text-sm text-white">{categoryString}</div>
+          <div className="text-sm text-white">{`${dateFrom} a ${dateTo}`}</div>
         </div>
       </div>
 
       <div className="flex items-center gap-2">
         <div className="w-full bg-gray-200 rounded-full h-4 relative">
-          <div
-            style={{ width: `${percentage}%` }}
-            className="absolute top-0 left-0 h-full bg-yellow-400 rounded-full transition-all"
-          />
+          {porcentaje > 100 ? (
+            <div
+              style={{ width: `100%` }}
+              className="absolute top-0 left-0 h-full bg-yellow-400 rounded-full transition-all"
+            />
+          ) : (
+            <div
+              style={{ width: `${porcentaje}%` }}
+              className="absolute top-0 left-0 h-full bg-yellow-400 rounded-full transition-all"
+            />
+          )}
         </div>
-        <div className="text-sm font-semibold">{percentage}%</div>
+        <div className="text-sm font-semibold">{porcentaje}%</div>
       </div>
 
       <div className="flex justify-between mt-2 text-sm">
-        <span>0,00 SAR</span>
-        <span>Gastado: {currentAmount}</span>
-        <span>{maxAmount}</span>
+        <span>$0</span>
+        <span>Gastado: ${totalGastado}</span>
+        <span>${budget.totalBudget}</span>
       </div>
 
       <div className="flex justify-between items-center mt-4">
-        <span className="text-sm font-semibold text-white">{`Monto restante: ${residualAmount}`}</span>
+        <div>
+          <span className="text-sm font-semibold text-white">{`Monto restante: $ ${
+            budget.totalBudget - totalGastado
+          }`}</span>
+          {Object.entries(remainingByCategory).map(([category, remaining]) => (
+            <div>
+              <span className="text-sm font-semibold text-white">
+                {category}: ${remaining < 0 ? 0 : remaining}{" "}
+              </span>
+            </div>
+          ))}
+        </div>
         <div className="flex gap-2">
           <button className="btn btn-sm btn-outline btn-info">Edit</button>
-          <button className="btn btn-sm btn-outline btn-error">Delete</button>
+          <button
+            className="btn btn-sm btn-outline btn-error"
+            onClick={handleDelete}
+          >
+            Delete
+          </button>
         </div>
       </div>
     </div>

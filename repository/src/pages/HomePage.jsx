@@ -443,7 +443,6 @@ function HomePage() {
   };
   const agregarTransaccion = async (e, categoria) => {
     e.preventDefault();
-    console.log("mira aca bot, " + selectedGroup);
     const token = localStorage.getItem("token");
     let bodyJson = "";
     let url = "";
@@ -467,7 +466,6 @@ function HomePage() {
         : "https://two024-qwerty-back-2.onrender.com/api/grupos/transaccion";
     }
     const method = edit ? "PUT" : "POST";
-    console.log(bodyJson);
     try {
       const response = await fetch(url, {
         method: method,

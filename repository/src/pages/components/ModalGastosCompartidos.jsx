@@ -4,7 +4,7 @@ import ModalCrearGrupo from "./ModalCrearGrupo";
 import React, { useEffect, useState } from "react";
 import ModalVerDetallesGrupo from "./ModalVerDetallesGrupo";
 
-function ModalGastosCompartidos({ isModalGastosOpen, closeModalGastos }) {
+function ModalGastosCompartidos({ isModalGastosOpen, closeModalGastos, payCategories }) {
   const [modalError, setModalError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -153,6 +153,7 @@ function ModalGastosCompartidos({ isModalGastosOpen, closeModalGastos }) {
           closeModalDetallesGrupo={closeModalDetallesGrupo}
           grupo={grupoSeleccionado}
           setGrupoSeleccionado={setGrupoSeleccionado}
+          payCategories={payCategories}
         />
       )}
     </Modal>

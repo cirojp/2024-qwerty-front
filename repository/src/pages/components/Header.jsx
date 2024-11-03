@@ -134,6 +134,7 @@ function Header({
       <ModalGastosCompartidos
         isModalGastosOpen={isModalGastosOpen}
         closeModalGastos={closeModalGastos}
+        payCategories={payCategories}
       />
     </header>
   );

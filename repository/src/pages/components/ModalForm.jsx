@@ -95,7 +95,9 @@ function ModalForm({
   const [activeGroups, setActiveGroups] = useState([]);
   const [isModalCategoriaOpen, setIsModalCategoriaOpen] = useState(false);
   useEffect(() => {
+    if(grupos==null){ grupos=[selectedGroup];}
     setActiveGroups(grupos.filter(grupo => grupo.estado === true));
+    console.log(selectedGroup);
   }, [grupos]);
   const openModalCategoria = () => {
     setIsModalCategoriaOpen(true);
@@ -204,16 +206,28 @@ function ModalForm({
           <label className="text-center text-gray-100 mb-6">
             Si es un gasto grupal seleccione el grupo:
           </label>
-          <Select
-            options={[
-              { value: null, label: "Select..." }, // Opción predeterminada
-              ...activeGroups.map(grupo => ({ value: grupo.id, label: grupo.nombre }))
-            ]}
-            onChange={handleGroupChange} 
-            value={selectedGroup} // Este valor debe ser null para mostrar "Personal"
-            className="custom-select mt-1 block w-full border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm border-transparent"
-            styles={customSelectStyles}
-          />
+          
+          {handleGroupChange ? (
+            // Renderiza el componente Select cuando handleGroupChange no es null
+            <Select
+              options={[
+                { value: null, label: "Select..." }, // Opción predeterminada
+                ...activeGroups.map(grupo => ({ value: grupo.id, label: grupo.nombre }))
+              ]}
+              onChange={handleGroupChange}
+              value={selectedGroup}
+              className="custom-select mt-1 block w-full border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm border-transparent"
+              styles={customSelectStyles}
+            />
+          ) : (
+            // Renderiza un input de solo lectura cuando handleGroupChange es null
+            <input
+              type="text"
+              value={selectedGroup ? selectedGroup.nombre : "Ningún grupo seleccionado"}
+              readOnly
+              className="mt-1 block w-full border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm border-transparent text-center"
+            />
+          )}
         </div>
         {modalError && (
           <div className="text-red-500 text-sm text-center">{modalError}</div>

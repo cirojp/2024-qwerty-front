@@ -11,12 +11,15 @@ function TransaccionesTable({
   onTableEmpty = () => {},
   onTransactions = () => {},
   payCategories = [],
+  grupoAbierto = true,
 }) {
   createTheme("dark", {
     background: {
       default: "#1E2126",
     },
   });
+
+  const userEmail = localStorage.getItem("mail");
 
   const columns = [
     // Columna de Motivo
@@ -48,32 +51,39 @@ function TransaccionesTable({
           Acciones
         </span>
       ),
-      cell: (row) => (
-        <div className="flex justify-center space-x-2 sm:space-x-4">
-          <button
-            className="bg-yellow-500 text-white font-bold py-1 px-2 sm:px-3 rounded hover:bg-yellow-600 transition-colors duration-300"
-            onClick={() => editRow(row)}
-          >
-            <img
-              src={editIcon}
-              alt="Edit"
-              className="w-4 h-4 sm:w-5 sm:h-5 justify-center"
-            />
-          </button>
-          <button
-            className="bg-red-600 text-white font-bold py-1 px-2 sm:px-3 rounded hover:bg-red-700 transition-colors duration-300"
-            onClick={() => deleteRow(row.id)}
-          >
-            <img
-              src={deleteIcon}
-              alt="Delete"
-              className="w-4 h-4 sm:w-5 sm:h-5 justify-center"
-            />
-          </button>
-        </div>
-      ),
+      cell: (row) =>
+        grupoAbierto ? ( // Mostrar los botones solo si grupoAbierto es true
+          row.users === undefined || row.users === userEmail ? (
+            <div className="flex justify-center space-x-2 sm:space-x-4">
+              <button
+                className="bg-yellow-500 text-white font-bold py-1 px-2 sm:px-3 rounded hover:bg-yellow-600 transition-colors duration-300"
+                onClick={() => editRow(row)}
+              >
+                <img
+                  src={editIcon}
+                  alt="Edit"
+                  className="w-4 h-4 sm:w-5 sm:h-5 justify-center"
+                />
+              </button>
+              <button
+                className="bg-red-600 text-white font-bold py-1 px-2 sm:px-3 rounded hover:bg-red-700 transition-colors duration-300"
+                onClick={() => deleteRow(row.id)}
+              >
+                <img
+                  src={deleteIcon}
+                  alt="Delete"
+                  className="w-4 h-4 sm:w-5 sm:h-5 justify-center"
+                />
+              </button>
+            </div>
+          ) : (
+            <div className="text-sm text-center">Sin permiso</div>
+          )
+        ) : (
+          <div className="text-sm text-center">Sin acciones</div> // Mostrar "Sin acciones" si grupoAbierto es false
+        ),
       button: true,
-      minWidth: "120px", // Asegurar un ancho mínimo para que los botones se vean bien
+      minWidth: "120px",
       wrap: true,
     },
   ];

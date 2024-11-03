@@ -396,7 +396,6 @@ function ModalVerDetallesGrupo({
       } else {
         const errorMessage = await response.text();
         console.error("Error al agregar categoria:", errorMessage);
-        console.log("la categoria existeeeeeeeeeee");
         return "La categoria ya existe";
       }
     } catch (error) {
@@ -457,6 +456,7 @@ function ModalVerDetallesGrupo({
               payCategories={payCategories}
               editRow={editRow}
               deleteRow={deleteRow}
+              grupoAbierto={grupo.estado}
             />
           ) : (
             <p>No hay transacciones disponibles.</p>

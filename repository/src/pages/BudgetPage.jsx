@@ -44,13 +44,13 @@ function BudgetPage() {
       </div>
       <div className="flex flex-col gap-6">
         {presupuestos.map((budget) => {
-          const categoryNames = Object.keys(budget.categoryBudgets).join(", ");
+          console.log(budget);
           return (
             <BudgetCard
-              title={categoryNames}
+              title={budget.nameBudget}
               icon={defaultIcon}
-              dateFrom="01/10/2024"
-              dateTo="31/10/2024"
+              dateFrom={budget.budgetMonth}
+              dateTo={budget.budgetMonth}
               percentage={0}
               currentAmount="$0"
               maxAmount={"$" + budget.totalBudget}

@@ -40,6 +40,8 @@ function ModalCreateBudget({ closeModal = () => {} }) {
   const [budgetValues, setBudgetValues] = useState({});
   const [totalBudget, setTotalBudget] = useState("");
   const [errors, setErrors] = useState({});
+  const [budgetName, setBudgetName] = useState("");
+  const [budgetDate, setBudgetDate] = useState("");
 
   const fetchPersonalCategorias = async () => {
     const token = localStorage.getItem("token");
@@ -47,9 +49,7 @@ function ModalCreateBudget({ closeModal = () => {} }) {
       const response = await fetch(
         "https://two024-qwerty-back-2.onrender.com/api/personal-categoria",
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
 
@@ -79,7 +79,6 @@ function ModalCreateBudget({ closeModal = () => {} }) {
       [category]: numericValue,
     }));
 
-    // Validación en tiempo real: valor menor que 0
     setErrors((prevErrors) => ({
       ...prevErrors,
       [category]: numericValue < 0 ? "El valor no puede ser negativo" : "",
@@ -89,13 +88,16 @@ function ModalCreateBudget({ closeModal = () => {} }) {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    // Validación de la suma de los valores de presupuesto
+    if (!budgetName) {
+      alert("El nombre del presupuesto es obligatorio.");
+      return;
+    }
+
     const totalCategoryBudget = Object.values(budgetValues).reduce(
       (acc, curr) => acc + (curr || 0),
       0
     );
 
-    // Mensaje de error si la suma de budgets es mayor que el total
     if (totalCategoryBudget > totalBudget) {
       setErrors((prevErrors) => ({
         ...prevErrors,
@@ -104,13 +106,9 @@ function ModalCreateBudget({ closeModal = () => {} }) {
       }));
       return;
     } else {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        totalBudget: "",
-      }));
+      setErrors((prevErrors) => ({ ...prevErrors, totalBudget: "" }));
     }
 
-    // Verificar si hay errores en los valores de categorías
     const hasNegativeValues = Object.values(budgetValues).some(
       (value) => value < 0
     );
@@ -121,9 +119,12 @@ function ModalCreateBudget({ closeModal = () => {} }) {
     }
 
     const formData = {
-      totalBudget,
+      nameBudget: budgetName,
+      totalBudget: totalBudget,
+      budgetMonth: budgetDate,
       categoryBudgets: budgetValues,
     };
+
     createNewBudget(formData);
   };
 
@@ -155,6 +156,36 @@ function ModalCreateBudget({ closeModal = () => {} }) {
       </h3>
 
       <form onSubmit={handleSubmit}>
+        {/* Input para el nombre del presupuesto */}
+        <div className="mb-4">
+          <label className="block text-sm font-semibold mb-1 text-white">
+            Nombre del Presupuesto
+          </label>
+          <input
+            type="text"
+            placeholder="Nombre del Presupuesto"
+            className="input input-bordered w-full"
+            value={budgetName}
+            onChange={(e) => setBudgetName(e.target.value)}
+            required
+          />
+        </div>
+
+        {/* Input para el mes y año */}
+        <div className="mb-4">
+          <label className="block text-sm font-semibold mb-1 text-white">
+            Fecha (Mes y Año)
+          </label>
+          <input
+            type="month"
+            className="input input-bordered w-full"
+            value={budgetDate}
+            onChange={(e) => setBudgetDate(e.target.value)}
+            required
+          />
+        </div>
+
+        {/* Input para el presupuesto total */}
         <div className="mb-4">
           <label className="block text-sm font-semibold mb-1 text-white">
             <FontAwesomeIcon
@@ -177,6 +208,7 @@ function ModalCreateBudget({ closeModal = () => {} }) {
           )}
         </div>
 
+        {/* Inputs para categorías */}
         {payCategories.map((category, index) => (
           <div className="mb-4" key={index}>
             <label className="block text-sm font-semibold mb-1 text-white">

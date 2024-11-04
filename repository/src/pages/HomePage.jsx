@@ -393,7 +393,9 @@ function HomePage() {
     } else if (transaccion.id_reserva == "Grupo") {
       url =
         "https://two024-qwerty-back-2.onrender.com/api/grupos/agregar-usuario";
-      const grupoId = transaccion.grupo_id;
+      const grupoId = transaccion.grupoId;
+      console.log("este es el id " + grupoId);
+      console.log(transaccion);
       try {
         const response = await fetch(url, {
           method: "POST",

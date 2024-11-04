@@ -13,12 +13,14 @@ function ModalGastosCompartidos({
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [grupos, setGrupos] = useState([]); // Estado para grupos
-  const [isModalDetallesGrupoOpen, setIsModalDetallesGrupoOpen] =
-    useState(false);
+  const [isModalDetallesGrupoOpen, setIsModalDetallesGrupoOpen] = useState(false);
   const closeModalDetallesGrupo = () => setIsModalDetallesGrupoOpen(false);
   const [grupoSeleccionado, setGrupoSeleccionado] = useState(null); // Estado para el nombre del grupo seleccionado
   const [grupoAEliminar, setGrupoAEliminar] = useState(null);
+  const [grupoAAgregar, setGrupoAAgregar] = useState(null);
   const [isModalEliminarOpen, setIsModalEliminarOpen] = useState(false);
+  const [isModalMiembrosOpen, setIsModalMiembrosOpen] = useState(false);
+  const [miembros, setMiembros] = useState([]);
   const fetchGrupos = async () => {
     setIsLoading(true);
     const token = localStorage.getItem("token");
@@ -43,6 +45,31 @@ function ModalGastosCompartidos({
       setError("Ocurrió un error al obtener los grupos.");
     } finally {
       setIsLoading(false);
+    }
+  };
+  const fetchMiembros = async (grupoId) => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await fetch(
+        `https://two024-qwerty-back-2.onrender.com/api/grupos/${grupoId}/usuarios`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Error al obtener los miembros del grupo.");
+      }
+
+      const data = await response.json();
+      setMiembros(data);
+      setIsModalMiembrosOpen(true);
+      setGrupoAAgregar(grupoId);
+    } catch (error) {
+      setModalError("Ocurrió un error al obtener los miembros del grupo.");
     }
   };
 
@@ -92,6 +119,11 @@ function ModalGastosCompartidos({
       setModalError("Ocurrió un error al intentar eliminar el grupo.");
     }
   };
+
+  const closeModal = () => {
+    setGrupoAAgregar(null);
+    setIsModalOpen(false);
+  };  
 
   const customStyles = {
     overlay: {
@@ -150,6 +182,12 @@ function ModalGastosCompartidos({
                         {grupo.nombre}
                       </span>
                       <button
+                        onClick={() => fetchMiembros(grupo.id)}
+                        className="text-blue-500 hover:text-blue-700 mr-2"
+                      >
+                        Miembros
+                      </button>
+                      <button
                         onClick={() => openModalEliminar(grupo)}
                         className="text-red-500 hover:text-red-700"
                       >
@@ -183,7 +221,8 @@ function ModalGastosCompartidos({
 
       <ModalCrearGrupo
         isOpen={isModalOpen}
-        onRequestClose={() => setIsModalOpen(false)}
+        onRequestClose={() => closeModal()}
+        grupoAAgregar={grupoAAgregar}
       />
 
       {grupoSeleccionado && (
@@ -217,6 +256,41 @@ function ModalGastosCompartidos({
           className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400"
         >
           Cancelar
+        </button>
+      </Modal>
+
+      {/* Modal para mostrar miembros */}
+      <Modal
+        isOpen={isModalMiembrosOpen}
+        onRequestClose={() => setIsModalMiembrosOpen(false)}
+        contentLabel="Lista de Miembros"
+        style={customStyles}
+      >
+        <h2 className="text-xl font-bold mb-4">Miembros del grupo</h2>
+        <ul>
+          {miembros.length > 0 ? (
+            miembros.map((miembro) => (
+              <li key={miembro.id} className="py-1">
+                {miembro.email}
+              </li>
+            ))
+          ) : (
+            <li>No hay miembros en este grupo.</li>
+          )}
+        </ul>
+        <button
+          onClick={() => {
+            setIsModalOpen(true); // Abre el modal de crear grupo
+          }}
+          className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
+        >
+          Invitar Usuarios
+        </button>
+        <button
+          onClick={() => setIsModalMiembrosOpen(false)}
+          className="mt-4 bg-gray-300 px-4 py-2 rounded hover:bg-gray-400"
+        >
+          Cerrar
         </button>
       </Modal>
 </Modal>

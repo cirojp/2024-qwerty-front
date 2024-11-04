@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 
-const ModalCrearGrupo = ({ isOpen = false, onRequestClose = () => {} }) => {
+const ModalCrearGrupo = ({ isOpen = false, onRequestClose = () => {}, grupoAAgregar = null }) => {
   const customStyles = {
     overlay: {
       position: "fixed",
@@ -57,43 +57,78 @@ const ModalCrearGrupo = ({ isOpen = false, onRequestClose = () => {} }) => {
   const handleSubmit = async () => {
     setIsLoading(true);
     const token = localStorage.getItem("token");
-    if (!grupoNombre || usuarios.length === 0) {
-      setError("Debes ingresar un nombre de grupo y al menos un usuario.");
-      setIsLoading(false);
-      return;
-    }
-    try {
-      console.log(usuarios);
-      // Aquí iría la lógica para crear el grupo usando `grupoNombre` y `usuarios`
-      const response = await fetch(
-        "https://two024-qwerty-back-2.onrender.com/api/grupos/crear",
-        {
-          // Ajusta la URL según tu endpoint
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            nombre: grupoNombre,
-            usuarios: usuarios,
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Error al crear el grupo.");
+    if(grupoAAgregar == null){
+      if (!grupoNombre || usuarios.length === 0) {
+        setError("Debes ingresar un nombre de grupo y al menos un usuario.");
+        setIsLoading(false);
+        return;
       }
+      try {
+        // Aquí iría la lógica para crear el grupo usando `grupoNombre` y `usuarios`
+        const response = await fetch(
+          "https://two024-qwerty-back-2.onrender.com/api/grupos/crear",
+          {
+            // Ajusta la URL según tu endpoint
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              nombre: grupoNombre,
+              usuarios: usuarios,
+            }),
+          }
+        );
 
-      // Limpiar los campos y cerrar el modal si la solicitud fue exitosa
-      setGrupoNombre("");
-      setUsuarios([]);
-      setError("");
-      onRequestClose();
-    } catch (error) {
-      setError("Ocurrió un error al procesar la solicitud.");
-    } finally {
-      setIsLoading(false);
+        if (!response.ok) {
+          throw new Error("Error al crear el grupo.");
+        }
+
+        // Limpiar los campos y cerrar el modal si la solicitud fue exitosa
+        setGrupoNombre("");
+        setUsuarios([]);
+        setError("");
+        onRequestClose();
+      } catch (error) {
+        setError("Ocurrió un error al procesar la solicitud.");
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
+      if (usuarios.length === 0) {
+        setError("Debes ingresar al menos un usuario.");
+        setIsLoading(false);
+        return;
+      }
+      try {
+        // Aquí iría la lógica para crear el grupo usando `grupoNombre` y `usuarios`
+        const response = await fetch(
+          `https://two024-qwerty-back-2.onrender.com/api/grupos/${grupoAAgregar}/agregar-usuario`,
+          {
+            // Ajusta la URL según tu endpoint
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              usuarios: usuarios,
+            }),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Error al crear el grupo.");
+        }
+        setUsuarios([]);
+        setError("");
+        onRequestClose();
+      } catch (error) {
+        setError("Ocurrió un error al procesar la solicitud.");
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -108,25 +143,29 @@ const ModalCrearGrupo = ({ isOpen = false, onRequestClose = () => {} }) => {
     <Modal
       isOpen={isOpen}
       onRequestClose={onRequestClose}
-      contentLabel={"Crear Grupo"}
+      contentLabel={grupoAAgregar ? "Invitar Usuarios" : "Crear Grupo"}
       style={customStyles}
       className="bg-gray-900 text-white p-4 sm:p-2 rounded-lg shadow-lg"
     >
       <h2 className="text-xl sm:text-lg font-bold mb-4">
-        {"Crear Nuevo Grupo"}
+        {grupoAAgregar ? "Invitar Usuarios" : "Crear Nuevo Grupo"}
       </h2>
-      <input
-        type="text"
-        placeholder="Nombre del Grupo"
-        value={grupoNombre}
-        onChange={(e) => setGrupoNombre(e.target.value)}
-        className="mt-1 block w-full p-2 border border-gray-600 bg-gray-800 text-white rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
-      />
+      
+      {/* Mostrar el campo para el nombre del grupo solo si no se está invitando a usuarios */}
+      {!grupoAAgregar && (
+        <input
+          type="text"
+          placeholder="Nombre del Grupo"
+          value={grupoNombre}
+          onChange={(e) => setGrupoNombre(e.target.value)}
+          className="mt-1 block w-full p-2 border border-gray-600 bg-gray-800 text-white rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
+        />
+      )}
 
       {/* Lista de correos agregados */}
       {usuarios.length > 0 && (
         <div className="mt-3 mb-3">
-          <h3 className="text-lg font-semibold">Usuarios agregados:</h3>
+          <h3 className="text-lg font-semibold">Usuarios a agregar:</h3>
           <ul className="list-disc pl-5">
             {usuarios.map((email, index) => (
               <li key={index} className="text-sm text-gray-300">
@@ -164,7 +203,7 @@ const ModalCrearGrupo = ({ isOpen = false, onRequestClose = () => {} }) => {
             Cargando...
           </div>
         ) : (
-          "Crear Grupo"
+          grupoAAgregar ? "Invitar Usuarios" : "Crear Grupo"
         )}
       </button>
       <button

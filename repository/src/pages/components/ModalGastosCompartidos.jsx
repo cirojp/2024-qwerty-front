@@ -145,8 +145,14 @@ function ModalGastosCompartidos({
               <ul>
                 {grupos.length > 0 ? (
                   grupos.map((grupo) => (
-                    <li key={grupo.id} className="py-1 flex justify-between items-center">
-                      <span onClick={() => openModalDetallesGrupo(grupo)} className="cursor-pointer">
+                    <li
+                      key={grupo.id}
+                      className="py-1 flex justify-between items-center"
+                    >
+                      <span
+                        onClick={() => openModalDetallesGrupo(grupo)}
+                        className="cursor-pointer"
+                      >
                         {grupo.nombre}
                       </span>
                       <button
@@ -196,13 +202,15 @@ function ModalGastosCompartidos({
         />
       )}
 
-    <Modal
+      <Modal
         isOpen={isModalEliminarOpen}
         onRequestClose={() => setIsModalEliminarOpen(false)}
         contentLabel="Confirmar eliminación de grupo"
         style={customStyles}
       >
-        <h2 className="text-xl font-bold mb-4">¿Está seguro que quiere eliminar el grupo?</h2>
+        <h2 className="text-xl font-bold mb-4">
+          ¿Está seguro que quiere eliminar el grupo?
+        </h2>
         <p className="mb-6">
           Se eliminarán toda la información del grupo para todos los miembros.
         </p>
@@ -219,7 +227,7 @@ function ModalGastosCompartidos({
           Cancelar
         </button>
       </Modal>
-</Modal>
+    </Modal>
   );
 }
 

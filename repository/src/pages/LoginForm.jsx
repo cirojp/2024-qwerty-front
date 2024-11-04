@@ -48,7 +48,7 @@ function LoginForm() {
         const token = await response.text();
         console.log("Token recibido:", token);
         localStorage.setItem("token", token);
-        localStorage.setItem("mail",email);
+        localStorage.setItem("mail", email);
         setIsLoading(false);
         navigate("/index");
       } else {

@@ -8,6 +8,7 @@ import MonthlyGraphic from "./components/MonthlyGraphic";
 import Header from "./components/Header";
 import ModalAskPayment from "./components/ModalAskPayment";
 import ModalSendPayment from "./components/ModalSendPayment";
+import PresupuestosWidget from "./components/PresupuestosWidget";
 
 function HomePage() {
   const [transacciones, setTransacciones] = useState([]);
@@ -660,8 +661,8 @@ function HomePage() {
         getTransacciones={getTransacciones}
         openModal={openModal}
       />
-
-      <div className="flex md:hidden justify-end w-full p-4">
+      <PresupuestosWidget transacciones={transacciones} />
+      <div className="flex justify-end w-full p-4">
         <button
           onClick={() => setIsFiltersOpen(!isFiltersOpen)}
           className="btn btn-warning w-full"
@@ -670,7 +671,7 @@ function HomePage() {
         </button>
       </div>
 
-      {(isFiltersOpen || window.innerWidth >= 768) && (
+      {isFiltersOpen && (
         <div className="flex flex-col md:flex-row items-start md:items-center md:gap-6 mb-4">
           <div className="flex flex-col md:flex-row md:items-center gap-3 w-full">
             <div className="flex flex-col w-full md:w-1/3">

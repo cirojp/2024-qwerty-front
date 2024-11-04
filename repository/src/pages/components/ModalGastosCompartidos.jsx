@@ -17,6 +17,8 @@ function ModalGastosCompartidos({
     useState(false);
   const closeModalDetallesGrupo = () => setIsModalDetallesGrupoOpen(false);
   const [grupoSeleccionado, setGrupoSeleccionado] = useState(null); // Estado para el nombre del grupo seleccionado
+  const [grupoAEliminar, setGrupoAEliminar] = useState(null);
+  const [isModalEliminarOpen, setIsModalEliminarOpen] = useState(false);
   const fetchGrupos = async () => {
     setIsLoading(true);
     const token = localStorage.getItem("token");
@@ -60,6 +62,35 @@ function ModalGastosCompartidos({
     const estado = grupo.estado;
     setGrupoSeleccionado({ nombre: nombreGrupo, id: idGrupo, estado: estado });
     setIsModalDetallesGrupoOpen(true);
+  };
+
+  const openModalEliminar = (grupo) => {
+    setGrupoAEliminar(grupo);
+    setIsModalEliminarOpen(true);
+  };
+
+  const confirmDeleteGrupo = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await fetch(
+        `https://two024-qwerty-back-2.onrender.com/api/grupos/${grupoAEliminar.id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.ok) {
+        setGrupos(grupos.filter((grupo) => grupo.id !== grupoAEliminar.id));
+        setIsModalEliminarOpen(false);
+      } else {
+        setModalError("Error al eliminar el grupo.");
+      }
+    } catch (error) {
+      setModalError("Ocurrió un error al intentar eliminar el grupo.");
+    }
   };
 
   const customStyles = {
@@ -114,12 +145,16 @@ function ModalGastosCompartidos({
               <ul>
                 {grupos.length > 0 ? (
                   grupos.map((grupo) => (
-                    <li
-                      key={grupo.id}
-                      className="py-1 cursor-pointer"
-                      onClick={() => openModalDetallesGrupo(grupo)}
-                    >
-                      {grupo.nombre}
+                    <li key={grupo.id} className="py-1 flex justify-between items-center">
+                      <span onClick={() => openModalDetallesGrupo(grupo)} className="cursor-pointer">
+                        {grupo.nombre}
+                      </span>
+                      <button
+                        onClick={() => openModalEliminar(grupo)}
+                        className="text-red-500 hover:text-red-700"
+                      >
+                        Eliminar grupo
+                      </button>
                     </li>
                   ))
                 ) : (
@@ -160,7 +195,31 @@ function ModalGastosCompartidos({
           payCategories={payCategories}
         />
       )}
-    </Modal>
+
+    <Modal
+        isOpen={isModalEliminarOpen}
+        onRequestClose={() => setIsModalEliminarOpen(false)}
+        contentLabel="Confirmar eliminación de grupo"
+        style={customStyles}
+      >
+        <h2 className="text-xl font-bold mb-4">¿Está seguro que quiere eliminar el grupo?</h2>
+        <p className="mb-6">
+          Se eliminarán toda la información del grupo para todos los miembros.
+        </p>
+        <button
+          onClick={confirmDeleteGrupo}
+          className="bg-red-500 text-white px-4 py-2 rounded mr-2 hover:bg-red-700"
+        >
+          Eliminar grupo
+        </button>
+        <button
+          onClick={() => setIsModalEliminarOpen(false)}
+          className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400"
+        >
+          Cancelar
+        </button>
+      </Modal>
+</Modal>
   );
 }
 

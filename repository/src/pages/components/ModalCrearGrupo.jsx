@@ -35,9 +35,9 @@ const ModalCrearGrupo = ({ isOpen = false, onRequestClose = () => {}, grupoAAgre
   const [correoUsuario, setCorreoUsuario] = useState("");
   const [usuarios, setUsuarios] = useState([]); // Lista de correos
 
-  useEffect(() => {}, [isOpen]);
+  useEffect(() => {setCorreoUsuario("")}, [isOpen]);
 
-  const handleAddUsuario = () => {
+  const handleAddUsuario = async () => {
     if (!correoUsuario) {
       setError("Por favor ingresa un correo.");
       return;
@@ -47,11 +47,57 @@ const ModalCrearGrupo = ({ isOpen = false, onRequestClose = () => {}, grupoAAgre
       setError("Este correo ya fue agregado.");
       return;
     }
+    const token = localStorage.getItem("token");
+    if(grupoAAgregar!=null){
 
-    // Agregar el correo si no está duplicado
-    setUsuarios([...usuarios, correoUsuario]);
-    setCorreoUsuario("");
-    setError(""); // Limpiar el mensaje de error si la adición fue exitosa
+      try {
+        // Realiza la llamada al backend para verificar el usuario
+        const response = await fetch(
+          `https://two024-qwerty-back-2.onrender.com/api/grupos/${grupoAAgregar}/verificar-usuario?email=${correoUsuario}`,
+          {
+            method: "GET",
+            headers: {
+              "Authorization": `Bearer ${token}`,
+            }
+          }
+        );
+
+        const message = await response.text();
+
+        if (response.ok) {
+          // Agregar el correo si la verificación es exitosa
+          setUsuarios([...usuarios, correoUsuario]);
+          setCorreoUsuario("");
+          setError(""); // Limpiar el mensaje de error si la adición fue exitosa
+        } else {
+          // Si la respuesta no es OK, muestra el mensaje de error del backend
+          setError(message);
+        }
+      } catch (error) {
+        setError("Error al verificar el usuario.");
+      }
+    } else {
+      if(await userExists(correoUsuario)){
+        setUsuarios([...usuarios, correoUsuario]);
+        setCorreoUsuario("");
+        setError(""); // Limpiar el mensaje de error si la adición fue exitosa
+      } else {
+        setError("El usuario no esta registrado");
+      }
+    }
+  };
+  const userExists = async (mail) => {
+    let url =
+      "https://two024-qwerty-back-2.onrender.com/api/public/exists/" + mail;
+    const response = await fetch(url);
+    if (response.ok) {
+      const exists = await response.json();
+      console.log(exists);
+      return exists;
+    } else {
+      console.log(exists);
+      return exists;
+    }
   };
 
   const handleSubmit = async () => {

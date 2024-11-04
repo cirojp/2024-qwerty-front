@@ -273,7 +273,7 @@ function ModalVerDetallesGrupo({
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(
-        `https://two024-qwerty-back-2.onrender.com/api/transacciones/${id}`,
+        `https://two024-qwerty-back-2.onrender.com/api/grupos/transaccion/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -459,7 +459,7 @@ function ModalVerDetallesGrupo({
               grupoAbierto={grupo.estado}
             />
           ) : (
-            <p>No hay transacciones disponibles.</p>
+            <p>No hay transacciones en este grupo.</p>
           )}
           {grupo.estado && (
             <button

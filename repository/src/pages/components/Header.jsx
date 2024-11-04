@@ -49,7 +49,7 @@ function Header({
           Categorías
         </button>
         {/* Drawer Menu */}
-        <div className="drawer">
+        <div className="drawer" style={{ zIndex: 1000 }}>
           <input id="my-drawer" type="checkbox" className="drawer-toggle" />
           <div className="drawer-content flex items-center">
             <label
@@ -59,13 +59,17 @@ function Header({
               ☰
             </label>
           </div>
-          <div className="drawer-side">
+          <div
+            className="drawer-side"
+            style={{ zIndex: 1100, position: "fixed" }}
+          >
             <label
               htmlFor="my-drawer"
               aria-label="close sidebar"
               className="drawer-overlay"
+              style={{ zIndex: 1050 }}
             ></label>
-            <ul className="menu bg-base-200 text-base-content min-h-full w-80 p-4 space-y-3 shadow-lg">
+            <ul className="menu bg-base-200 text-base-content min-h-full w-80 p-4 space-y-3 shadow-lg z-[5000]">
               <li>
                 <button
                   className="btn w-full bg-yellow-500 text-gray-950 text-lg rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out"
@@ -112,7 +116,9 @@ function Header({
               <li>
                 <button
                   className="btn mt-3 w-full bg-yellow-500 text-gray-950 text-lg rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out"
-                  onClick={() => {openModalGastos()}}
+                  onClick={() => {
+                    openModalGastos();
+                  }}
                 >
                   Gastos Compartidos
                 </button>

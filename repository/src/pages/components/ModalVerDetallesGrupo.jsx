@@ -59,9 +59,9 @@ function ModalVerDetallesGrupo({
     content: {
       padding: "2rem",
       borderRadius: "0.75rem",
-      width: "90vw",
-      maxWidth: "500px",
-      maxHeight: "80vh", // Limita la altura del modal
+      width: "100vw",
+      maxWidth: "700px",
+      maxHeight: "100vh", // Limita la altura del modal
       margin: "auto",
       display: "flex",
       flexDirection: "column",
@@ -467,30 +467,38 @@ function ModalVerDetallesGrupo({
           ) : (
             <p>No hay transacciones en este grupo.</p>
           )}
-          {grupo.estado && (
+          <div className="flex justify-end gap-4 mt-4">
+            {grupo.estado && (
+                <button
+                  onClick={cerrarGrupo}
+                  className="flex-1 bg-blue-500 text-white font-bold py-3 px-4 rounded hover:bg-blue-600 transition-colors duration-300 mt-4"
+                >
+                  Finalizar Evento
+                </button>
+            )}
             <button
-              onClick={cerrarGrupo}
-              className="flex-1 bg-blue-500 text-white font-bold py-3 px-4 rounded hover:bg-blue-600 transition-colors duration-300 mt-4"
+              onClick={closeWindow}
+              className="flex-1 bg-red-500 text-white font-bold py-3 px-4 rounded hover:bg-red-600 transition-colors duration-300 mt-4"
             >
-              Finalizar Evento
+              Cerrar
             </button>
-          )}
-          <button
-            onClick={closeWindow}
-            className="flex-1 bg-red-500 text-white font-bold py-3 px-4 rounded hover:bg-red-600 transition-colors duration-300 mt-4"
-          >
-            Cerrar
-          </button>
-          <div className="mt-4">
-            <h3 className="text-lg font-semibold mb-2">Deudas</h3>
-            <ul>
-              {deudas.map((deuda, index) => (
-                <li key={index} className="py-1">
-                  {deuda}
-                </li>
-              ))}
-            </ul>
           </div>
+          {!grupo.estado && (
+            <div className="mt-4">
+              <h3 className="text-lg font-semibold mb-2">Deudas:</h3>
+              {deudas.length > 0 ? (
+                <ul>
+                  {deudas.map((deuda, index) => (
+                    <li key={index} className="py-1 text-lg font-medium text-center">
+                      {deuda}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-gray-400">No hay deudas pendientes en este grupo</p>
+              )}
+            </div>
+          )}
         </div>
       </div>
       <ModalForm

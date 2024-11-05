@@ -148,7 +148,7 @@ function ModalGastosCompartidos({
       padding: "2rem",
       borderRadius: "0.75rem",
       width: "90vw",
-      maxWidth: "500px",
+      maxWidth: "550px",
       maxHeight: "80vh",
       margin: "auto",
       display: "flex",
@@ -185,23 +185,28 @@ function ModalGastosCompartidos({
                   grupos.map((grupo) => (
                     <li
                       key={grupo.id}
-                      className="py-1 flex justify-between items-center"
+                      className="py-1 flex justify-between items-center space-x-4"
                     >
+                      {/* Nombre del grupo en amarillo */}
                       <span
                         onClick={() => openModalDetallesGrupo(grupo)}
-                        className="cursor-pointer"
+                        className="cursor-pointer bg-yellow-500 hover:bg-yellow-600 text-black px-2 py-1 rounded w-40 text-center"
                       >
                         {grupo.nombre}
                       </span>
+
+                      {/* Botón de miembros en azul */}
                       <button
                         onClick={() => fetchMiembros(grupo)}
-                        className="text-blue-500 hover:text-blue-700 mr-2"
+                        className="bg-blue-500 text-white hover:bg-blue-600 px-2 py-1 rounded"
                       >
                         Miembros
                       </button>
+
+                      {/* Botón de eliminar grupo en rojo */}
                       <button
                         onClick={() => openModalEliminar(grupo)}
-                        className="text-red-500 hover:text-red-700"
+                        className="cursor-pointer bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded w-40 text-center"
                       >
                         Eliminar grupo
                       </button>
@@ -214,23 +219,25 @@ function ModalGastosCompartidos({
             )}
           </div>
 
-          <button
-            className="mt-4 px-4 py-3 bg-yellow-500 text-black rounded-md hover:bg-yellow-700 mr-2"
-            onClick={() => {
-              setIsModalOpen(true);
-            }}
-          >
-            Crear Grupo
-          </button>
-          <button
-            onClick={closeWindow}
-            className="flex-1 bg-red-500 text-white font-bold py-3 px-4 rounded hover:bg-red-600 transition-colors duration-300"
-          >
-            Cerrar
-          </button>
+          {/* Botones Crear Grupo y Cerrar */}
+          <div className="flex space-x-4">
+            <button
+              className="flex-1  bg-yellow-500 text-black font-bold py-3 px-4 rounded hover:bg-yellow-700 transition-colors duration-300 mt-4"
+              onClick={() => setIsModalOpen(true)}
+            >
+              Crear Grupo
+            </button>
+            <button
+              onClick={closeWindow}
+              className="flex-1 bg-red-500 text-white font-bold py-3 px-4 rounded hover:bg-red-600 transition-colors duration-300 mt-4"
+            >
+              Cerrar
+            </button>
+          </div>
         </div>
       </div>
 
+      {/* Modales adicionales */}
       <ModalCrearGrupo
         isOpen={isModalOpen}
         onRequestClose={() => closeModal()}
@@ -254,25 +261,26 @@ function ModalGastosCompartidos({
         onRequestClose={() => setIsModalEliminarOpen(false)}
         contentLabel="Confirmar eliminación de grupo"
         style={customStyles}
+        className="bg-gray-950 shadow-lg p-4 rounded-lg"
       >
-        <h2 className="text-xl font-bold mb-4">
+        <h2 className="text-2xl font-bold text-gray-100 text-center mb-4">
           ¿Está seguro que quiere eliminar el grupo?
         </h2>
-        <p className="mb-6">
+        <p className="text-gray-300 mb-6 text-center">
           Se eliminarán toda la información del grupo para todos los miembros.
         </p>
-        <button
-          onClick={confirmDeleteGrupo}
-          className="bg-red-500 text-white px-4 py-2 rounded mr-2 hover:bg-red-700"
-        >
-          Eliminar grupo
-        </button>
-        <button
-          onClick={() => setIsModalEliminarOpen(false)}
-          className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400"
-        >
-          Cancelar
-        </button>
+          <button
+            onClick={confirmDeleteGrupo}
+            className="bg-red-500 text-white font-bold py-3 px-4 rounded hover:bg-red-600 transition-colors duration-300"
+          >
+            Eliminar grupo
+          </button>
+          <button
+            onClick={() => setIsModalEliminarOpen(false)}
+            className="bg-gray-300 text-gray-800 font-bold py-3 px-4 rounded hover:bg-gray-400 transition-colors duration-300"
+          >
+            Cancelar
+          </button>
       </Modal>
 
       {/* Modal para mostrar miembros */}
@@ -280,42 +288,48 @@ function ModalGastosCompartidos({
         isOpen={isModalMiembrosOpen}
         onRequestClose={() => {
           setIsModalMiembrosOpen(false);
-          setGrupoAAgregar(null); 
+          setGrupoAAgregar(null);
         }}
         contentLabel="Lista de Miembros"
         style={customStyles}
+        className="bg-gray-950 shadow-lg p-4 rounded-lg"
       >
-        <h2 className="text-xl font-bold mb-4">Miembros del grupo</h2>
-        <ul>
-          {miembros.length > 0 ? (
-            miembros.map((miembro) => (
-              <li key={miembro.id} className="py-1">
-                {miembro.email}
-              </li>
-            ))
-          ) : (
-            <li>No hay miembros en este grupo.</li>
-          )}
-        </ul>
-        {grupoAAgregar && grupoAAgregar.estado && (
-          <button
-            onClick={() => {
-              setIsModalOpen(true); // Abre el modal de crear grupo
-            }}
-            className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
-          >
-            Invitar Usuarios
-          </button>
-        )}
-
-        <button
-          onClick={() => setIsModalMiembrosOpen(false)}
-          className="mt-4 bg-gray-300 px-4 py-2 rounded hover:bg-gray-400"
-        >
-          Cerrar
-        </button>
+        <h2 className="text-2xl font-bold text-gray-100 text-center mb-4">Miembros del grupo</h2>
+        <div className="flex flex-col flex-grow px-4">
+          <div className="bg-gray-800 p-4 rounded-lg shadow-lg text-white">
+            <h3 className="text-lg font-semibold mb-2">Miembros:</h3>
+              <ul>
+                {miembros.length > 0 ? (
+                  miembros.map((miembro) => (
+                    <li key={miembro.id} className="py-1">
+                      {miembro.email}
+                    </li>
+                  ))
+                ) : (
+                  <li className="text-gray-400">No hay miembros en este grupo.</li>
+                )}
+              </ul>
+              <div className="flex justify-end gap-4 mt-4">
+                {grupoAAgregar && grupoAAgregar.estado && (
+                  <button
+                    onClick={() => setIsModalOpen(true)}
+                    className="flex-1 bg-blue-500 text-white font-bold py-3 px-4 rounded hover:bg-blue-600 transition-colors duration-300 mt-4"
+                  >
+                    Invitar Usuarios
+                  </button>
+                )}
+                <button
+                  onClick={() => setIsModalMiembrosOpen(false)}
+                  className="flex-1 bg-red-500 text-white font-bold py-3 px-4 rounded hover:bg-red-600 transition-colors duration-300 mt-4"
+                >
+                  Cerrar
+                </button>
+              </div>
+            </div>
+          </div>
       </Modal>
-</Modal>
+    </Modal>
+
   );
 }
 

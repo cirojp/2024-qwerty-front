@@ -13,122 +13,192 @@ function Header({
 }) {
   const [isModalCategoriaOpen, setIsModalCategoriaOpen] = useState(false);
   const [isModalGastosOpen, setIsModalGastosOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   const openModalCategoria = () => setIsModalCategoriaOpen(true);
   const closeModalCategoria = () => setIsModalCategoriaOpen(false);
   const openModalGastos = () => setIsModalGastosOpen(true);
   const closeModalGastos = () => setIsModalGastosOpen(false);
+  const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
   return (
-    <header className="flex flex-col md:flex-row justify-between items-center w-full py-4 md:py-6 px-6 md:px-10">
-      {/* Logo */}
-      <div className="flex items-center">
-        <div className="w-16 h-16 md:w-24 md:h-24 rounded-full overflow-hidden border-4 border-yellow-600 shadow-md">
+    <nav className="bg-gray-900 text-white px-4 md:px-8 py-4 shadow-md">
+      <div className="container mx-auto flex justify-between items-center relative">
+        {/* Logo */}
+        <div
+          className="flex items-center cursor-pointer"
+          onClick={() => navigate("/")}
+        >
           <img
             src={logo}
             alt="logo"
-            onClick={() => navigate("/")}
-            className="w-full h-full object-cover"
+            className="w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 rounded-full border-4 border-yellow-600 shadow-md"
           />
         </div>
-      </div>
 
-      {/* Action Buttons */}
-      <div className="flex flex-col md:flex-row items-center md:space-x-4 mt-4 md:mt-0 gap-3">
-        <button
-          className="flex-grow md:flex-none md:w-auto px-4 py-2 text-sm font-semibold bg-yellow-500 text-gray-950 rounded-lg shadow hover:bg-yellow-600 transition-all duration-300 ease-in-out h-12"
-          onClick={() => navigate("/profile")}
-        >
-          Mi Cuenta
-        </button>
-        <button
-          className="flex-grow md:flex-none md:w-auto px-4 py-2 text-sm font-semibold bg-yellow-500 text-gray-950 rounded-lg shadow hover:bg-yellow-600 transition-all duration-300 ease-in-out h-12"
-          onClick={openModalCategoria}
-        >
-          Categorías
-        </button>
-        {/* Drawer Menu */}
-        <div className="drawer drawer-end" style={{ zIndex: 1000 }}>
-          <input id="my-drawer" type="checkbox" className="drawer-toggle" />
-          <div className="drawer-content flex items-center">
-            <label
-              htmlFor="my-drawer"
-              className="btn-circle text-yellow-600 hover:text-yellow-700 transition duration-300 ease-in-out text-3xl"
-            >
-              ☰
-            </label>
-          </div>
-          <div
-            className="drawer-side"
-            style={{ zIndex: 1100, position: "fixed" }}
+        {/* Desktop Menu */}
+        <div className="hidden md:flex space-x-4">
+          <button
+            className="px-4 py-2 bg-yellow-500 text-gray-900 rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out"
+            onClick={() => navigate("/profile")}
           >
-            <label
-              htmlFor="my-drawer"
-              aria-label="close sidebar"
-              className="drawer-overlay"
-              style={{ zIndex: 1050 }}
-            ></label>
-            <ul className="menu flex flex-col justify-between  py-20  bg-gray-800 bg-base-200 text-base-content min-h-full w-80  space-y-3 shadow-lg z-[5000]">
+            Mi Cuenta
+          </button>
+          <button
+            className="px-4 py-2 bg-yellow-500 text-gray-900 rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out"
+            onClick={openModalCategoria}
+          >
+            Categorías
+          </button>
+          {/* Grouped menu for the last 5 buttons */}
+          <details className="group relative z-50">
+            <summary className="px-4 py-2 bg-yellow-500 text-gray-900 rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out cursor-pointer list-none">
+              Más Opciones
+            </summary>
+            <ul className="absolute left-0 mt-2 w-48 bg-gray-800 text-white rounded-lg shadow-lg p-2 space-y-2 z-50">
               <li>
                 <button
-                  className="btn w-full bg-yellow-500 text-gray-950 text-lg rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out"
-                  onClick={() => {
-                    openModal();
-                    setIsModalCategoriaOpen(false);
-                  }}
+                  className="w-full px-4 py-2 bg-yellow-500 text-gray-900 rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out"
+                  onClick={() => openModal()}
                 >
                   Agregar Transacción
                 </button>
               </li>
               <li>
                 <button
-                  className="btn w-full mt-3 bg-yellow-500 text-gray-950 text-lg rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out"
-                  onClick={() => {
-                    document.getElementById("sendPayModal").showModal();
-                    setIsModalCategoriaOpen(false);
-                  }}
+                  className="w-full px-4 py-2 bg-yellow-500 text-gray-900 rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out"
+                  onClick={() =>
+                    document.getElementById("sendPayModal").showModal()
+                  }
                 >
                   Realizar Pago
                 </button>
               </li>
               <li>
                 <button
-                  className="btn mt-3 w-full bg-yellow-500 text-gray-950 text-lg rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out"
-                  onClick={() => {
-                    document.getElementById("generatePayModal").showModal();
-                    setIsModalCategoriaOpen(false);
-                  }}
+                  className="w-full px-4 py-2 bg-yellow-500 text-gray-900 rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out"
+                  onClick={() =>
+                    document.getElementById("generatePayModal").showModal()
+                  }
                 >
                   Generar Cobro
                 </button>
               </li>
               <li>
                 <button
-                  className="btn mt-3 w-full bg-yellow-500 text-gray-950 text-lg rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out"
-                  onClick={() => {
-                    navigate("/presupuestos");
-                  }}
+                  className="w-full px-4 py-2 bg-yellow-500 text-gray-900 rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out"
+                  onClick={() => navigate("/presupuestos")}
                 >
                   Presupuesto
                 </button>
               </li>
               <li>
                 <button
-                  className="btn mt-3 w-full bg-yellow-500 text-gray-950 text-lg rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out"
-                  onClick={() => {
-                    openModalGastos();
-                  }}
+                  className="w-full px-4 py-2 bg-yellow-500 text-gray-900 rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out"
+                  onClick={openModalGastos}
                 >
                   Gastos Compartidos
                 </button>
               </li>
             </ul>
-          </div>
+          </details>
+        </div>
+
+        {/* Mobile Menu Toggle */}
+        <div className="md:hidden">
+          <button
+            onClick={toggleMobileMenu}
+            className="block cursor-pointer text-yellow-500 text-3xl"
+          >
+            {isMobileMenuOpen ? "X" : "☰"}
+          </button>
+          {isMobileMenuOpen && (
+            <div className="absolute right-0 top-14 w-64 bg-gray-800 text-white shadow-lg rounded-md z-50">
+              <ul className="flex flex-col p-4 space-y-3">
+                <li>
+                  <button
+                    className="w-full px-4 py-2 bg-yellow-500 text-gray-900 rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out"
+                    onClick={() => {
+                      navigate("/profile");
+                      setIsMobileMenuOpen(false);
+                    }}
+                  >
+                    Mi Cuenta
+                  </button>
+                </li>
+                <li>
+                  <button
+                    className="w-full px-4 py-2 bg-yellow-500 text-gray-900 rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out"
+                    onClick={() => {
+                      openModalCategoria();
+                      setIsMobileMenuOpen(false);
+                    }}
+                  >
+                    Categorías
+                  </button>
+                </li>
+                <li>
+                  <button
+                    className="w-full px-4 py-2 bg-yellow-500 text-gray-900 rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out"
+                    onClick={() => {
+                      openModal();
+                      setIsMobileMenuOpen(false);
+                    }}
+                  >
+                    Agregar Transacción
+                  </button>
+                </li>
+                <li>
+                  <button
+                    className="w-full px-4 py-2 bg-yellow-500 text-gray-900 rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out"
+                    onClick={() => {
+                      document.getElementById("sendPayModal").showModal();
+                      setIsMobileMenuOpen(false);
+                    }}
+                  >
+                    Realizar Pago
+                  </button>
+                </li>
+                <li>
+                  <button
+                    className="w-full px-4 py-2 bg-yellow-500 text-gray-900 rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out"
+                    onClick={() => {
+                      document.getElementById("generatePayModal").showModal();
+                      setIsMobileMenuOpen(false);
+                    }}
+                  >
+                    Generar Cobro
+                  </button>
+                </li>
+                <li>
+                  <button
+                    className="w-full px-4 py-2 bg-yellow-500 text-gray-900 rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out"
+                    onClick={() => {
+                      navigate("/presupuestos");
+                      setIsMobileMenuOpen(false);
+                    }}
+                  >
+                    Presupuesto
+                  </button>
+                </li>
+                <li>
+                  <button
+                    className="w-full px-4 py-2 bg-yellow-500 text-gray-900 rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out"
+                    onClick={() => {
+                      openModalGastos();
+                      setIsMobileMenuOpen(false);
+                    }}
+                  >
+                    Gastos Compartidos
+                  </button>
+                </li>
+              </ul>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Modal de Categorias */}
       <ModalVerCategorias
         isModalCategoriaOpen={isModalCategoriaOpen}
         closeModalCategoria={closeModalCategoria}
@@ -142,7 +212,7 @@ function Header({
         closeModalGastos={closeModalGastos}
         payCategories={payCategories}
       />
-    </header>
+    </nav>
   );
 }
 

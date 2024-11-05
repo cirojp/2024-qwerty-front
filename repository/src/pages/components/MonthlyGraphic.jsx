@@ -25,15 +25,12 @@ function MonthlyGraphic({
 }) {
   library.add(fas);
 
-  // Estado para controlar si está cargando
-
   // Estado para los datos
   const [data, setData] = useState([]);
   const [dataPay, setDataPay] = useState([]);
   const [dataLine, setDataLine] = useState([]);
 
   useEffect(() => {
-    // Procesar los datos
     const gastos =
       filtroCategoria !== "Ingreso de Dinero"
         ? transacciones.filter(
@@ -131,36 +128,36 @@ function MonthlyGraphic({
   };
 
   return (
-    <div className="flex flex-col justify-center items-center py-4 bg-gray-950 h-full w-full">
+    <div className="flex flex-col justify-center items-center py-4 bg-gray-950 w-full">
       {loading ? (
-        <span className="loading loading-lg loading-spinner text-warning"></span> // Muestra el mensaje mientras carga
+        <span className="loading loading-lg loading-spinner text-warning"></span>
       ) : (
-        <div className="flex flex-col md:flex-row justify-center items-center">
-          <div className="flex justify-center items-center md:w-1/2">
-            <PieChart width={400} height={400}>
-              {" "}
-              {/* Aumentar tamaño del gráfico */}
-              <Pie
-                data={type === "categorias" ? data : dataPay}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                label={renderCustomizedLabel}
-                outerRadius={150}
-                fill="#8884d8"
-                dataKey="value"
-              >
-                {(type === "categorias" ? data : dataPay).map(
-                  (entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={COLORS[index % COLORS.length]}
-                    />
-                  )
-                )}
-              </Pie>
-            </PieChart>
-            <div className="legend flex flex-col">
+        <div className="flex flex-col md:flex-row justify-center items-center w-full">
+          <div className="w-full md:w-1/2 flex justify-center items-center">
+            <ResponsiveContainer width="100%" aspect={1}>
+              <PieChart>
+                <Pie
+                  data={type === "categorias" ? data : dataPay}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={renderCustomizedLabel}
+                  outerRadius="80%"
+                  fill="#8884d8"
+                  dataKey="value"
+                >
+                  {(type === "categorias" ? data : dataPay).map(
+                    (entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    )
+                  )}
+                </Pie>
+              </PieChart>
+            </ResponsiveContainer>
+            <div className="legend flex flex-col mt-4">
               {type === "categorias" &&
                 data.map((entry, index) => {
                   const iconPath = getCategoryIcon(entry.name);
@@ -181,28 +178,26 @@ function MonthlyGraphic({
                   );
                 })}
               {type === "tipoGasto" &&
-                dataPay.map((entry, index) => {
-                  return (
+                dataPay.map((entry, index) => (
+                  <div
+                    key={`legend-item-${index}`}
+                    className="flex items-center mb-2 text-white"
+                  >
                     <div
-                      key={`legend-item-${index}`}
-                      className="flex items-center mb-2 text-white"
-                    >
-                      <div
-                        style={{
-                          width: "12px",
-                          height: "12px",
-                          backgroundColor: COLORS[index % COLORS.length],
-                          marginRight: "8px",
-                        }}
-                      ></div>
-                      <span>{entry.name}</span>
-                    </div>
-                  );
-                })}
+                      style={{
+                        width: "12px",
+                        height: "12px",
+                        backgroundColor: COLORS[index % COLORS.length],
+                        marginRight: "8px",
+                      }}
+                    ></div>
+                    <span>{entry.name}</span>
+                  </div>
+                ))}
             </div>
           </div>
-          <div className="flex justify-center items-center md:w-1/2">
-            <ResponsiveContainer width={300} height={300}>
+          <div className="w-full md:w-1/2 flex justify-center items-center mt-4 md:mt-0">
+            <ResponsiveContainer width="100%" aspect={1.5}>
               <BarChart data={dataLine}>
                 <XAxis dataKey={filtroMes ? "day" : "month"} stroke="#ffffff" />
                 <YAxis stroke="#ffffff" />

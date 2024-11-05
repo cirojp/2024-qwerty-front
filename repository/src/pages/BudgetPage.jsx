@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import BudgetCard from "./components/BudgetCard";
 import ModalCreateBudget from "./components/ModalCreateBudget";
+import { useNavigate } from "react-router-dom";
 
 function BudgetPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [presupuestos, setPresupuestos] = useState([]);
   const [transacciones, setTransacciones] = useState([]);
+  const navigate = useNavigate();
   const [filtro, setFiltro] = useState("Todos");
 
   const onEdit = () => {
@@ -47,6 +49,7 @@ function BudgetPage() {
     } catch (err) {
       console.error("Ocurrió un error. Intenta nuevamente: ", err);
     } finally {
+      setPresupuestos([]);
       getPersonalPresupuestos();
     }
   };
@@ -107,41 +110,56 @@ function BudgetPage() {
   };
 
   return (
-    <div className="container h-full mx-auto p-4 bg-black">
-      <div className="text-2xl font-semibold text-center mb-4 text-white">
-        Presupuestos Mensuales
-      </div>
-      <div className="flex justify-between mb-6 mt-2">
-        <div className="flex justify-left">
-          <button className="btn bg-yellow-400 text-black" onClick={openModal}>
-            Agregar Presupuesto
-          </button>
+    <div className="min-h-screen bg-black text-white">
+      <div className="container h-full mx-auto p-4">
+        <div className="text-2xl font-semibold text-center mb-4">
+          Presupuestos Mensuales
         </div>
-        <div className="flex justify-end">
-          <select
-            className="select select-bordered w-full max-w-xs bg-yellow-400 text-black"
-            value={filtro}
-            onChange={handleFilterChange}
+        <div className="flex justify-between mb-6 mt-2">
+          <div className="flex justify-left">
+            <button
+              className="btn bg-yellow-400 text-black"
+              onClick={openModal}
+            >
+              Agregar Presupuesto
+            </button>
+          </div>
+          <div className="flex justify-end">
+            <select
+              className="select select-bordered w-full max-w-xs bg-yellow-400 text-black"
+              value={filtro}
+              onChange={handleFilterChange}
+            >
+              <option value="Todos">Mostrar Todos</option>
+              <option value="Pasados">Pasados</option>
+              <option value="Actuales">Actuales</option>
+              <option value="Futuros">Futuros</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-6">
+          {filtrarPresupuestos().map((budget) => (
+            <BudgetCard
+              key={budget.id}
+              budget={budget}
+              transacciones={transacciones}
+              onDelete={handleDelete}
+              onEdit={onEdit}
+            />
+          ))}
+        </div>
+
+        <div className="mt-8 text-center">
+          <button
+            className="btn bg-yellow-400 text-black"
+            onClick={() => navigate("/")}
           >
-            <option value="Todos">Mostrar Todos</option>
-            <option value="Pasados">Pasados</option>
-            <option value="Actuales">Actuales</option>
-            <option value="Futuros">Futuros</option>
-          </select>
+            Volver a Home
+          </button>
         </div>
       </div>
 
-      <div className="flex flex-col gap-6">
-        {filtrarPresupuestos().map((budget) => (
-          <BudgetCard
-            key={budget.id}
-            budget={budget}
-            transacciones={transacciones}
-            onDelete={handleDelete}
-            onEdit={onEdit}
-          />
-        ))}
-      </div>
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <ModalCreateBudget closeModal={() => closeModal()} />

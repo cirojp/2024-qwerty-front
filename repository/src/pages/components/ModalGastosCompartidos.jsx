@@ -13,7 +13,8 @@ function ModalGastosCompartidos({
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [grupos, setGrupos] = useState([]); // Estado para grupos
-  const [isModalDetallesGrupoOpen, setIsModalDetallesGrupoOpen] = useState(false);
+  const [isModalDetallesGrupoOpen, setIsModalDetallesGrupoOpen] =
+    useState(false);
   const closeModalDetallesGrupo = () => setIsModalDetallesGrupoOpen(false);
   const [grupoSeleccionado, setGrupoSeleccionado] = useState(null); // Estado para el nombre del grupo seleccionado
   const [grupoAEliminar, setGrupoAEliminar] = useState(null);
@@ -83,7 +84,6 @@ function ModalGastosCompartidos({
       setGrupoAAgregar(null);
     }
   }, [isModalMiembrosOpen]);
-  
 
   const closeWindow = () => {
     setModalError("");
@@ -129,7 +129,7 @@ function ModalGastosCompartidos({
   const closeModal = () => {
     setGrupoAAgregar(null);
     setIsModalOpen(false);
-  };  
+  };
 
   const customStyles = {
     overlay: {
@@ -280,7 +280,7 @@ function ModalGastosCompartidos({
         isOpen={isModalMiembrosOpen}
         onRequestClose={() => {
           setIsModalMiembrosOpen(false);
-          setGrupoAAgregar(null); 
+          setGrupoAAgregar(null);
         }}
         contentLabel="Lista de Miembros"
         style={customStyles}
@@ -315,7 +315,7 @@ function ModalGastosCompartidos({
           Cerrar
         </button>
       </Modal>
-</Modal>
+    </Modal>
   );
 }
 

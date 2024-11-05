@@ -47,11 +47,11 @@ function ModalGastosCompartidos({
       setIsLoading(false);
     }
   };
-  const fetchMiembros = async (grupoId) => {
+  const fetchMiembros = async (grupo) => {
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(
-        `https://two024-qwerty-back-2.onrender.com/api/grupos/${grupoId}/usuarios`,
+        `https://two024-qwerty-back-2.onrender.com/api/grupos/${grupo.id}/usuarios`,
         {
           method: "GET",
           headers: {
@@ -67,7 +67,7 @@ function ModalGastosCompartidos({
       const data = await response.json();
       setMiembros(data);
       setIsModalMiembrosOpen(true);
-      setGrupoAAgregar(grupoId);
+      setGrupoAAgregar(grupo);
     } catch (error) {
       setModalError("Ocurrió un error al obtener los miembros del grupo.");
     }
@@ -78,6 +78,12 @@ function ModalGastosCompartidos({
       fetchGrupos(); // Fetch groups when modal opens
     }
   }, [isModalGastosOpen, isModalOpen]);
+  useEffect(() => {
+    if (!isModalMiembrosOpen) {
+      setGrupoAAgregar(null);
+    }
+  }, [isModalMiembrosOpen]);
+  
 
   const closeWindow = () => {
     setModalError("");
@@ -188,7 +194,7 @@ function ModalGastosCompartidos({
                         {grupo.nombre}
                       </span>
                       <button
-                        onClick={() => fetchMiembros(grupo.id)}
+                        onClick={() => fetchMiembros(grupo)}
                         className="text-blue-500 hover:text-blue-700 mr-2"
                       >
                         Miembros
@@ -228,7 +234,7 @@ function ModalGastosCompartidos({
       <ModalCrearGrupo
         isOpen={isModalOpen}
         onRequestClose={() => closeModal()}
-        grupoAAgregar={grupoAAgregar}
+        grupoAAgregar={grupoAAgregar ? grupoAAgregar.id : null}
       />
 
       {grupoSeleccionado && (
@@ -238,6 +244,8 @@ function ModalGastosCompartidos({
           grupo={grupoSeleccionado}
           setGrupoSeleccionado={setGrupoSeleccionado}
           payCategories={payCategories}
+          setGrupos={setGrupos}
+          grupos={grupos}
         />
       )}
 
@@ -270,7 +278,10 @@ function ModalGastosCompartidos({
       {/* Modal para mostrar miembros */}
       <Modal
         isOpen={isModalMiembrosOpen}
-        onRequestClose={() => setIsModalMiembrosOpen(false)}
+        onRequestClose={() => {
+          setIsModalMiembrosOpen(false);
+          setGrupoAAgregar(null); 
+        }}
         contentLabel="Lista de Miembros"
         style={customStyles}
       >
@@ -286,14 +297,17 @@ function ModalGastosCompartidos({
             <li>No hay miembros en este grupo.</li>
           )}
         </ul>
-        <button
-          onClick={() => {
-            setIsModalOpen(true); // Abre el modal de crear grupo
-          }}
-          className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
-        >
-          Invitar Usuarios
-        </button>
+        {grupoAAgregar && grupoAAgregar.estado && (
+          <button
+            onClick={() => {
+              setIsModalOpen(true); // Abre el modal de crear grupo
+            }}
+            className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
+          >
+            Invitar Usuarios
+          </button>
+        )}
+
         <button
           onClick={() => setIsModalMiembrosOpen(false)}
           className="mt-4 bg-gray-300 px-4 py-2 rounded hover:bg-gray-400"

@@ -17,6 +17,8 @@ function ModalVerDetallesGrupo({
   grupo,
   setGrupoSeleccionado,
   payCategories,
+  setGrupos,
+  grupos
 }) {
   const [transacciones, setTransacciones] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -238,13 +240,17 @@ function ModalVerDetallesGrupo({
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
       }
-      console.log("Grupo cerrado exitosamente");
       calcularDeudas();
       setGrupoSeleccionado({
         nombre: grupo.nombre,
         id: grupo.id,
         estado: false,
       });
+      setGrupos((grupos) =>
+        grupos.map((grupo) =>
+          grupo.id === grupo.id ? { ...grupo, estado: false } : grupo
+        )
+      );
     } catch (error) {
       console.error("Error al cerrar el grupo:", error);
     }

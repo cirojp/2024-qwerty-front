@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import ConfirmDeleteMedioDePago from "./components/ConfirmDeleteMedioDePago";
 import ModalMedioDePago from "./components/ModalMedioDePago";
 import MonthlyGraphic from "./components/MonthlyGraphic";
+import LoadingSpinner from "./components/LoadingSpinner";
 
 function ProfilePage() {
   library.add(fas);
@@ -40,6 +41,7 @@ function ProfilePage() {
     setLoadingGraphic(false);
   }, []);
   const getTransacciones = async () => {
+    setLoadingGraphic(true);
     const token = localStorage.getItem("token");
     if (await checkIfValidToken(token)) {
       let url = `https://two024-qwerty-back-2.onrender.com/api/transacciones/user/filter`;
@@ -60,10 +62,8 @@ function ProfilePage() {
       } catch (err) {
         console.error("Error fetching transactions:", err);
       } finally {
-        setIsLoadingFilter(false);
+        setLoadingGraphic(false);
       }
-      fetchPersonalCategorias();
-      showTransactionsPendientes();
     } else {
       console.log("deberia redirec");
       navigate("/");
@@ -237,8 +237,11 @@ function ProfilePage() {
           <img src={logo} alt="logo" className="w-full h-full object-cover" />
         </div>
       </div>
-
+      
       <div className="flex flex-col flex-grow px-4">
+      {loadingGraphic ? ( // Muestra el spinner si está cargando
+          <LoadingSpinner />
+        ) : (
         <div className="bg-gray-800 p-4 rounded-lg shadow-lg text-white">
           <div className="font-bold text-yellow-500 text-xl text-center mb-4">
             Mis Medios De Pago
@@ -301,11 +304,14 @@ function ProfilePage() {
             Agregar Medio de Pago
           </button>
         </div>
+        )}
         <div className="flex items-center">
           <h2 className="text-2xl py-2 font-bold text-gray-100">
             Monto por Medio de Pago
           </h2>
+          
         </div>
+        
         <MonthlyGraphic
           type="tipoGasto"
           transacciones={transacciones}

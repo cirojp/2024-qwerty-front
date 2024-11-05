@@ -13,6 +13,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
+import LoadingSpinner from "./LoadingSpinner";
 
 function MonthlyGraphic({
   transacciones = [],
@@ -31,6 +32,7 @@ function MonthlyGraphic({
   const [data, setData] = useState([]);
   const [dataPay, setDataPay] = useState([]);
   const [dataLine, setDataLine] = useState([]);
+  const [loadingg, setLoadingg] = useState(true);
 
   useEffect(() => {
     // Procesar los datos
@@ -114,6 +116,7 @@ function MonthlyGraphic({
       }))
     );
     setDataLine(newDataLine);
+    setLoadingg(false);
   }, [payCategories, transacciones, filtroMes, filtroCategoria]);
 
   const COLORS = [
@@ -132,8 +135,8 @@ function MonthlyGraphic({
 
   return (
     <div className="flex flex-col justify-center items-center py-4 bg-gray-950 h-full w-full">
-      {loading ? (
-        <span className="loading loading-lg loading-spinner text-warning"></span> // Muestra el mensaje mientras carga
+      {loadingg ? (
+        <LoadingSpinner />
       ) : (
         <div className="flex flex-col md:flex-row justify-center items-center">
           <div className="flex justify-center items-center md:w-1/2">

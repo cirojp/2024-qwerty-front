@@ -269,18 +269,18 @@ function ModalGastosCompartidos({
         <p className="text-gray-300 mb-6 text-center">
           Se eliminarán toda la información del grupo para todos los miembros.
         </p>
-          <button
-            onClick={confirmDeleteGrupo}
-            className="bg-red-500 text-white font-bold py-3 px-4 rounded hover:bg-red-600 transition-colors duration-300"
-          >
-            Eliminar grupo
-          </button>
-          <button
-            onClick={() => setIsModalEliminarOpen(false)}
-            className="bg-gray-300 text-gray-800 font-bold py-3 px-4 rounded hover:bg-gray-400 transition-colors duration-300"
-          >
-            Cancelar
-          </button>
+        <button
+          onClick={confirmDeleteGrupo}
+          className="bg-red-500 text-white font-bold py-3 px-4 rounded hover:bg-red-600 transition-colors duration-300"
+        >
+          Eliminar grupo
+        </button>
+        <button
+          onClick={() => setIsModalEliminarOpen(false)}
+          className="bg-gray-300 text-gray-800 font-bold py-3 px-4 rounded hover:bg-gray-400 transition-colors duration-300"
+        >
+          Cancelar
+        </button>
       </Modal>
 
       {/* Modal para mostrar miembros */}
@@ -294,39 +294,43 @@ function ModalGastosCompartidos({
         style={customStyles}
         className="bg-gray-950 shadow-lg p-4 rounded-lg"
       >
-        <h2 className="text-2xl font-bold text-gray-100 text-center mb-4">Miembros del grupo</h2>
+        <h2 className="text-2xl font-bold text-gray-100 text-center mb-4">
+          Miembros del grupo
+        </h2>
         <div className="flex flex-col flex-grow px-4">
           <div className="bg-gray-800 p-4 rounded-lg shadow-lg text-white">
             <h3 className="text-lg font-semibold mb-2">Miembros:</h3>
-              <ul>
-                {miembros.length > 0 ? (
-                  miembros.map((miembro) => (
-                    <li key={miembro.id} className="py-1">
-                      {miembro.email}
-                    </li>
-                  ))
-                ) : (
-                  <li className="text-gray-400">No hay miembros en este grupo.</li>
-                )}
-              </ul>
-              <div className="flex justify-end gap-4 mt-4">
-                {grupoAAgregar && grupoAAgregar.estado && (
-                  <button
-                    onClick={() => setIsModalOpen(true)}
-                    className="flex-1 bg-blue-500 text-white font-bold py-3 px-4 rounded hover:bg-blue-600 transition-colors duration-300 mt-4"
-                  >
-                    Invitar Usuarios
-                  </button>
-                )}
+            <ul>
+              {miembros.length > 0 ? (
+                miembros.map((miembro) => (
+                  <li key={miembro.id} className="py-1">
+                    {miembro.email}
+                  </li>
+                ))
+              ) : (
+                <li className="text-gray-400">
+                  No hay miembros en este grupo.
+                </li>
+              )}
+            </ul>
+            <div className="flex justify-end gap-4 mt-4">
+              {grupoAAgregar && grupoAAgregar.estado && (
                 <button
-                  onClick={() => setIsModalMiembrosOpen(false)}
-                  className="flex-1 bg-red-500 text-white font-bold py-3 px-4 rounded hover:bg-red-600 transition-colors duration-300 mt-4"
+                  onClick={() => setIsModalOpen(true)}
+                  className="flex-1 bg-blue-500 text-white font-bold py-3 px-4 rounded hover:bg-blue-600 transition-colors duration-300 mt-4"
                 >
-                  Cerrar
+                  Invitar Usuarios
                 </button>
-              </div>
+              )}
+              <button
+                onClick={() => setIsModalMiembrosOpen(false)}
+                className="flex-1 bg-red-500 text-white font-bold py-3 px-4 rounded hover:bg-red-600 transition-colors duration-300 mt-4"
+              >
+                Cerrar
+              </button>
             </div>
           </div>
+        </div>
       </Modal>
     </Modal>
   );

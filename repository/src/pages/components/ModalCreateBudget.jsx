@@ -37,7 +37,7 @@ function ModalCreateBudget({ closeModal = () => {}, initialBudget = null }) {
     },
   ]);
 
-  const [budgetValues, setBudgetValues] = useState({});
+  const [budgetValues, setBudgetValues] = useState({}); // Inicialmente vacío
   const [totalBudget, setTotalBudget] = useState("");
   const [errors, setErrors] = useState({});
   const [budgetName, setBudgetName] = useState("");
@@ -94,6 +94,15 @@ function ModalCreateBudget({ closeModal = () => {}, initialBudget = null }) {
     }));
   };
 
+  const addCategory = (category) => {
+    if (!budgetValues[category.value] && category) {
+      setBudgetValues((prevValues) => ({
+        ...prevValues,
+        [category.value]: 0, // Inicializa el valor en 0
+      }));
+    }
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -127,19 +136,24 @@ function ModalCreateBudget({ closeModal = () => {}, initialBudget = null }) {
       return;
     }
 
+    // Filtrar categorías con valores vacíos o 0 antes de enviar
+    const filteredBudgetValues = Object.fromEntries(
+      Object.entries(budgetValues).filter(([_, value]) => value > 0)
+    );
+
     const formData = initialBudget
       ? {
           ...initialBudget,
           nameBudget: budgetName,
           totalBudget: totalBudget,
           budgetMonth: budgetDate,
-          categoryBudgets: budgetValues,
+          categoryBudgets: filteredBudgetValues, // Usar el objeto filtrado
         }
       : {
           nameBudget: budgetName,
           totalBudget: totalBudget,
           budgetMonth: budgetDate,
-          categoryBudgets: budgetValues,
+          categoryBudgets: filteredBudgetValues, // Usar el objeto filtrado
         };
 
     createOrUpdateBudget(formData);
@@ -241,28 +255,51 @@ function ModalCreateBudget({ closeModal = () => {}, initialBudget = null }) {
           )}
         </div>
 
-        {payCategories.map((category, index) => (
+        <div className="mb-4">
+          <label className="block text-sm font-semibold mb-1 text-white">
+            Agregar Categoría
+          </label>
+          <select
+            className="input input-bordered w-full"
+            onChange={(e) => {
+              const selectedCategory = payCategories.find(
+                (cat) => cat.value === e.target.value
+              );
+              if (selectedCategory) addCategory(selectedCategory);
+              e.target.value = ""; // Resetear el valor del select
+            }}
+          >
+            <option value="">Seleccionar categoría</option>
+            {payCategories.map((category) => (
+              <option key={category.value} value={category.value}>
+                {category.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {Object.keys(budgetValues).map((category, index) => (
           <div className="mb-4" key={index}>
             <label className="block text-sm font-semibold mb-1 text-white">
               <FontAwesomeIcon
                 className="mr-2"
                 color="#FFFFFF"
-                icon={category.iconPath}
+                icon={
+                  payCategories.find((cat) => cat.value === category)?.iconPath
+                }
               />
-              {category.label}
+              {category}
             </label>
             <input
               type="number"
               id={`amount-${index}`}
-              placeholder={`Monto para ${category.label}`}
+              placeholder={`Monto para ${category}`}
               className="input input-bordered w-full"
-              value={budgetValues[category.value] || ""}
-              onChange={(e) =>
-                handleInputChange(e.target.value, category.value)
-              }
+              value={budgetValues[category] || ""}
+              onChange={(e) => handleInputChange(e.target.value, category)}
             />
-            {errors[category.value] && (
-              <p className="text-red-500 text-sm">{errors[category.value]}</p>
+            {errors[category] && (
+              <p className="text-red-500 text-sm">{errors[category]}</p>
             )}
           </div>
         ))}

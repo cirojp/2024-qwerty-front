@@ -237,81 +237,80 @@ function ProfilePage() {
           <img src={logo} alt="logo" className="w-full h-full object-cover" />
         </div>
       </div>
-      
+
       <div className="flex flex-col flex-grow px-4">
-      {loadingGraphic ? ( // Muestra el spinner si está cargando
+        {loadingGraphic ? ( // Muestra el spinner si está cargando
           <LoadingSpinner />
         ) : (
-        <div className="bg-gray-800 p-4 rounded-lg shadow-lg text-white">
-          <div className="font-bold text-yellow-500 text-xl text-center mb-4">
-            Mis Medios De Pago
-          </div>
-          <ul>
-            {defaultMediosDePago.map((medioDePago) => (
-              <li
-                key={medioDePago.value}
-                className="bg-gray-700 p-3 rounded-md shadow mb-3"
-              >
-                <div className="flex items-center">
-                  <div className={medioDePago.textColor}>
-                    {medioDePago.label}
+          <div className="bg-gray-800 p-4 rounded-lg shadow-lg text-white">
+            <div className="font-bold text-yellow-500 text-xl text-center mb-4">
+              Mis Medios De Pago
+            </div>
+            <ul>
+              {defaultMediosDePago.map((medioDePago) => (
+                <li
+                  key={medioDePago.value}
+                  className="bg-gray-700 p-3 rounded-md shadow mb-3"
+                >
+                  <div className="flex items-center">
+                    <div className={medioDePago.textColor}>
+                      {medioDePago.label}
+                    </div>
                   </div>
-                </div>
-              </li>
-            ))}
-          </ul>
-          <ul>
-            {payOptions.slice(3).map((medioDePago) => (
-              <li
-                key={medioDePago.value}
-                className="bg-gray-700 p-3 rounded-md shadow mb-3 flex justify-between"
-              >
-                <div className="flex items-center">
-                  <div className={medioDePago.textColor}>
-                    {medioDePago.label}
+                </li>
+              ))}
+            </ul>
+            <ul>
+              {payOptions.slice(3).map((medioDePago) => (
+                <li
+                  key={medioDePago.value}
+                  className="bg-gray-700 p-3 rounded-md shadow mb-3 flex justify-between"
+                >
+                  <div className="flex items-center">
+                    <div className={medioDePago.textColor}>
+                      {medioDePago.label}
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-center">
-                  <button
-                    className="text-blue-500 hover:text-blue-700 mr-2"
-                    onClick={() => {
-                      setEditPayOption(medioDePago);
-                      setIsEditMode(true);
-                      setIsModalOpen(true);
-                    }}
-                  >
-                    Editar
-                  </button>
-                  <button
-                    className="text-red-500 hover:text-red-700"
-                    onClick={() => confirmDelete(medioDePago.value)}
-                  >
-                    X
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
+                  <div className="flex items-center">
+                    <button
+                      className="text-blue-500 hover:text-blue-700 mr-2"
+                      onClick={() => {
+                        setEditPayOption(medioDePago);
+                        setIsEditMode(true);
+                        setIsModalOpen(true);
+                      }}
+                    >
+                      Editar
+                    </button>
+                    <button
+                      className="text-red-500 hover:text-red-700"
+                      onClick={() => confirmDelete(medioDePago.value)}
+                    >
+                      X
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
 
-          <button
-            className="mt-4 px-4 py-2 bg-yellow-500 text-black rounded-md hover:bg-yellow-700"
-            onClick={() => {
-              setEditPayOption({});
-              setIsEditMode(false);
-              setIsModalOpen(true);
-            }}
-          >
-            Agregar Medio de Pago
-          </button>
-        </div>
+            <button
+              className="mt-4 px-4 py-2 bg-yellow-500 text-black rounded-md hover:bg-yellow-700"
+              onClick={() => {
+                setEditPayOption({});
+                setIsEditMode(false);
+                setIsModalOpen(true);
+              }}
+            >
+              Agregar Medio de Pago
+            </button>
+          </div>
         )}
         <div className="flex items-center">
           <h2 className="text-2xl py-2 font-bold text-gray-100">
             Monto por Medio de Pago
           </h2>
-          
         </div>
-        
+
         <MonthlyGraphic
           type="tipoGasto"
           transacciones={transacciones}

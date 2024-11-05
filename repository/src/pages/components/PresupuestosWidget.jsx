@@ -39,9 +39,13 @@ function PresupuestosWidget({ transacciones = [] }) {
   };
   return (
     <div className="m-4">
-      <h2 className="text-xl md:text-2xl py-2 font-bold text-gray-100 hover:underline">
-        <a onClick={() => navigate("/presupuestos")}>Presupuestos Actuales</a>
-      </h2>
+      <button
+        className="btn bg-black text-xl md:text-2xl py-2 font-bold text-gray-100 hover:underline"
+        onClick={() => navigate("/presupuestos")}
+      >
+        Presupuestos Actuales
+      </button>
+
       {presupuestos.map((presupuesto) => (
         <BudgetCard
           budget={presupuesto}

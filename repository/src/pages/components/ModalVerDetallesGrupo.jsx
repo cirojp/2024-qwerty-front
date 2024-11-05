@@ -469,12 +469,12 @@ function ModalVerDetallesGrupo({
           )}
           <div className="flex justify-end gap-4 mt-4">
             {grupo.estado && (
-                <button
-                  onClick={cerrarGrupo}
-                  className="flex-1 bg-blue-500 text-white font-bold py-3 px-4 rounded hover:bg-blue-600 transition-colors duration-300 mt-4"
-                >
-                  Finalizar Evento
-                </button>
+              <button
+                onClick={cerrarGrupo}
+                className="flex-1 bg-blue-500 text-white font-bold py-3 px-4 rounded hover:bg-blue-600 transition-colors duration-300 mt-4"
+              >
+                Finalizar Evento
+              </button>
             )}
             <button
               onClick={closeWindow}
@@ -489,13 +489,18 @@ function ModalVerDetallesGrupo({
               {deudas.length > 0 ? (
                 <ul>
                   {deudas.map((deuda, index) => (
-                    <li key={index} className="py-1 text-lg font-medium text-center">
+                    <li
+                      key={index}
+                      className="py-1 text-lg font-medium text-center"
+                    >
                       {deuda}
                     </li>
                   ))}
                 </ul>
               ) : (
-                <p className="text-gray-400">No hay deudas pendientes en este grupo</p>
+                <p className="text-gray-400">
+                  No hay deudas pendientes en este grupo
+                </p>
               )}
             </div>
           )}

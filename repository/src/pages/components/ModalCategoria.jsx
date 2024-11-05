@@ -49,11 +49,13 @@ const ModalCategoria = ({
   useEffect(() => {
     if (edit) {
       setCategoriaNombre(editCat.value || "");
+      console.log("111");
       setIconoSeleccionado(editCat.iconPath || "");
-    } else {
+    } /*else {
       setCategoriaNombre("");
+      console.log("222");
       setIconoSeleccionado("");
-    }
+    }*/
   }, [editCat, edit, isOpen]);
 
   const handleSubmit = async () => {
@@ -88,6 +90,7 @@ const ModalCategoria = ({
 
       // Si todo está bien, limpiamos el estado
       setCategoriaNombre("");
+      console.log("333");
       setIconoSeleccionado("");
       setError("");
       onRequestClose();
@@ -101,6 +104,7 @@ const ModalCategoria = ({
   const handleClose = () => {
     setError("");
     setCategoriaNombre("");
+    console.log("444");
     setIconoSeleccionado("");
     onRequestClose();
   };

@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 
-const ModalCrearGrupo = ({ isOpen = false, onRequestClose = () => {}, grupoAAgregar = null }) => {
+const ModalCrearGrupo = ({
+  isOpen = false,
+  onRequestClose = () => {},
+  grupoAAgregar = null,
+}) => {
   const customStyles = {
     overlay: {
       position: "fixed",
@@ -35,7 +39,9 @@ const ModalCrearGrupo = ({ isOpen = false, onRequestClose = () => {}, grupoAAgre
   const [correoUsuario, setCorreoUsuario] = useState("");
   const [usuarios, setUsuarios] = useState([]); // Lista de correos
 
-  useEffect(() => {setCorreoUsuario("")}, [isOpen]);
+  useEffect(() => {
+    setCorreoUsuario("");
+  }, [isOpen]);
 
   const handleAddUsuario = async () => {
     if (!correoUsuario) {
@@ -48,8 +54,7 @@ const ModalCrearGrupo = ({ isOpen = false, onRequestClose = () => {}, grupoAAgre
       return;
     }
     const token = localStorage.getItem("token");
-    if(grupoAAgregar!=null){
-
+    if (grupoAAgregar != null) {
       try {
         // Realiza la llamada al backend para verificar el usuario
         const response = await fetch(
@@ -57,8 +62,8 @@ const ModalCrearGrupo = ({ isOpen = false, onRequestClose = () => {}, grupoAAgre
           {
             method: "GET",
             headers: {
-              "Authorization": `Bearer ${token}`,
-            }
+              Authorization: `Bearer ${token}`,
+            },
           }
         );
 
@@ -77,7 +82,7 @@ const ModalCrearGrupo = ({ isOpen = false, onRequestClose = () => {}, grupoAAgre
         setError("Error al verificar el usuario.");
       }
     } else {
-      if(await userExists(correoUsuario)){
+      if (await userExists(correoUsuario)) {
         setUsuarios([...usuarios, correoUsuario]);
         setCorreoUsuario("");
         setError(""); // Limpiar el mensaje de error si la adición fue exitosa
@@ -103,7 +108,7 @@ const ModalCrearGrupo = ({ isOpen = false, onRequestClose = () => {}, grupoAAgre
   const handleSubmit = async () => {
     setIsLoading(true);
     const token = localStorage.getItem("token");
-    if(grupoAAgregar == null){
+    if (grupoAAgregar == null) {
       if (!grupoNombre || usuarios.length === 0) {
         setError("Debes ingresar un nombre de grupo y al menos un usuario.");
         setIsLoading(false);
@@ -196,7 +201,7 @@ const ModalCrearGrupo = ({ isOpen = false, onRequestClose = () => {}, grupoAAgre
       <h2 className="text-xl sm:text-lg font-bold mb-4">
         {grupoAAgregar ? "Invitar Usuarios" : "Crear Nuevo Grupo"}
       </h2>
-      
+
       {/* Mostrar el campo para el nombre del grupo solo si no se está invitando a usuarios */}
       {!grupoAAgregar && (
         <input
@@ -248,8 +253,10 @@ const ModalCrearGrupo = ({ isOpen = false, onRequestClose = () => {}, grupoAAgre
             <span className="loading loading-spinner loading-sm"></span>
             Cargando...
           </div>
+        ) : grupoAAgregar ? (
+          "Invitar Usuarios"
         ) : (
-          grupoAAgregar ? "Invitar Usuarios" : "Crear Grupo"
+          "Crear Grupo"
         )}
       </button>
       <button

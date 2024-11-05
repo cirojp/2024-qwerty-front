@@ -30,6 +30,7 @@ function BudgetCard({
   useEffect(() => {
     const [budgetYear, budgetMonth] = budget.budgetMonth.split("-").map(Number);
     checkIfFutureBudget(budgetYear, budgetMonth);
+
     const totalCategoryBudget = Object.values(budget.categoryBudgets).reduce(
       (sum, value) => sum + value,
       0
@@ -43,8 +44,8 @@ function BudgetCard({
         transactionYear === budgetYear && transactionMonth === budgetMonth;
 
       let isCategoryValid = 1;
-      if (totalCategoryBudget == budget.totalBudget) {
-        const isCategoryValid = Object.keys(budget.categoryBudgets).includes(
+      if (totalCategoryBudget === budget.totalBudget) {
+        isCategoryValid = Object.keys(budget.categoryBudgets).includes(
           transaccion.categoria
         );
       }
@@ -53,6 +54,7 @@ function BudgetCard({
     });
 
     setBudgetTransactions(filteredTransactions);
+
     const total = filteredTransactions.reduce(
       (acc, transaccion) => acc + transaccion.valor,
       0
@@ -106,7 +108,7 @@ function BudgetCard({
 
   if (widget) {
     return (
-      <div className="card shadow-lg rounded-lg bg-[#1E2126] p-4 text-white">
+      <div className="card shadow-lg rounded-lg bg-[#1E2126] p-4 text-white mb-4">
         <div className="flex items-center gap-4 mb-2">
           <img src={icon} alt={budget.nameBudget} className="w-10 h-10" />
           <div className="flex-1">

@@ -22,6 +22,8 @@ function Header({
   const closeModalGastos = () => setIsModalGastosOpen(false);
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
+
+
   return (
     <nav className="bg-black text-white px-2 py-2 md:px-8 shadow-md">
       <div className="container mx-auto flex justify-between items-center relative">
@@ -211,6 +213,7 @@ function Header({
         isModalGastosOpen={isModalGastosOpen}
         closeModalGastos={closeModalGastos}
         payCategories={payCategories}
+        getTransacciones={getTransacciones}
       />
     </nav>
   );

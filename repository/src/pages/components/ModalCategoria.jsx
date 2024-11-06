@@ -49,7 +49,6 @@ const ModalCategoria = ({
   useEffect(() => {
     if (edit) {
       setCategoriaNombre(editCat.value || "");
-      console.log("111");
       setIconoSeleccionado(editCat.iconPath || "");
     } /*else {
       setCategoriaNombre("");

@@ -7,6 +7,7 @@ function BudgetPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [presupuestos, setPresupuestos] = useState([]);
   const [transacciones, setTransacciones] = useState([]);
+  const [loading, setLoading] = useState(true); // Estado de carga añadido
   const navigate = useNavigate();
   const [filtro, setFiltro] = useState("Todos");
 
@@ -24,8 +25,14 @@ function BudgetPage() {
       },
     })
       .then((response) => response.json())
-      .then((data) => setTransacciones(data))
-      .catch((err) => console.log(err));
+      .then((data) => {
+        setTransacciones(data);
+        setLoading(false); // Marcar como cargado una vez que se han recibido las transacciones
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false); // Marcar como cargado incluso si hay un error
+      });
   }, []);
 
   const handleDelete = async (budget) => {
@@ -42,7 +49,7 @@ function BudgetPage() {
       );
 
       if (response.ok) {
-        setTransacciones(presupuestos.filter((t) => t.id !== budget.id));
+        setPresupuestos(presupuestos.filter((t) => t.id !== budget.id));
       } else {
         console.error("Error al eliminar el presupuesto");
       }
@@ -136,17 +143,22 @@ function BudgetPage() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-6">
-          {filtrarPresupuestos().map((budget) => (
-            <BudgetCard
-              key={budget.id}
-              budget={budget}
-              transacciones={transacciones}
-              onDelete={handleDelete}
-              onEdit={onEdit}
-            />
-          ))}
-        </div>
+        {/* Mostrar un mensaje de carga o renderizar los BudgetCard */}
+        {loading ? (
+          <div className="text-center">Cargando transacciones...</div>
+        ) : (
+          <div className="flex flex-col gap-6">
+            {filtrarPresupuestos().map((budget) => (
+              <BudgetCard
+                key={budget.id}
+                budget={budget}
+                transacciones={transacciones}
+                onDelete={handleDelete}
+                onEdit={onEdit}
+              />
+            ))}
+          </div>
+        )}
 
         <div className="fixed bottom-6 right-6">
           <button className="btn bg-yellow-400 text-black" onClick={openModal}>

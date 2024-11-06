@@ -211,6 +211,7 @@ function HomePage() {
   };
   const getTransacciones = async (filtrado = "Todas") => {
     const token = localStorage.getItem("token");
+    setTransaccionesCargadas(false);
     if (await checkIfValidToken(token)) {
       let url = `https://two024-qwerty-back-2.onrender.com/api/transacciones/user/filter`;
       if (filtrado !== "Todas" || filtroMes || filtroAno) {
@@ -344,6 +345,7 @@ function HomePage() {
   };
   const enviarRespuesta = async (resp, id_reserva) => {
     const token = localStorage.getItem("token");
+    setTransaccionesCargadas(false);
     const url = `https://two024-qwerty-back-2.onrender.com/api/transaccionesPendientes/${resp}?id_reserva=${id_reserva}`;
     const method = "POST";
     try {
@@ -361,10 +363,13 @@ function HomePage() {
       }
     } catch (err) {
       // habria que avisar que hubo un error en aceptar la transaccion o algo
+    } finally {
+      setTransaccionesCargadas(true);
     }
   };
   const aceptarTransaccion = async (transaccion, categoria, tipoGasto) => {
     const token = localStorage.getItem("token");
+    setTransaccionesCargadas(false);
     let url = "https://two024-qwerty-back-2.onrender.com/api/transacciones";
     if (transaccion.id_reserva == "Cobro") {
       url += "/crearPago/" + transaccion.sentByEmail;
@@ -390,6 +395,8 @@ function HomePage() {
         }
       } catch (err) {
         console.log(err);
+      } finally {
+        setTransaccionesCargadas(true);
       }
     } else if (transaccion.id_reserva == "Pago") {
       console.log("Transaccion Aprobada");
@@ -415,6 +422,8 @@ function HomePage() {
         }
       } catch (err) {
         console.log("Error en la solicitud de agregar usuario al grupo:", err);
+      } finally {
+        setTransaccionesCargadas(true);
       }
     } else {
       const method = "POST";
@@ -443,6 +452,8 @@ function HomePage() {
         }
       } catch (err) {
         // habria que avisar que hubo un error en aceptar la transaccion o algo
+      } finally {
+        setTransaccionesCargadas(true);
       }
     }
   };
@@ -451,6 +462,7 @@ function HomePage() {
     const token = localStorage.getItem("token");
     let bodyJson = "";
     let url = "";
+    setTransaccionesCargadas(false);
     if (selectedGroup == null) {
       bodyJson = JSON.stringify({ motivo, valor, fecha, categoria, tipoGasto });
       url = edit
@@ -505,11 +517,14 @@ function HomePage() {
     } catch (err) {
       console.log("la respuesta fue error");
       console.log(err);
+    } finally {
+      setTransaccionesCargadas(true);
     }
   };
 
   const deleteRow = async (id) => {
     const token = localStorage.getItem("token");
+    setTransaccionesCargadas(false);
     try {
       const response = await fetch(
         `https://two024-qwerty-back-2.onrender.com/api/transacciones/${id}`,
@@ -528,6 +543,8 @@ function HomePage() {
       }
     } catch (err) {
       setError("Ocurrió un error. Intenta nuevamente.");
+    } finally {
+      setTransaccionesCargadas(true);
     }
   };
   const eliminarTransaccionPendiente = async (id) => {

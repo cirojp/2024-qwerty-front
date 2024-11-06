@@ -37,7 +37,7 @@ function ModalCreateBudget({ closeModal = () => {}, initialBudget = null }) {
     },
   ]);
 
-  const [budgetValues, setBudgetValues] = useState({}); // Inicialmente vacío
+  const [budgetValues, setBudgetValues] = useState({});
   const [totalBudget, setTotalBudget] = useState("");
   const [errors, setErrors] = useState({});
   const [budgetName, setBudgetName] = useState("");
@@ -98,7 +98,7 @@ function ModalCreateBudget({ closeModal = () => {}, initialBudget = null }) {
     if (!budgetValues[category.value] && category) {
       setBudgetValues((prevValues) => ({
         ...prevValues,
-        [category.value]: 0, // Inicializa el valor en 0
+        [category.value]: 0,
       }));
     }
   };
@@ -136,7 +136,6 @@ function ModalCreateBudget({ closeModal = () => {}, initialBudget = null }) {
       return;
     }
 
-    // Filtrar categorías con valores vacíos o 0 antes de enviar
     const filteredBudgetValues = Object.fromEntries(
       Object.entries(budgetValues).filter(([_, value]) => value > 0)
     );
@@ -147,13 +146,13 @@ function ModalCreateBudget({ closeModal = () => {}, initialBudget = null }) {
           nameBudget: budgetName,
           totalBudget: totalBudget,
           budgetMonth: budgetDate,
-          categoryBudgets: filteredBudgetValues, // Usar el objeto filtrado
+          categoryBudgets: filteredBudgetValues,
         }
       : {
           nameBudget: budgetName,
           totalBudget: totalBudget,
           budgetMonth: budgetDate,
-          categoryBudgets: filteredBudgetValues, // Usar el objeto filtrado
+          categoryBudgets: filteredBudgetValues,
         };
 
     createOrUpdateBudget(formData);
@@ -200,12 +199,12 @@ function ModalCreateBudget({ closeModal = () => {}, initialBudget = null }) {
   };
 
   return (
-    <div className="modal-box w-full max-w-md p-6 bg-[#1E2126] rounded-lg shadow-lg">
+    <div className="modal-box w-full max-w-lg p-6 bg-[#1E2126] rounded-lg shadow-lg mx-4 md:mx-auto lg:w-1/2">
       <h3 className="text-xl font-bold mb-4 text-white">
         {initialBudget ? "Editar Presupuesto" : "Agregar Nuevo Presupuesto"}
       </h3>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="space-y-4">
         <div className="mb-4">
           <label className="block text-sm font-semibold mb-1 text-white">
             Nombre del Presupuesto
@@ -213,7 +212,7 @@ function ModalCreateBudget({ closeModal = () => {}, initialBudget = null }) {
           <input
             type="text"
             placeholder="Nombre del Presupuesto"
-            className="input input-bordered w-full"
+            className="input input-bordered w-full bg-[#1D232A]"
             value={budgetName}
             onChange={(e) => setBudgetName(e.target.value)}
             required
@@ -226,7 +225,7 @@ function ModalCreateBudget({ closeModal = () => {}, initialBudget = null }) {
           </label>
           <input
             type="month"
-            className="input input-bordered w-full"
+            className="input input-bordered w-full bg-[#1D232A]"
             value={budgetDate}
             onChange={(e) => setBudgetDate(e.target.value)}
             required
@@ -260,13 +259,13 @@ function ModalCreateBudget({ closeModal = () => {}, initialBudget = null }) {
             Agregar Categoría
           </label>
           <select
-            className="input input-bordered w-full"
+            className="input input-bordered w-full bg-[#1D232A]"
             onChange={(e) => {
               const selectedCategory = payCategories.find(
                 (cat) => cat.value === e.target.value
               );
               if (selectedCategory) addCategory(selectedCategory);
-              e.target.value = ""; // Resetear el valor del select
+              e.target.value = "";
             }}
           >
             <option value="">Seleccionar categoría</option>
@@ -294,7 +293,7 @@ function ModalCreateBudget({ closeModal = () => {}, initialBudget = null }) {
               type="number"
               id={`amount-${index}`}
               placeholder={`Monto para ${category}`}
-              className="input input-bordered w-full"
+              className="input input-bordered w-full bg-[#1D232A]"
               value={budgetValues[category] || ""}
               onChange={(e) => handleInputChange(e.target.value, category)}
             />
@@ -306,7 +305,7 @@ function ModalCreateBudget({ closeModal = () => {}, initialBudget = null }) {
 
         {formMessage && <p className="text-green-500 text-sm">{formMessage}</p>}
 
-        <div className="flex justify-end gap-4 mt-6">
+        <div className="flex flex-wrap justify-end gap-4 mt-6">
           <button type="button" className="btn btn-ghost" onClick={closeModal}>
             Cancelar
           </button>

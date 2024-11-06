@@ -23,7 +23,7 @@ function Header({
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
   return (
-    <nav className="bg-gray-900 text-white px-4 md:px-8 py-4 shadow-md">
+    <nav className="bg-black text-white px-2 py-2 md:px-8 shadow-md">
       <div className="container mx-auto flex justify-between items-center relative">
         {/* Logo */}
         <div

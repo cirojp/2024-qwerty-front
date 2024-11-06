@@ -111,20 +111,18 @@ function BudgetPage() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      <div className="container h-full mx-auto p-4">
-        <div className="text-2xl font-semibold text-center mb-4">
-          Presupuestos Mensuales
-        </div>
-        <div className="flex justify-between mb-6 mt-2">
-          <div className="flex justify-left">
-            <button
-              className="btn bg-yellow-400 text-black"
-              onClick={openModal}
-            >
-              Agregar Presupuesto
-            </button>
+      <div className="container mx-auto p-4">
+        <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
+          <button
+            className="btn bg-yellow-400 text-black mb-4 mr-2 sm:mb-0 sm:order-1"
+            onClick={() => navigate("/")}
+          >
+            HomePage
+          </button>
+          <div className="text-2xl font-semibold text-center sm:flex-1">
+            Presupuestos Mensuales
           </div>
-          <div className="flex justify-end">
+          <div className="mt-4 sm:mt-0 sm:order-2">
             <select
               className="select select-bordered w-full max-w-xs bg-yellow-400 text-black"
               value={filtro}
@@ -150,19 +148,16 @@ function BudgetPage() {
           ))}
         </div>
 
-        <div className="mt-8 text-center">
-          <button
-            className="btn bg-yellow-400 text-black"
-            onClick={() => navigate("/")}
-          >
-            Volver a Home
+        <div className="fixed bottom-6 right-6">
+          <button className="btn bg-yellow-400 text-black" onClick={openModal}>
+            Agregar Presupuesto
           </button>
         </div>
       </div>
 
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <ModalCreateBudget closeModal={() => closeModal()} />
+          <ModalCreateBudget closeModal={closeModal} />
         </div>
       )}
     </div>

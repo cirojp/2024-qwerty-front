@@ -165,7 +165,9 @@ function BudgetCard({
               }`}
             />
           </div>
-          <div className="text-sm font-semibold">{porcentaje.toFixed(1)}%</div>
+          <div className="text-sm font-semibold">
+            {(porcentaje > 100 ? 100 : porcentaje).toFixed(1)}%
+          </div>
         </div>
 
         <div className="flex justify-between mt-2 text-sm">
@@ -175,9 +177,16 @@ function BudgetCard({
         </div>
 
         <div className="mt-4">
-          <span className="text-sm font-semibold text-white">{`Monto restante: $ ${
-            budget.totalBudget - totalGastado
-          }`}</span>
+          <span className="text-sm font-semibold text-white">
+            {`Monto restante: $ ${
+              budget.totalBudget - totalGastado < 0
+                ? 0
+                : budget.totalBudget - totalGastado
+            }` +
+              (budget.totalBudget - totalGastado < 0
+                ? " ($ " + (totalGastado - budget.totalBudget) + " por encima)"
+                : "")}
+          </span>
           {Object.entries(remainingByCategory).map(([category, remaining]) => {
             const totalCatBudget = budget.categoryBudgets[category];
             const percentageCatSpent =
@@ -187,9 +196,11 @@ function BudgetCard({
               <div key={category} className="mt-2">
                 <div className="flex justify-between items-center">
                   <span className="text-sm font-semibold text-white">
-                    {category}: ${remaining < 0 ? 0 : remaining} / $
-                    {totalCatBudget} (
-                    {((remaining / totalCatBudget) * 100).toFixed(1)}%)
+                    {category}: $
+                    {totalCatBudget - remaining > totalCatBudget
+                      ? totalCatBudget
+                      : totalCatBudget - remaining}{" "}
+                    / ${totalCatBudget} ({percentageCatSpent.toFixed(1)}%)
                   </span>
                   <div className="w-1/3 bg-gray-200 rounded-full h-2 relative ml-2">
                     <div

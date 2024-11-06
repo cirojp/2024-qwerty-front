@@ -58,6 +58,7 @@ function ModalSendPayment({
     }
   };
 
+
   useEffect(() => {
     fetchPersonalTipoGastos();
   }, []);
@@ -123,9 +124,12 @@ function ModalSendPayment({
         }
         cleanForm();
         document.getElementById("sendPayModal").close();
+      } else {
+        setIsLoading(false);
       }
     } else {
       setModalError("El mail no pertenece a un usuario de este sitio");
+      setIsLoading(false);
     }
   };
 
@@ -145,6 +149,7 @@ function ModalSendPayment({
     setCategoria("");
     setIsLoading(false);
     setFecha(new Date().toISOString().split("T")[0]);
+    setModalError("");
   };
 
   return (
@@ -190,6 +195,7 @@ function ModalSendPayment({
               value={payOption}
               onChange={(e) => setPayOption(e.target.value)}
               className="select select-warning w-full mt-1 block text-white bg-gray-900"
+              required
             >
               <option value="">Selecciona un Medio De Pago</option>
               {payOptions.map((cat) => (
@@ -205,6 +211,7 @@ function ModalSendPayment({
               value={categoria}
               onChange={handleCategoryChange}
               className="select select-warning w-full mt-1 block text-white bg-gray-900"
+              required
             >
               <option value="">Selecciona una categoría</option>
               {payCategories.map((cat) => (

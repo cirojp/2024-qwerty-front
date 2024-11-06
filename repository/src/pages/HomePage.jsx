@@ -67,7 +67,7 @@ function HomePage() {
   const navigate = useNavigate();
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("Todas");
   const [categoriasConTodas, setCategoriasConTodas] = useState([]);
-  const [isLoadingFilter, setIsLoadingFilter] = useState(false);
+  const [isLoadingFilter, setIsLoadingFilter] = useState(true);
   const [pendTran, setPendTran] = useState(false);
   const [filtroMes, setFiltroMes] = useState(""); // Ej: "10" para octubre
   const [filtroAno, setFiltroAno] = useState("2024"); //

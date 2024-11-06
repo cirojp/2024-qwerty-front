@@ -19,6 +19,7 @@ function ModalVerDetallesGrupo({
   payCategories,
   setGrupos,
   grupos,
+  getTransacciones
 }) {
   const [transacciones, setTransacciones] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -251,6 +252,7 @@ function ModalVerDetallesGrupo({
           grupo.id === grupo.id ? { ...grupo, estado: false } : grupo
         )
       );
+      getTransacciones();
     } catch (error) {
       console.error("Error al cerrar el grupo:", error);
     }

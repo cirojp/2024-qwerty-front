@@ -204,13 +204,16 @@ const ModalCrearGrupo = ({
 
       {/* Mostrar el campo para el nombre del grupo solo si no se está invitando a usuarios */}
       {!grupoAAgregar && (
-        <input
-          type="text"
-          placeholder="Nombre del Grupo"
-          value={grupoNombre}
-          onChange={(e) => setGrupoNombre(e.target.value)}
-          className="mt-1 block w-full p-2 border border-gray-600 bg-gray-800 text-white rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
-        />
+        <div className="mt-2">
+          <input
+            type="text"
+            placeholder="Nombre del Grupo"
+            value={grupoNombre}
+            onChange={(e) => setGrupoNombre(e.target.value.slice(0, 16))}
+            className="mt-1 block w-full p-2 border border-gray-600 bg-gray-800 text-white rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
+          />
+          <p className="text-gray-500 text-sm mt-1">{grupoNombre.length}/16   Largo maximo 16 caracteres</p>
+        </div>
       )}
 
       {/* Lista de correos agregados */}

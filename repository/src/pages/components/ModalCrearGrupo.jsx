@@ -212,7 +212,9 @@ const ModalCrearGrupo = ({
             onChange={(e) => setGrupoNombre(e.target.value.slice(0, 16))}
             className="mt-1 block w-full p-2 border border-gray-600 bg-gray-800 text-white rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
           />
-          <p className="text-gray-500 text-sm mt-1">{grupoNombre.length}/16   Largo maximo 16 caracteres</p>
+          <p className="text-gray-500 text-sm mt-1">
+            {grupoNombre.length}/16 Largo maximo 16 caracteres
+          </p>
         </div>
       )}
 

@@ -663,7 +663,7 @@ function HomePage() {
   };
   const resetFilters = () => {
     setCategoriaSeleccionada("Todas");
-    setFiltroAno("2024");
+    setFiltroAno("");
     setFiltroMes("");
   };
   const refershTransacciones = (transaccionNueva) => {
@@ -703,94 +703,83 @@ function HomePage() {
             filtroCategoria={categoriaSeleccionada}
             loading={loadGraphic}
           />
+        </>
+      )}
 
-          <div className="flex justify-end w-full p-4">
+      <div className="flex justify-end w-full p-4">
+        <button
+          onClick={() => setIsFiltersOpen(!isFiltersOpen)}
+          className="btn btn-warning w-full"
+        >
+          {isFiltersOpen ? "Ocultar Filtros" : "Mostrar Filtros"}
+        </button>
+      </div>
+
+      {isFiltersOpen && (
+        <div className="flex flex-col md:flex-row items-start md:items-center md:gap-6 mb-4">
+          <div className="flex flex-col md:flex-row md:items-center gap-3 w-full">
+            <div className="flex flex-col w-full md:w-1/3">
+              <select
+                id="categorias"
+                value={categoriaSeleccionada}
+                onChange={handleChange}
+                className="block select select-bordered w-full max-w-full"
+              >
+                {categoriasConTodas.map((cat) => (
+                  <option key={cat.value} value={cat.value}>
+                    {cat.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Select de Mes */}
+            <div className="flex flex-col w-full md:w-1/3">
+              <select
+                value={filtroMes}
+                onChange={(e) => setFiltroMes(e.target.value)}
+                className="select select-bordered w-full max-w-full"
+              >
+                <option value="">Mes</option>
+                <option value="01">Enero</option>
+                <option value="02">Febrero</option>
+                <option value="03">Marzo</option>
+                <option value="04">Abril</option>
+                <option value="05">Mayo</option>
+                <option value="06">Junio</option>
+                <option value="07">Julio</option>
+                <option value="08">Agosto</option>
+                <option value="09">Septiembre</option>
+                <option value="10">Octubre</option>
+                <option value="11">Noviembre</option>
+                <option value="12">Diciembre</option>
+              </select>
+            </div>
+
+            <div className="flex flex-col w-full md:w-1/3">
+              <select
+                value={filtroAno}
+                onChange={(e) => setFiltroAno(e.target.value)}
+                className="select select-bordered w-full max-w-full"
+              >
+                <option value="">Todos los años</option>{" "}
+                <option value="2021">2021</option>
+                <option value="2022">2022</option>
+                <option value="2023">2023</option>
+                <option value="2024">2024</option>
+                <option value="2025">2025</option>
+                <option value="2026">2026</option>
+              </select>
+            </div>
+
             <button
-              onClick={() => setIsFiltersOpen(!isFiltersOpen)}
-              className="btn btn-warning w-full"
+              onClick={() => resetFilters()}
+              className="btn btn-warning w-full md:w-auto mt-2 md:mt-0"
             >
-              {isFiltersOpen ? "Ocultar Filtros" : "Mostrar Filtros"}
+              Borrar filtros
             </button>
           </div>
-
-          {isFiltersOpen && (
-            <div className="flex flex-col md:flex-row items-start md:items-center md:gap-6 mb-4">
-              <div className="flex flex-col md:flex-row md:items-center gap-3 w-full">
-                <div className="flex flex-col w-full md:w-1/3">
-                  <select
-                    id="categorias"
-                    value={categoriaSeleccionada}
-                    onChange={handleChange}
-                    className="block select select-bordered w-full max-w-full"
-                  >
-                    {categoriasConTodas.map((cat) => (
-                      <option key={cat.value} value={cat.value}>
-                        {cat.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Select de Mes */}
-                <div className="flex flex-col w-full md:w-1/3">
-                  <select
-                    value={filtroMes}
-                    onChange={(e) => setFiltroMes(e.target.value)}
-                    className="select select-bordered w-full max-w-full"
-                  >
-                    <option value="">Mes</option>
-                    <option value="01">Enero</option>
-                    <option value="02">Febrero</option>
-                    <option value="03">Marzo</option>
-                    <option value="04">Abril</option>
-                    <option value="05">Mayo</option>
-                    <option value="06">Junio</option>
-                    <option value="07">Julio</option>
-                    <option value="08">Agosto</option>
-                    <option value="09">Septiembre</option>
-                    <option value="10">Octubre</option>
-                    <option value="11">Noviembre</option>
-                    <option value="12">Diciembre</option>
-                  </select>
-                </div>
-
-                {/* Select de Año */}
-                <div className="flex flex-col w-full md:w-1/3">
-                  <select
-                    value={filtroAno}
-                    onChange={(e) => setFiltroAno(e.target.value)}
-                    className="select select-bordered w-full max-w-full"
-                  >
-                    <option value="2021">2021</option>
-                    <option value="2022">2022</option>
-                    <option value="2023">2023</option>
-                    <option value="2024">2024</option>
-                    <option value="2025">2025</option>
-                    <option value="2026">2026</option>
-                  </select>
-                </div>
-
-                <button
-                  onClick={() => resetFilters()}
-                  className="btn btn-warning w-full md:w-auto mt-2 md:mt-0"
-                >
-                  Borrar filtros
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* Historial de Transacciones */}
-          <div className="bg-black flex flex-col w-full overflow-x-auto">
-            <div className="flex justify-between items-center w-full px-4 py-6">
-              <div className="flex items-center">
-                <h2 className="text-xl md:text-2xl py-2 font-bold text-gray-100">
-                  Historial de Transacciones
-                </h2>
-              </div>
-            </div>
-          </div>
-        </>
+        </div>
       )}
 
       {/* Cargando Spinner */}
@@ -820,6 +809,16 @@ function HomePage() {
         </div>
       ) : (
         <>
+          {/* Historial de Transacciones */}
+          <div className="bg-black flex flex-col w-full overflow-x-auto">
+            <div className="flex justify-between items-center w-full px-4 py-6">
+              <div className="flex items-center">
+                <h2 className="text-xl md:text-2xl py-2 font-bold text-gray-100">
+                  Historial de Transacciones
+                </h2>
+              </div>
+            </div>
+          </div>
           <TransaccionesTable
             transacciones={transacciones}
             payCategories={payCategories}

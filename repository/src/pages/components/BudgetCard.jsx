@@ -44,10 +44,8 @@ function BudgetCard({
         transactionYear === budgetYear && transactionMonth === budgetMonth;
 
       let isCategoryValid = 1;
-      if (totalCategoryBudget === budget.totalBudget) {
-        isCategoryValid = Object.keys(budget.categoryBudgets).includes(
-          transaccion.categoria
-        );
+      if (transaccion.categoria == "Ingreso de Dinero") {
+        isCategoryValid = 0;
       }
 
       return isSameMonth && isCategoryValid;

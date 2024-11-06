@@ -8,7 +8,7 @@ function ModalGastosCompartidos({
   isModalGastosOpen,
   closeModalGastos,
   payCategories,
-  getTransacciones
+  getTransacciones,
 }) {
   const [modalError, setModalError] = useState("");
   const [isLoading, setIsLoading] = useState(false);

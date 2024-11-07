@@ -85,7 +85,7 @@ function HomePage() {
   };
 
   useEffect(() => {
-    getTransacciones(categoriaSeleccionada);
+    getTransacciones(categoriaSeleccionada); //aplicar un filtro local
     setLoadGraphic(false);
   }, [categoriaSeleccionada, filtroMes, filtroAno]);
   useEffect(() => {
@@ -666,7 +666,7 @@ function HomePage() {
   };
   const resetFilters = () => {
     setCategoriaSeleccionada("Todas");
-    setFiltroAno("");
+    setFiltroAno("2024");
     setFiltroMes("");
   };
   const refershTransacciones = (transaccionNueva) => {

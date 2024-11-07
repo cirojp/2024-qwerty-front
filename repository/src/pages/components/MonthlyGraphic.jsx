@@ -44,7 +44,6 @@ function MonthlyGraphic({
         : transacciones;
 
     if (filtroCategoria && filtroCategoria !== "Todas" && filtroCategoria !== "Ingreso de Dinero") {
-      console.log(transaccionesSinFiltroCat);
       setTransaccionesRestantes([]);
       setTransaccionesRestantes(transaccionesSinFiltroCat);
       let transaccionesFiltradas = transaccionesSinFiltroCat.filter(
@@ -52,7 +51,6 @@ function MonthlyGraphic({
           transaccion.categoria !== "Ingreso de Dinero" &&
           transaccion.categoria !== filtroCategoria
       );
-      console.log(transaccionesRestantes);
       transaccionesFiltradas = transaccionesFiltradas.map((transaccion) => ({
         ...transaccion,
         categoria: "Otros",

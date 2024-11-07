@@ -58,14 +58,13 @@ function ProfilePage() {
         }
 
         const data = await response.json();
-        setTransacciones(data);
+        setTransacciones(data.transaccionesFiltradas);
       } catch (err) {
         console.error("Error fetching transactions:", err);
       } finally {
         setLoadingGraphic(false);
       }
     } else {
-      console.log("deberia redirec");
       navigate("/");
     }
   };

@@ -58,14 +58,14 @@ const Achievement = ({ achievement }) => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center w-full max-w-md bg-gray-900">
         <div className="text-lg text-gray-600">Loading...</div>
       </div>
     );
   } else {
     return (
-      <div className="w-full max-w-md mx-auto p-4">
-        <div className="card shadow-lg bg-base-100 hover:shadow-xl rounded-lg transition-shadow overflow-hidden">
+      <div className="w-full max-w-md mx-auto p-4 bg-gray-900">
+        <div className="card shadow-lg bg-gray-900 hover:shadow-xl rounded-lg transition-shadow overflow-hidden">
           <figure className="px-6 pt-6">
             <img
               src={achievement.img}

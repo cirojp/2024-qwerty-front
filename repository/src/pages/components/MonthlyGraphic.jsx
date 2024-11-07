@@ -23,7 +23,7 @@ function MonthlyGraphic({
   filtroMes = "",
   filtroCategoria,
   loading = true,
-  transaccionesSinFiltroCat
+  transaccionesSinFiltroCat,
 }) {
   library.add(fas);
 
@@ -35,7 +35,6 @@ function MonthlyGraphic({
   const [transaccionesRestantes, setTransaccionesRestantes] = useState([]);
 
   useEffect(() => {
-
     const gastos =
       filtroCategoria !== "Ingreso de Dinero"
         ? transacciones.filter(
@@ -43,9 +42,14 @@ function MonthlyGraphic({
           )
         : transacciones;
 
-    if (filtroCategoria && filtroCategoria !== "Todas" && filtroCategoria !== "Ingreso de Dinero") {
+    if (
+      filtroCategoria &&
+      filtroCategoria !== "Todas" &&
+      filtroCategoria !== "Ingreso de Dinero"
+    ) {
       setTransaccionesRestantes([]);
       setTransaccionesRestantes(transaccionesSinFiltroCat);
+      console.log(transaccionesSinFiltroCat);
       let transaccionesFiltradas = transaccionesSinFiltroCat.filter(
         (transaccion) =>
           transaccion.categoria !== "Ingreso de Dinero" &&
@@ -59,7 +63,6 @@ function MonthlyGraphic({
     } else {
       setTransaccionesRestantes([]);
     }
-    
 
     const sumaPorCategoria = gastos.reduce((acc, transaccion) => {
       const categoria = transaccion.categoria;
@@ -70,16 +73,23 @@ function MonthlyGraphic({
       return acc;
     }, {});
     let sumaPorCategoriaOtros = 0;
-    if (filtroCategoria && filtroCategoria!=="Todas" && filtroCategoria!=="Ingreso de Dinero") {
-      sumaPorCategoriaOtros = transaccionesRestantes.reduce((acc, transaccion) => {
-        const categoria = transaccion.categoria;
-        if (!acc[categoria]) {
-          acc[categoria] = 0;
-        }
-        acc[categoria] += transaccion.valor;
-        return acc;
-      }, {});
-    };
+    if (
+      filtroCategoria &&
+      filtroCategoria !== "Todas" &&
+      filtroCategoria !== "Ingreso de Dinero"
+    ) {
+      sumaPorCategoriaOtros = transaccionesRestantes.reduce(
+        (acc, transaccion) => {
+          const categoria = transaccion.categoria;
+          if (!acc[categoria]) {
+            acc[categoria] = 0;
+          }
+          acc[categoria] += transaccion.valor;
+          return acc;
+        },
+        {}
+      );
+    }
 
     const sumaPorTipoGasto = gastos.reduce((acc, transaccion) => {
       const tipoGasto = transaccion.tipoGasto;
@@ -112,24 +122,30 @@ function MonthlyGraphic({
       }, {});
 
       //para la parte de otros
-      if (filtroCategoria!=="Todas" && filtroCategoria!=="Ingreso de Dinero") {
-        const gastosPorDiaOtros = transaccionesRestantes.reduce((acc, transaccion) => {
-          const fecha = new Date(transaccion.fecha);
-          const mes = fecha.getMonth();
-          if (mes === selectedMonth) {
-            const dia = fecha.getDate();
-            if (!acc[dia]) {
-              acc[dia] = 0;
+      if (
+        filtroCategoria !== "Todas" &&
+        filtroCategoria !== "Ingreso de Dinero"
+      ) {
+        const gastosPorDiaOtros = transaccionesRestantes.reduce(
+          (acc, transaccion) => {
+            const fecha = new Date(transaccion.fecha);
+            const mes = fecha.getMonth();
+            if (mes === selectedMonth) {
+              const dia = fecha.getDate();
+              if (!acc[dia]) {
+                acc[dia] = 0;
+              }
+              acc[dia] += transaccion.valor;
             }
-            acc[dia] += transaccion.valor;
-          }
-          return acc;
-        }, {});
+            return acc;
+          },
+          {}
+        );
       }
 
       const daysInMonth = new Date(2024, selectedMonth + 1, 0).getDate();
       newDataLine = Array.from({ length: daysInMonth }, (_, index) => ({
-        day: (index + 1).toString(),
+        day: (index + 2).toString(),
         total: gastosPorDia[index + 1] || 0,
       }));
     } else {
@@ -143,15 +159,21 @@ function MonthlyGraphic({
       }, {});
 
       //para la parte de otros
-      if (filtroCategoria!=="Todas" && filtroCategoria!=="Ingreso de Dinero") {
-        const gastosPorMesOtros = transaccionesRestantes.reduce((acc, transaccion) => {
-          const mes = new Date(transaccion.fecha).getMonth();
-          if (!acc[mes]) {
-            acc[mes] = 0;
-          }
-          acc[mes] += transaccion.valor;
-          return acc;
-        }, {});
+      if (
+        filtroCategoria !== "Todas" &&
+        filtroCategoria !== "Ingreso de Dinero"
+      ) {
+        const gastosPorMesOtros = transaccionesRestantes.reduce(
+          (acc, transaccion) => {
+            const mes = new Date(transaccion.fecha).getMonth();
+            if (!acc[mes]) {
+              acc[mes] = 0;
+            }
+            acc[mes] += transaccion.valor;
+            return acc;
+          },
+          {}
+        );
       }
 
       newDataLine = allMonths.map((month, index) => ({
@@ -159,7 +181,10 @@ function MonthlyGraphic({
         total: gastosPorMes[index] || 0,
       }));
     }
-    if (filtroCategoria!=="Todas" && filtroCategoria!=="Ingreso de Dinero") {
+    if (
+      filtroCategoria !== "Todas" &&
+      filtroCategoria !== "Ingreso de Dinero"
+    ) {
       setData(
         Object.entries(sumaPorCategoriaOtros).map(([categoria, monto]) => ({
           name: categoria,
@@ -173,7 +198,7 @@ function MonthlyGraphic({
           value: monto,
         }))
       );
-    }  
+    }
     setDataPay(
       Object.entries(sumaPorTipoGasto).map(([tipoGasto, monto]) => ({
         name: tipoGasto,

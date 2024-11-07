@@ -5,9 +5,11 @@ import { useNavigate } from "react-router-dom";
 function PresupuestosWidget({ transacciones = [], filtroMes, filtroAno }) {
   const [presupuestos, setPresupuestos] = useState([]);
   const navigate = useNavigate();
+
   useEffect(() => {
     getPersonalPresupuestos();
   }, []);
+
   const getPersonalPresupuestos = async () => {
     const token = localStorage.getItem("token");
     try {
@@ -25,11 +27,9 @@ function PresupuestosWidget({ transacciones = [], filtroMes, filtroAno }) {
         const fechaActual = new Date();
         const mesActual = fechaActual.getMonth() + 1;
         const añoActual = fechaActual.getFullYear();
-        const formatoMesFiltro = `${
-          filtroAno == "" ? añoActual : filtroAno
-        }-${(filtroMes == "" ? mesActual : filtroMes)
-          .toString()
-          .padStart(2, "0")}`;
+        const formatoMesFiltro = `${filtroAno == "" ? añoActual : filtroAno}-${
+          filtroMes === "" ? mesActual.toString().padStart(2, "0") : filtroMes
+        }`;
         const dataActual = data.filter(
           (presupuesto) => presupuesto.budgetMonth === formatoMesFiltro
         );
@@ -39,6 +39,7 @@ function PresupuestosWidget({ transacciones = [], filtroMes, filtroAno }) {
       console.error("Error al obtener las categorías personalizadas:", error);
     }
   };
+
   return (
     <div className="m-4">
       {presupuestos[0] != null && (
@@ -50,8 +51,9 @@ function PresupuestosWidget({ transacciones = [], filtroMes, filtroAno }) {
         </button>
       )}
 
-      {presupuestos.map((presupuesto) => (
+      {presupuestos.map((presupuesto, index) => (
         <BudgetCard
+          key={presupuesto.id || index} // Se debe usar un identificador único (preferiblemente `presupuesto.id`)
           budget={presupuesto}
           transacciones={transacciones}
           widget={true}

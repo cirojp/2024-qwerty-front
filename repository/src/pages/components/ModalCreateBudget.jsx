@@ -6,6 +6,7 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 function ModalCreateBudget({ closeModal = () => {}, initialBudget = null }) {
   library.add(fas);
   const [payCategories, setPayCategories] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [formMessage, setFormMessage] = useState("");
   const [payCategoriesDefault, setPayCategoriesDefault] = useState([
     {
@@ -155,6 +156,7 @@ function ModalCreateBudget({ closeModal = () => {}, initialBudget = null }) {
 
   const createOrUpdateBudget = async (budget) => {
     const token = localStorage.getItem("token");
+    setIsLoading(true);
     const url = initialBudget
       ? "https://two024-qwerty-back-2.onrender.com/api/presupuesto/editPresupuesto"
       : "https://two024-qwerty-back-2.onrender.com/api/presupuesto";
@@ -190,6 +192,8 @@ function ModalCreateBudget({ closeModal = () => {}, initialBudget = null }) {
           : "Error al crear el presupuesto:",
         error
       );
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -308,8 +312,19 @@ function ModalCreateBudget({ closeModal = () => {}, initialBudget = null }) {
           >
             Cancelar
           </button>
-          <button type="submit" className="btn bg-yellow-500 text-black">
-            Guardar
+          <button
+            type="submit"
+            className="btn bg-yellow-500 text-black"
+            disabled={isLoading}
+          >
+            {!isLoading ? (
+              "Guardar"
+            ) : (
+              <div>
+                <span className="loading loading-spinner loading-lg"></span>
+                Cargando...
+              </div>
+            )}
           </button>
         </div>
       </form>

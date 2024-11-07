@@ -5,7 +5,6 @@ import "./styles/ModalForm.css";
 import ModalCategoria from "./ModalCategoria";
 import CreatableSelect from "react-select/creatable";
 
-
 function ModalForm({
   isModalOpen,
   closeModal,
@@ -97,8 +96,10 @@ function ModalForm({
   const [isGroupDisabled, setIsGroupDisabled] = useState(false);
   const [isCategoryDisabled, setIsCategoryDisabled] = useState(false);
   useEffect(() => {
-    if(grupos==null){ grupos=[selectedGroup];}
-    setActiveGroups(grupos.filter(grupo => grupo.estado === true));
+    if (grupos == null) {
+      grupos = [selectedGroup];
+    }
+    setActiveGroups(grupos.filter((grupo) => grupo.estado === true));
     console.log(selectedGroup);
   }, [grupos]);
   useEffect(() => {
@@ -110,12 +111,12 @@ function ModalForm({
       setIsCategoryDisabled(false);
     } else if (selectedGroup) {
       setIsGroupDisabled(false);
-      setIsCategoryDisabled(true); 
+      setIsCategoryDisabled(true);
     } else {
       setIsCategoryDisabled(false);
-      setIsGroupDisabled(false); 
+      setIsGroupDisabled(false);
     }
-    if(edit && handleGroupChange!=null){
+    if (edit && handleGroupChange != null) {
       setIsGroupDisabled(true);
     }
   }, [selectedCategory, selectedGroup]);
@@ -217,8 +218,8 @@ function ModalForm({
         <div>
           <label className="text-center text-gray-100 mb-6">Categoria:</label>
           {handleGroupChange ? (
-          <div className="flex items-center">
-            <Select
+            <div className="flex items-center">
+              <Select
                 options={payCategories}
                 onChange={handleCategorySelect}
                 value={selectedCategory}
@@ -227,19 +228,23 @@ function ModalForm({
                 styles={customSelectStyles}
                 required
               />
-            <button
-              type="button"
-              onClick={() => openModalCategoria()}
-              className="ml-2 bg-blue-500 text-white py-1 px-2 rounded"
-            >
-              +
-            </button>
-          </div>
+              <button
+                type="button"
+                onClick={() => openModalCategoria()}
+                className="ml-2 bg-blue-500 text-white py-1 px-2 rounded"
+              >
+                +
+              </button>
+            </div>
           ) : (
             // Renderiza un input de solo lectura cuando handleGroupChange es null
             <input
               type="text"
-              value={selectedCategory ? selectedCategory.label : "Ningún grupo seleccionado"}
+              value={
+                selectedCategory
+                  ? selectedCategory.label
+                  : "Ningún grupo seleccionado"
+              }
               readOnly
               className="mt-1 block w-full border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm border-transparent text-center"
             />
@@ -261,32 +266,36 @@ function ModalForm({
           </label>
           {isGroupDisabled && (
             <p className="text-yellow-500 text-sm text-center mb-2">
-              {edit && selectedCategory.label=="Gasto Grupal"
-                ? "(no se pueden agregar transacciones propias a grupos)" 
+              {edit && selectedCategory.label == "Gasto Grupal"
+                ? "(no se pueden agregar transacciones propias a grupos)"
                 : "(Opción habilitada únicamente para categoría: Gasto Grupal)"}
             </p>
           )}
           {handleGroupChange ? (
             // Renderiza el componente Select cuando handleGroupChange no es null
             <Select
-            options={[
-              { value: null, label: "Select..." },
-              ...activeGroups.map((grupo) => ({
-                value: grupo.id,
-                label: grupo.nombre,
-              })),
-            ]}
-            onChange={handleGroupSelect}
-            value={selectedGroup}
-            isDisabled={isGroupDisabled} // Desactivar si la categoría no es "Gasto Grupal"
-            className="custom-select mt-1 block w-full border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm border-transparent"
-            styles={customSelectStyles}
-          />
+              options={[
+                { value: null, label: "Select..." },
+                ...activeGroups.map((grupo) => ({
+                  value: grupo.id,
+                  label: grupo.nombre,
+                })),
+              ]}
+              onChange={handleGroupSelect}
+              value={selectedGroup}
+              isDisabled={isGroupDisabled} // Desactivar si la categoría no es "Gasto Grupal"
+              className="custom-select mt-1 block w-full border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm border-transparent"
+              styles={customSelectStyles}
+            />
           ) : (
             // Renderiza un input de solo lectura cuando handleGroupChange es null
             <input
               type="text"
-              value={selectedGroup ? selectedGroup.nombre : "Ningún grupo seleccionado"}
+              value={
+                selectedGroup
+                  ? selectedGroup.nombre
+                  : "Ningún grupo seleccionado"
+              }
               readOnly
               className="mt-1 block w-full border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm border-transparent text-center"
             />

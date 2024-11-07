@@ -101,6 +101,7 @@ function HomePage() {
         ...payCategories,
       ]);
     }
+    setIsLoading(false);
     //getTransacciones(categoriaSeleccionada);
   }, [payCategories]);
   useEffect(() => {
@@ -764,6 +765,7 @@ function HomePage() {
                 filtroMes={filtroMes}
                 filtroCategoria={categoriaSeleccionada}
                 loading={loadGraphic}
+                transaccionesSinFiltroCat={transaccionesSinFiltroCat}
               />
             )}
           </>

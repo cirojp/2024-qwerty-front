@@ -78,7 +78,9 @@ function HomePage() {
   const [loadGraphic, setLoadGraphic] = useState(true);
   const [grupos, setGrupos] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
-  const [transaccionesSinFiltroCat, setTransaccionesSinFiltroCat] = useState([]);
+  const [transaccionesSinFiltroCat, setTransaccionesSinFiltroCat] = useState(
+    []
+  );
   const [isLoading, setIsLoading] = useState(true);
   const handleGroupChange = (selectedOption) => {
     if (selectedOption && selectedOption.value === null) {
@@ -723,33 +725,25 @@ function HomePage() {
         openModal={openModal}
       />
       <>
-      {isLoading && (
-        <div className="fixed inset-0 bg-black bg-opacity-500 flex justify-center items-center z-50">
-          <div className="flex items-center justify-center">
-            <div className="animate-spin border-t-4 border-blue-500 border-solid w-16 h-16 rounded-full"></div>
-            </div>
-        </div>
-      )}
-      {transaccionesCargadas && (
-        <PresupuestosWidget
-          transacciones={
-            categoriaSeleccionada != "Todas"
-              ? transaccionesSinFiltroCat
-              : transacciones
-          }
-          filtroMes={filtroMes}
-          filtroAno={filtroAno}
-        />
-      )}
-        {!showNoTransactions && (
-          <div>
-            <div className="flex items-center">
-              <h2 className="text-xl md:text-2xl py-2 font-bold text-gray-100">
-                Monto por Categoria
-              </h2>
+        {isLoading && (
+          <div className="fixed inset-0 bg-black bg-opacity-500 flex justify-center items-center z-50">
+            <div className="flex items-center justify-center">
+              <div className="animate-spin border-t-4 border-blue-500 border-solid w-16 h-16 rounded-full"></div>
             </div>
           </div>
         )}
+        {transaccionesCargadas && (
+          <PresupuestosWidget
+            transacciones={
+              categoriaSeleccionada != "Todas"
+                ? transaccionesSinFiltroCat
+                : transacciones
+            }
+            filtroMes={filtroMes}
+            filtroAno={filtroAno}
+          />
+        )}
+
         {transaccionesCargadas && (
           <PresupuestosWidget transacciones={transacciones} />
         )}

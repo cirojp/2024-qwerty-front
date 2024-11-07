@@ -78,7 +78,9 @@ function HomePage() {
   const [loadGraphic, setLoadGraphic] = useState(true);
   const [grupos, setGrupos] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
-  const [transaccionesSinFiltroCat, setTransaccionesSinFiltroCat] = useState([]);
+  const [transaccionesSinFiltroCat, setTransaccionesSinFiltroCat] = useState(
+    []
+  );
   const handleGroupChange = (selectedOption) => {
     if (selectedOption && selectedOption.value === null) {
       setSelectedGroup(null); // Restablecer a null si se selecciona "Personal"
@@ -237,7 +239,7 @@ function HomePage() {
 
         const data = await response.json();
         setTransacciones(data.transaccionesFiltradas);
-        if (filtrado !== "Todas"){
+        if (filtrado !== "Todas") {
           setTransaccionesSinFiltroCat(data.transaccionesSinFiltrarCat);
         }
       } catch (err) {
@@ -715,7 +717,15 @@ function HomePage() {
         openModal={openModal}
       />
       {transaccionesCargadas && (
-        <PresupuestosWidget transacciones={transacciones} />
+        <PresupuestosWidget
+          transacciones={
+            categoriaSeleccionada != "Todas"
+              ? transaccionesSinFiltroCat
+              : transacciones
+          }
+          filtroMes={filtroMes}
+          filtroAno={filtroAno}
+        />
       )}
 
       {!showNoTransactions && (

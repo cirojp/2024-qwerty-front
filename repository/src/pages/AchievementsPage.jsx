@@ -36,7 +36,7 @@ const AchievementsPage = () => {
   ];
 
   return (
-    <div className="container mx-auto min-h-screen bg-black text-white py-8 px-4">
+    <div className="min-h-screen flex flex-col bg-black text-white py-8 px-4">
       {/* Botón de regreso */}
       <div className="mb-4">
         <button
@@ -50,7 +50,8 @@ const AchievementsPage = () => {
       <h1 className="text-3xl font-bold text-center text-white mb-8">
         Mis Logros
       </h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {achievements.map((achievement) => (
           <Achievement key={achievement.id} achievement={achievement} />
         ))}

@@ -58,57 +58,55 @@ const Achievement = ({ achievement }) => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center w-full max-w-md bg-gray-900">
+      <div className="flex items-center justify-center w-full h-full bg-gray-900">
         <div className="text-lg text-gray-600">Loading...</div>
       </div>
     );
   } else {
     return (
-      <div className="w-full max-w-md mx-auto p-4 bg-gray-900">
-        <div className="card shadow-lg bg-gray-900 hover:shadow-xl rounded-lg transition-shadow overflow-hidden">
-          <figure className="px-6 pt-6">
-            <img
-              src={achievement.img}
-              alt={`Achievement: ${title}`}
-              className={`w-28 h-28 object-contain mx-auto border-4 rounded-full ${getBorderColor(
+      <div className="w-full h-2/3 max-w-sm mx-auto p-4 bg-gray-900 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
+        <figure className="px-4 pt-4">
+          <img
+            src={achievement.img}
+            alt={`Achievement: ${title}`}
+            className={`w-24 h-24 object-contain mx-auto border-4 rounded-full ${getBorderColor(
+              type
+            )}`}
+          />
+        </figure>
+        <div className="text-center px-4 py-2">
+          <h2 className="text-xl font-bold text-white mb-2">
+            {title} - Nivel{" "}
+            {achievement.type === "Bronce"
+              ? 1
+              : achievement.type === "Plata"
+              ? 2
+              : achievement.type === "Oro"
+              ? 3
+              : 4}
+          </h2>
+          <p className="text-sm text-gray-400">{description}</p>
+
+          <div className="mt-4">
+            <span
+              className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
+                completed
+                  ? "bg-green-500 text-green-100"
+                  : "bg-orange-400 text-orange-100"
+              }`}
+            >
+              {completed ? "Obtenido" : "No Obtenido"}
+            </span>
+          </div>
+
+          <div className="mt-3">
+            <span
+              className={`inline-block px-3 py-1 rounded-full text-xs font-bold ${getBadgeColor(
                 type
               )}`}
-            />
-          </figure>
-          <div className="card-body text-center px-6 py-4">
-            <h2 className="card-title text-2xl font-bold text-white mb-2 justify-center">
-              {title} - Nivel{" "}
-              {achievement.type == "Bronce"
-                ? 1
-                : achievement.type == "Plata"
-                ? 2
-                : achievement.type == "Oro"
-                ? 3
-                : 4}
-            </h2>
-            <p className="text-sm text-gray-400">{description}</p>
-
-            <div className="mt-4">
-              <span
-                className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
-                  completed
-                    ? "bg-green-500 text-green-100"
-                    : "bg-orange-400 text-orange-100"
-                }`}
-              >
-                {completed ? "Obtenido" : "No Obtenido"}
-              </span>
-            </div>
-
-            <div className="mt-3">
-              <span
-                className={`inline-block px-3 py-1 rounded-full text-xs font-bold ${getBadgeColor(
-                  type
-                )}`}
-              >
-                {type}
-              </span>
-            </div>
+            >
+              {type}
+            </span>
           </div>
         </div>
       </div>

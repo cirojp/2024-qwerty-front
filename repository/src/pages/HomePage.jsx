@@ -75,6 +75,7 @@ function HomePage() {
   const [loadGraphic, setLoadGraphic] = useState(true);
   const [grupos, setGrupos] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
+  const [transaccionesSinFiltroCat, setTransaccionesSinFiltroCat] = useState([]);
   const handleGroupChange = (selectedOption) => {
     if (selectedOption && selectedOption.value === null) {
       setSelectedGroup(null); // Restablecer a null si se selecciona "Personal"
@@ -218,7 +219,6 @@ function HomePage() {
         url += `?categoria=${filtrado}`;
         if (filtroMes) url += `&mes=${filtroMes}`;
         if (filtroAno) url += `&anio=${filtroAno}`;
-        console.log(url);
       }
       try {
         const response = await fetch(url, {
@@ -233,7 +233,10 @@ function HomePage() {
         }
 
         const data = await response.json();
-        setTransacciones(data);
+        setTransacciones(data.transaccionesFiltradas);
+        if (filtrado !== "Todas"){
+          setTransaccionesSinFiltroCat(data.transaccionesSinFiltrarCat);
+        }
       } catch (err) {
         console.error("Error fetching transactions:", err);
       } finally {
@@ -702,6 +705,7 @@ function HomePage() {
             filtroMes={filtroMes}
             filtroCategoria={categoriaSeleccionada}
             loading={loadGraphic}
+            transaccionesSinFiltroCat={transaccionesSinFiltroCat}
           />
 
           <div className="flex justify-end w-full p-4">

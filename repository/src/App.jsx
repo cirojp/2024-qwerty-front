@@ -10,6 +10,7 @@ import PrivateRoutes from "./pages/PrivateRoutes";
 import KeepSignedIn from "./pages/KeepSignedIn";
 import ProfilePage from "./pages/ProfilePage";
 import BudgetPage from "./pages/BudgetPage";
+import AchievementsPage from "./pages/AchievementsPage";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           />
           <Route exact path="/profile" element={<ProfilePage />} />
           <Route exact path="/presupuestos" element={<BudgetPage />} />
+          <Route exact path="/achievements" element={<AchievementsPage />} />
         </Route>
         <Route element={<KeepSignedIn />}>
           <Route exact path="/" element={<LoginForm />} />

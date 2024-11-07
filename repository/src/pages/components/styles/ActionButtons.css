@@ -1,53 +1,111 @@
-/* Contenedor de los botones de acción */
-.mt-5 {
-    margin-top: 1.25rem;
-    display: flex; /* Usar flexbox para disposición horizontal */
-    flex-wrap: wrap; /* Permitir que los botones envuelvan en pantallas pequeñas */
-    gap: 1rem; /* Espacio entre los botones */
-    justify-content: center; /* Centrar los botones horizontalmente */
+/* Contenedor principal */
+.action-buttons-container {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 1rem;
+}
+
+/* Botón principal */
+.primary-button {
+  padding: 0.75rem 1.5rem;
+  background-color: #fbbf24; /* Color amarillo */
+  color: #1f2937; /* Texto gris oscuro */
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: background-color 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.primary-button:hover {
+  background-color: #f59e0b; /* Color amarillo más oscuro */
+}
+
+/* Contenedor del dropdown */
+.dropdown-container {
+  position: relative;
+}
+
+/* Menú desplegable */
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 100%;
+  width: 200px;
+  margin-top: 0.5rem;
+  background-color: #1f2937; /* Fondo gris oscuro */
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  flex-direction: column;
+  padding: 0.5rem;
+}
+
+.dropdown-container[open] .dropdown-menu {
+  display: flex;
+  animation: dropdown 0.3s ease-in-out;
+}
+
+/* Estilo de cada ítem en el menú desplegable */
+.dropdown-item {
+  width: 100%;
+  padding: 0.5rem;
+  background-color: #fbbf24;
+  color: #1f2937;
+  border-radius: 6px;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.dropdown-item + .dropdown-item {
+  margin-top: 0.5rem; /* Espacio entre los botones */
+}
+
+.dropdown-item:hover {
+  background-color: #d97706; /* Fondo más oscuro */
+}
+
+/* Estilo específico para el botón de eliminar */
+.delete-button {
+  background-color: #dc2626; /* Rojo */
+  color: #fff;
+}
+
+.delete-button:hover {
+  background-color: #b91c1c; /* Rojo más oscuro */
+}
+
+/* Transición para el menú desplegable */
+@keyframes dropdown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
   }
-  
-  /* Estilos de los botones */
-  button {
-    background-color: #007bff; /* Azul Primario */
-    color: white;
-    font-weight: bold;
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.5rem;
-    border: none; /* Quitar borde */
-    transition: background-color 0.3s ease;
-    cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  /* Botones al pasar el cursor */
-  button:hover {
-    background-color: #0056b3; /* Azul más oscuro */
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .action-buttons-container {
+    flex-direction: column;
+    gap: 0.5rem;
   }
-  
-  /* Botones adicionales */
-  button.sign-off-btn, button.delete-account-btn {
-    background-color: #dc3545; /* Rojo Suave */
+
+  .primary-button {
+    width: 100%;
+    text-align: center;
   }
-  
-  button.sign-off-btn:hover, button.delete-account-btn:hover {
-    background-color: #c82333; /* Rojo más oscuro */
+
+  .dropdown-menu {
+    width: 100%;
   }
-  
-  /* Botones específicos */
-  button.bg-yellow-500 {
-    background-color: #f8c104; /* Amarillo Primario */
-  }
-  
-  button.bg-yellow-500:hover {
-    background-color: #f8b600; /* Amarillo más oscuro */
-  }
-  
-  /* Ajustes para pantallas más pequeñas */
-  @media (max-width: 768px) {
-    button {
-      flex: 1 1 100%; /* Los botones ocuparán el 100% del ancho en pantallas pequeñas */
-      margin-top: 0.5rem; /* Ajustar el margen superior */
-    }
-  }
-  
+}

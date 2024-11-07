@@ -8,7 +8,6 @@ function AlertPending({
   isRejected = () => {},
   payCategories,
 }) {
-  console.log(pendingTransaction.id_reserva);
   const defaultMediosDePago = [
     {
       value: "Tarjeta de credito",

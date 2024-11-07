@@ -7,7 +7,7 @@ function BudgetPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [presupuestos, setPresupuestos] = useState([]);
   const [transacciones, setTransacciones] = useState([]);
-  const [loading, setLoading] = useState(true); // Estado de carga añadido
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const [filtro, setFiltro] = useState("Todos");
 
@@ -27,11 +27,12 @@ function BudgetPage() {
       .then((response) => response.json())
       .then((data) => {
         setTransacciones(data);
-        setLoading(false); // Marcar como cargado una vez que se han recibido las transacciones
       })
       .catch((err) => {
         console.log(err);
-        setLoading(false); // Marcar como cargado incluso si hay un error
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, []);
 
@@ -145,7 +146,20 @@ function BudgetPage() {
 
         {/* Mostrar un mensaje de carga o renderizar los BudgetCard */}
         {loading ? (
-          <div className="text-center">Cargando transacciones...</div>
+          <div className="text-center">
+            <span className="loading loading-spinner loading-lg"></span>{" "}
+            Cargando presupuestos...
+          </div>
+        ) : presupuestos.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-64">
+            <button
+              className="btn bg-yellow-400 text-black text-xl w-64 h-10"
+              onClick={openModal}
+            >
+              Agregar Presupuesto
+            </button>
+            <p className="text-lg mt-4">No tienes presupuestos aún.</p>
+          </div>
         ) : (
           <div className="flex flex-col gap-6">
             {filtrarPresupuestos().map((budget) => (

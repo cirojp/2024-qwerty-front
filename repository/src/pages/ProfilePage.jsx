@@ -227,7 +227,7 @@ function ProfilePage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-900 py-10">
+    <div className="min-h-screen flex flex-col bg-black py-10">
       <div className="text-2xl font-bold text-gray-100 text-center mb-4">
         Mi Cuenta
       </div>
@@ -239,6 +239,9 @@ function ProfilePage() {
       </div>
 
       <div className="flex flex-col flex-grow px-4">
+        <div className="m-4">
+          <ActionButtons />
+        </div>
         {loadingGraphic ? ( // Muestra el spinner si está cargando
           <LoadingSpinner />
         ) : (
@@ -311,15 +314,14 @@ function ProfilePage() {
           </h2>
         </div>
 
-        <MonthlyGraphic
-          type="tipoGasto"
-          transacciones={transacciones}
-          payCategories={payOptions}
-          loading={loadingGraphic}
-        />
-        <div className="m-4">
-          <ActionButtons />
-        </div>
+        {!loadingGraphic && (
+          <MonthlyGraphic
+            type="tipoGasto"
+            transacciones={transacciones}
+            payCategories={payOptions}
+            loading={loadingGraphic}
+          />
+        )}
       </div>
       <ModalMedioDePago
         isOpen={isModalOpen}

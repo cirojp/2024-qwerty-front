@@ -9,9 +9,11 @@ import Header from "./components/Header";
 import ModalAskPayment from "./components/ModalAskPayment";
 import ModalSendPayment from "./components/ModalSendPayment";
 import PresupuestosWidget from "./components/PresupuestosWidget";
+import AchievementNotification from "./components/AchievementNotification";
 
 function HomePage() {
   const [transacciones, setTransacciones] = useState([]);
+  const [showNotification, setShowNotification] = useState(false);
   const [motivo, setMotivo] = useState("");
   const [showNoTransactions, setShowNoTransactions] = useState(false);
   const [valor, setValor] = useState("");
@@ -23,6 +25,7 @@ function HomePage() {
   const [categoria, setCategoria] = useState("");
   const [payCategories, setPayCategories] = useState([]);
   const [transaccionesCargadas, setTransaccionesCargadas] = useState(false);
+  const [achievementData, setAchievementData] = useState(0);
   const [payCategoriesDefault, setPayCategoriesDefault] = useState([
     {
       value: "Impuestos y Servicios",
@@ -519,7 +522,33 @@ function HomePage() {
       console.log(err);
     } finally {
       setTransaccionesCargadas(true);
+      if (!edit) {
+        checkTransaccionAchievment();
+      }
     }
+  };
+
+  const checkTransaccionAchievment = async () => {
+    const token = localStorage.getItem("token");
+    fetch(
+      "https://two024-qwerty-back-2.onrender.com/api/users/userTransaction",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        if (data == 1 || data == 5 || data == 10) {
+          setAchievementData(data);
+          setShowNotification(true);
+        } else {
+          console.log(data);
+        }
+      });
   };
 
   const deleteRow = async (id) => {
@@ -694,15 +723,16 @@ function HomePage() {
             </h2>
           </div>
 
-          {/* Gráfico */}
-          <MonthlyGraphic
-            type="categorias"
-            transacciones={transacciones}
-            payCategories={payCategories}
-            filtroMes={filtroMes}
-            filtroCategoria={categoriaSeleccionada}
-            loading={loadGraphic}
-          />
+          {!loadGraphic && (
+            <MonthlyGraphic
+              type="categorias"
+              transacciones={transacciones}
+              payCategories={payCategories}
+              filtroMes={filtroMes}
+              filtroCategoria={categoriaSeleccionada}
+              loading={loadGraphic}
+            />
+          )}
         </>
       )}
 
@@ -849,7 +879,6 @@ function HomePage() {
         </>
       )}
 
-      {/* Modales */}
       <ModalForm
         isModalOpen={isModalOpen}
         closeModal={closeModal}
@@ -885,6 +914,12 @@ function HomePage() {
         isRejected={isRejected}
         payCategories={payCategories}
       />
+      {showNotification && (
+        <AchievementNotification
+          achievement={achievementData}
+          onClose={() => setShowNotification(false)}
+        />
+      )}
     </div>
   );
 }

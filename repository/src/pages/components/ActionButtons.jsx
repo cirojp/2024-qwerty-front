@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import "./styles/ActionButtons.css";
 import { useNavigate } from "react-router-dom";
 
 function ActionButtons() {
   const navigate = useNavigate();
+
   const signOff = () => {
     localStorage.removeItem("token");
     navigate("/");
   };
+
   const deleteAccount = async () => {
     const token = localStorage.getItem("token");
     try {
@@ -20,50 +22,57 @@ function ActionButtons() {
           },
         }
       );
-      /*const response = await fetch(`https://two024-qwerty-back-2.onrender.com/api/auth`, {
-                method: "DELETE",
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                }
-            });*/
 
       if (response.ok) {
         localStorage.removeItem("token");
         navigate("/");
       } else {
-        setError("Error al eliminar la cuenta");
+        alert("Error al eliminar la cuenta");
       }
     } catch (err) {
-      setError("Ocurrió un error. Intenta nuevamente.");
+      alert("Ocurrió un error. Intenta nuevamente.");
     }
   };
 
   return (
-    <div className="mt-5 flex flex-col lg:flex-row justify-end">
-      <button
-        className="w-full lg:w-1/5 bg-yellow-500 bg-opacity-80 text-gray-950 text-sm py-2 rounded-lg hover:bg-yellow-700"
-        onClick={() => navigate("/index")}
-      >
+    <div className="action-buttons-container">
+      <button className="primary-button" onClick={() => navigate("/index")}>
         Ver Mis Transacciones
       </button>
       <button
-        className="w-full lg:w-1/5 bg-yellow-500 bg-opacity-80 text-gray-950 text-sm py-2 rounded-lg hover:bg-yellow-700"
-        onClick={() => navigate("/change-password")}
+        className="primary-button"
+        onClick={() => navigate("/achievements")}
       >
-        Cambiar Contraseña
+        Ver Mis Logros
       </button>
-      <button
-        className="w-full lg:w-1/5 bg-yellow-500 bg-opacity-80 text-gray-950 text-sm py-2 rounded-lg hover:bg-yellow-700"
-        onClick={() => signOff()}
-      >
-        Cerrar Sesión
-      </button>
-      <button
-        className="w-full lg:w-1/5 bg-red-600 bg-opacity-80 text-white text-sm py-2 rounded-lg hover:bg-red-900"
-        onClick={() => deleteAccount()}
-      >
-        Eliminar Cuenta
-      </button>
+      <details className="dropdown-container">
+        <summary className="primary-button cursor-pointer">
+          Más Opciones
+        </summary>
+        <ul className="dropdown-menu">
+          <li>
+            <button
+              className="dropdown-item"
+              onClick={() => navigate("/change-password")}
+            >
+              Cambiar Contraseña
+            </button>
+          </li>
+          <li>
+            <button className="dropdown-item mt-2" onClick={signOff}>
+              Cerrar Sesión
+            </button>
+          </li>
+          <li>
+            <button
+              className="dropdown-item mt-2 delete-button"
+              onClick={deleteAccount}
+            >
+              Eliminar Cuenta
+            </button>
+          </li>
+        </ul>
+      </details>
     </div>
   );
 }

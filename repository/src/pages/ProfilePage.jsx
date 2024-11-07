@@ -35,12 +35,14 @@ function ProfilePage() {
   const [itemToDelete, setItemToDelete] = useState({});
   const [transacciones, setTransacciones] = useState([]);
   const [loadingGraphic, setLoadingGraphic] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   useEffect(() => {
     getTransacciones();
     setLoadingGraphic(false);
   }, []);
   const getTransacciones = async () => {
+    setIsLoading(true);
     setLoadingGraphic(true);
     const token = localStorage.getItem("token");
     if (await checkIfValidToken(token)) {
@@ -67,6 +69,7 @@ function ProfilePage() {
     } else {
       navigate("/");
     }
+    setIsLoading(false);
   };
   const checkIfValidToken = async (token) => {
     try {
@@ -92,6 +95,7 @@ function ProfilePage() {
     }
   };
   const fetchPersonalTipoGastos = async () => {
+    setIsLoading(true);
     const token = localStorage.getItem("token");
     if (await checkIfValidToken(token)) {
       try {
@@ -122,6 +126,7 @@ function ProfilePage() {
       console.log("deberia redirec");
       navigate("/");
     }
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -242,6 +247,14 @@ function ProfilePage() {
         <div className="m-4">
           <ActionButtons />
         </div>
+        <>
+        {isLoading && (
+          <div className="fixed inset-0 bg-black bg-opacity-500 flex justify-center items-center z-50">
+            <div className="flex items-center justify-center">
+              <div className="animate-spin border-t-4 border-blue-500 border-solid w-16 h-16 rounded-full"></div>
+            </div>
+          </div>
+        )}
         {loadingGraphic ? ( // Muestra el spinner si está cargando
           <LoadingSpinner />
         ) : (
@@ -322,6 +335,7 @@ function ProfilePage() {
             loading={loadingGraphic}
           />
         )}
+        </>
       </div>
       <ModalMedioDePago
         isOpen={isModalOpen}

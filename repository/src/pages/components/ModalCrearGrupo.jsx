@@ -239,14 +239,13 @@ const ModalCrearGrupo = ({
         onChange={(e) => setCorreoUsuario(e.target.value)}
         className="mt-1 block w-full p-2 border border-gray-600 bg-gray-800 text-white rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
       />
+      {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
       <button
         onClick={handleAddUsuario}
         className="mt-2 w-full sm:w-auto bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600 transition duration-300"
       >
         Agregar Usuario
       </button>
-
-      {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
 
       <button
         onClick={handleSubmit}

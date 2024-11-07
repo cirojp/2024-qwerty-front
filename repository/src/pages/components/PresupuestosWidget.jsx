@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import BudgetCard from "./BudgetCard";
 import { useNavigate } from "react-router-dom";
 
-function PresupuestosWidget({ transacciones = [] }) {
+function PresupuestosWidget({ transacciones = [], filtroMes, filtroAno }) {
   const [presupuestos, setPresupuestos] = useState([]);
   const navigate = useNavigate();
   useEffect(() => {
@@ -25,11 +25,13 @@ function PresupuestosWidget({ transacciones = [] }) {
         const fechaActual = new Date();
         const mesActual = fechaActual.getMonth() + 1;
         const añoActual = fechaActual.getFullYear();
-        const formatoMesActual = `${añoActual}-${mesActual
+        const formatoMesFiltro = `${
+          filtroAno == "" ? añoActual : filtroAno
+        }-${(filtroMes == "" ? mesActual : filtroMes)
           .toString()
           .padStart(2, "0")}`;
         const dataActual = data.filter(
-          (presupuesto) => presupuesto.budgetMonth === formatoMesActual
+          (presupuesto) => presupuesto.budgetMonth === formatoMesFiltro
         );
         setPresupuestos(dataActual);
       }
@@ -39,9 +41,9 @@ function PresupuestosWidget({ transacciones = [] }) {
   };
   return (
     <div className="m-4">
-      {presupuestos == [] && (
+      {presupuestos[0] != null && (
         <button
-          className="btn bg-black text-xl md:text-2xl py-2 font-bold text-gray-100 hover:underline"
+          className="btn bg-black text-xl border-none md:text-2xl py-2 font-bold text-gray-100 hover:underline"
           onClick={() => navigate("/presupuestos")}
         >
           Presupuestos Actuales

@@ -78,6 +78,7 @@ function HomePage() {
   const [loadGraphic, setLoadGraphic] = useState(true);
   const [grupos, setGrupos] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
+  const [transaccionesSinFiltroCat, setTransaccionesSinFiltroCat] = useState([]);
   const handleGroupChange = (selectedOption) => {
     if (selectedOption && selectedOption.value === null) {
       setSelectedGroup(null); // Restablecer a null si se selecciona "Personal"
@@ -87,7 +88,7 @@ function HomePage() {
   };
 
   useEffect(() => {
-    getTransacciones(categoriaSeleccionada);
+    getTransacciones(categoriaSeleccionada); //aplicar un filtro local
     setLoadGraphic(false);
   }, [categoriaSeleccionada, filtroMes, filtroAno]);
   useEffect(() => {
@@ -221,7 +222,6 @@ function HomePage() {
         url += `?categoria=${filtrado}`;
         if (filtroMes) url += `&mes=${filtroMes}`;
         if (filtroAno) url += `&anio=${filtroAno}`;
-        console.log(url);
       }
       try {
         const response = await fetch(url, {
@@ -236,7 +236,10 @@ function HomePage() {
         }
 
         const data = await response.json();
-        setTransacciones(data);
+        setTransacciones(data.transaccionesFiltradas);
+        if (filtrado !== "Todas"){
+          setTransaccionesSinFiltroCat(data.transaccionesSinFiltrarCat);
+        }
       } catch (err) {
         console.error("Error fetching transactions:", err);
       } finally {
@@ -692,7 +695,7 @@ function HomePage() {
   };
   const resetFilters = () => {
     setCategoriaSeleccionada("Todas");
-    setFiltroAno("");
+    setFiltroAno("2024");
     setFiltroMes("");
   };
   const refershTransacciones = (transaccionNueva) => {

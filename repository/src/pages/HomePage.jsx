@@ -79,6 +79,8 @@ function HomePage() {
   const [grupos, setGrupos] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [transaccionesSinFiltroCat, setTransaccionesSinFiltroCat] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
   const handleGroupChange = (selectedOption) => {
     if (selectedOption && selectedOption.value === null) {
       setSelectedGroup(null); // Restablecer a null si se selecciona "Personal"
@@ -106,6 +108,7 @@ function HomePage() {
   }, []);
 
   const fetchGrupos = async () => {
+    setIsLoading(true);
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(
@@ -127,7 +130,7 @@ function HomePage() {
     } catch (error) {
       setError("Ocurrió un error al obtener los grupos.");
     } finally {
-      //loading?
+      setIsLoading(false);
     }
   };
 
@@ -164,6 +167,7 @@ function HomePage() {
   };
 
   const fetchPersonalTipoGastos = async () => {
+    setIsLoading(true);
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(
@@ -188,6 +192,8 @@ function HomePage() {
         "Error al obtener los tipos de gasto personalizados:",
         error
       );
+    } finally {
+      setIsLoading(false);
     }
   };
   const checkIfValidToken = async (token) => {
@@ -214,6 +220,7 @@ function HomePage() {
     }
   };
   const getTransacciones = async (filtrado = "Todas") => {
+    setIsLoading(true);
     const token = localStorage.getItem("token");
     setTransaccionesCargadas(false);
     if (await checkIfValidToken(token)) {
@@ -252,9 +259,11 @@ function HomePage() {
       console.log("deberia redirec");
       navigate("/");
     }
+    setIsLoading(false);
   };
 
   const fetchPersonalCategorias = async () => {
+    setIsLoading(true);
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(
@@ -714,215 +723,225 @@ function HomePage() {
         getTransacciones={getTransacciones}
         openModal={openModal}
       />
-      {transaccionesCargadas && (
-        <PresupuestosWidget transacciones={transacciones} />
-      )}
-
-      {!showNoTransactions && (
-        <>
-          <div className="flex items-center">
-            <h2 className="text-xl md:text-2xl py-2 font-bold text-gray-100">
-              Monto por Categoria
-            </h2>
-          </div>
-
-          {!loadGraphic && (
-            <MonthlyGraphic
-              type="categorias"
-              transacciones={transacciones}
-              payCategories={payCategories}
-              filtroMes={filtroMes}
-              filtroCategoria={categoriaSeleccionada}
-              loading={loadGraphic}
-            />
-          )}
-        </>
-      )}
-
-      <div className="flex justify-end w-full p-4">
-        <button
-          onClick={() => setIsFiltersOpen(!isFiltersOpen)}
-          className="btn btn-warning w-full"
-        >
-          {isFiltersOpen ? "Ocultar Filtros" : "Mostrar Filtros"}
-        </button>
-      </div>
-
-      {isFiltersOpen && (
-        <div className="flex flex-col md:flex-row items-start md:items-center md:gap-6 mb-4">
-          <div className="flex flex-col md:flex-row md:items-center gap-3 w-full">
-            <div className="flex flex-col w-full md:w-1/3">
-              <select
-                id="categorias"
-                value={categoriaSeleccionada}
-                onChange={handleChange}
-                className="block select select-bordered w-full max-w-full"
-              >
-                {categoriasConTodas.map((cat) => (
-                  <option key={cat.value} value={cat.value}>
-                    {cat.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Select de Mes */}
-            <div className="flex flex-col w-full md:w-1/3">
-              <select
-                value={filtroMes}
-                onChange={(e) => setFiltroMes(e.target.value)}
-                className="select select-bordered w-full max-w-full"
-              >
-                <option value="">Mes</option>
-                <option value="01">Enero</option>
-                <option value="02">Febrero</option>
-                <option value="03">Marzo</option>
-                <option value="04">Abril</option>
-                <option value="05">Mayo</option>
-                <option value="06">Junio</option>
-                <option value="07">Julio</option>
-                <option value="08">Agosto</option>
-                <option value="09">Septiembre</option>
-                <option value="10">Octubre</option>
-                <option value="11">Noviembre</option>
-                <option value="12">Diciembre</option>
-              </select>
-            </div>
-
-            <div className="flex flex-col w-full md:w-1/3">
-              <select
-                value={filtroAno}
-                onChange={(e) => setFiltroAno(e.target.value)}
-                className="select select-bordered w-full max-w-full"
-              >
-                <option value="">Todos los años</option>{" "}
-                <option value="2021">2021</option>
-                <option value="2022">2022</option>
-                <option value="2023">2023</option>
-                <option value="2024">2024</option>
-                <option value="2025">2025</option>
-                <option value="2026">2026</option>
-              </select>
-            </div>
-
-            <button
-              onClick={() => resetFilters()}
-              className="btn btn-warning w-full md:w-auto mt-2 md:mt-0"
-            >
-              Borrar filtros
-            </button>
+      <>
+      {isLoading && (
+        <div className="fixed inset-0 bg-black bg-opacity-500 flex justify-center items-center z-50">
+          <div className="flex items-center justify-center">
+            <div className="animate-spin border-t-4 border-blue-500 border-solid w-16 h-16 rounded-full"></div>
           </div>
         </div>
       )}
+        {transaccionesCargadas && (
+          <PresupuestosWidget transacciones={transacciones} />
+        )}
 
-      {/* Cargando Spinner */}
-      {isLoadingFilter ? (
-        <div className="flex justify-center items-center">
-          <svg
-            className="animate-spin h-8 w-8 md:h-10 md:w-10 text-yellow-500"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
+        {!showNoTransactions && (
+          <>
+            <div className="flex items-center">
+              <h2 className="text-xl md:text-2xl py-2 font-bold text-gray-100">
+                Monto por Categoria
+              </h2>
+            </div>
+
+            {!loadGraphic && (
+              <MonthlyGraphic
+                type="categorias"
+                transacciones={transacciones}
+                payCategories={payCategories}
+                filtroMes={filtroMes}
+                filtroCategoria={categoriaSeleccionada}
+                loading={loadGraphic}
+              />
+            )}
+          </>
+        )}
+
+        <div className="flex justify-end w-full p-4">
+          <button
+            onClick={() => setIsFiltersOpen(!isFiltersOpen)}
+            className="btn btn-warning w-full"
           >
-            <circle
-              className="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              strokeWidth="4"
-            ></circle>
-            <path
-              className="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.965 7.965 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-            ></path>
-          </svg>
-          <span className="text-yellow-500 font-bold ml-2">Cargando...</span>
+            {isFiltersOpen ? "Ocultar Filtros" : "Mostrar Filtros"}
+          </button>
         </div>
-      ) : (
-        <>
-          {/* Historial de Transacciones */}
-          <div className="bg-black flex flex-col w-full overflow-x-auto">
-            <div className="flex justify-between items-center w-full px-4 py-6">
-              <div className="flex items-center">
-                <h2 className="text-xl md:text-2xl py-2 font-bold text-gray-100">
-                  Historial de Transacciones
-                </h2>
-              </div>
-            </div>
-          </div>
-          <TransaccionesTable
-            transacciones={transacciones}
-            payCategories={payCategories}
-            editRow={editRow}
-            deleteRow={deleteRow}
-            onTableEmpty={() => setShowNoTransactions(true)}
-            onTransactions={() => setShowNoTransactions(false)}
-          />
 
-          {/* Si no hay transacciones */}
-          {showNoTransactions && (
-            <div className="flex flex-col justify-center items-center mb-0">
-              {(categoriaSeleccionada !== "Todas" ||
-                filtroAno !== "2024" ||
-                filtroMes !== "") && (
-                <p className="text-red-500 font-bold mb-4">
-                  Su filtro no coincide con ninguna transacción
-                </p>
-              )}
+        {isFiltersOpen && (
+          <div className="flex flex-col md:flex-row items-start md:items-center md:gap-6 mb-4">
+            <div className="flex flex-col md:flex-row md:items-center gap-3 w-full">
+              <div className="flex flex-col w-full md:w-1/3">
+                <select
+                  id="categorias"
+                  value={categoriaSeleccionada}
+                  onChange={handleChange}
+                  className="block select select-bordered w-full max-w-full"
+                >
+                  {categoriasConTodas.map((cat) => (
+                    <option key={cat.value} value={cat.value}>
+                      {cat.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Select de Mes */}
+              <div className="flex flex-col w-full md:w-1/3">
+                <select
+                  value={filtroMes}
+                  onChange={(e) => setFiltroMes(e.target.value)}
+                  className="select select-bordered w-full max-w-full"
+                >
+                  <option value="">Mes</option>
+                  <option value="01">Enero</option>
+                  <option value="02">Febrero</option>
+                  <option value="03">Marzo</option>
+                  <option value="04">Abril</option>
+                  <option value="05">Mayo</option>
+                  <option value="06">Junio</option>
+                  <option value="07">Julio</option>
+                  <option value="08">Agosto</option>
+                  <option value="09">Septiembre</option>
+                  <option value="10">Octubre</option>
+                  <option value="11">Noviembre</option>
+                  <option value="12">Diciembre</option>
+                </select>
+              </div>
+
+              <div className="flex flex-col w-full md:w-1/3">
+                <select
+                  value={filtroAno}
+                  onChange={(e) => setFiltroAno(e.target.value)}
+                  className="select select-bordered w-full max-w-full"
+                >
+                  <option value="">Todos los años</option>{" "}
+                  <option value="2021">2021</option>
+                  <option value="2022">2022</option>
+                  <option value="2023">2023</option>
+                  <option value="2024">2024</option>
+                  <option value="2025">2025</option>
+                  <option value="2026">2026</option>
+                </select>
+              </div>
+
               <button
-                className="bg-yellow-500 text-gray-950 font-extrabold py-4 px-8 rounded-lg hover:bg-yellow-700"
-                onClick={openModal}
+                onClick={() => resetFilters()}
+                className="btn btn-warning w-full md:w-auto mt-2 md:mt-0"
               >
-                Ingrese una transacción
+                Borrar filtros
               </button>
             </div>
-          )}
-        </>
-      )}
+          </div>
+        )}
 
-      <ModalForm
-        isModalOpen={isModalOpen}
-        closeModal={closeModal}
-        agregarTransaccion={agregarTransaccion}
-        edit={edit}
-        motivo={motivo}
-        valor={valor}
-        fecha={fecha}
-        handleMotivoChange={handleMotivoChange}
-        setValor={setValor}
-        selectedCategory={selectedCategory}
-        payCategories={payCategories}
-        handleCategoryChange={handleCategoryChange}
-        handleCreateCat={handleCreateCat}
-        setFecha={setFecha}
-        handlePayChange={handlePayChange}
-        selectedPayMethod={selectedPayMethod}
-        payOptions={payOptions}
-        handleCreateTP={handleCreateTP}
-        handleGroupChange={handleGroupChange}
-        selectedGroup={selectedGroup}
-        grupos={grupos}
-      />
-      <ModalAskPayment payCategories={payCategories} />
-      <ModalSendPayment
-        payCategories={payCategories}
-        refreshTransacciones={refershTransacciones}
-      />
-      <AlertPending
-        isOpen={pendTran}
-        pendingTransaction={tranPendiente}
-        isAccepted={isAccepted}
-        isRejected={isRejected}
-        payCategories={payCategories}
-      />
-      {showNotification && (
-        <AchievementNotification
-          achievement={achievementData}
-          onClose={() => setShowNotification(false)}
+        {/* Cargando Spinner */}
+        {isLoadingFilter ? (
+          <div className="flex justify-center items-center">
+            <svg
+              className="animate-spin h-8 w-8 md:h-10 md:w-10 text-yellow-500"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.965 7.965 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+            <span className="text-yellow-500 font-bold ml-2">Cargando...</span>
+          </div>
+        ) : (
+          <>
+            {/* Historial de Transacciones */}
+            <div className="bg-black flex flex-col w-full overflow-x-auto">
+              <div className="flex justify-between items-center w-full px-4 py-6">
+                <div className="flex items-center">
+                  <h2 className="text-xl md:text-2xl py-2 font-bold text-gray-100">
+                    Historial de Transacciones
+                  </h2>
+                </div>
+              </div>
+            </div>
+            <TransaccionesTable
+              transacciones={transacciones}
+              payCategories={payCategories}
+              editRow={editRow}
+              deleteRow={deleteRow}
+              onTableEmpty={() => setShowNoTransactions(true)}
+              onTransactions={() => setShowNoTransactions(false)}
+            />
+
+            {/* Si no hay transacciones */}
+            {showNoTransactions && (
+              <div className="flex flex-col justify-center items-center mb-0">
+                {(categoriaSeleccionada !== "Todas" ||
+                  filtroAno !== "2024" ||
+                  filtroMes !== "") && (
+                  <p className="text-red-500 font-bold mb-4">
+                    Su filtro no coincide con ninguna transacción
+                  </p>
+                )}
+                <button
+                  className="bg-yellow-500 text-gray-950 font-extrabold py-4 px-8 rounded-lg hover:bg-yellow-700"
+                  onClick={openModal}
+                >
+                  Ingrese una transacción
+                </button>
+              </div>
+            )}
+          </>
+        )}
+
+        <ModalForm
+          isModalOpen={isModalOpen}
+          closeModal={closeModal}
+          agregarTransaccion={agregarTransaccion}
+          edit={edit}
+          motivo={motivo}
+          valor={valor}
+          fecha={fecha}
+          handleMotivoChange={handleMotivoChange}
+          setValor={setValor}
+          selectedCategory={selectedCategory}
+          payCategories={payCategories}
+          handleCategoryChange={handleCategoryChange}
+          handleCreateCat={handleCreateCat}
+          setFecha={setFecha}
+          handlePayChange={handlePayChange}
+          selectedPayMethod={selectedPayMethod}
+          payOptions={payOptions}
+          handleCreateTP={handleCreateTP}
+          handleGroupChange={handleGroupChange}
+          selectedGroup={selectedGroup}
+          grupos={grupos}
         />
-      )}
+        <ModalAskPayment payCategories={payCategories} />
+        <ModalSendPayment
+          payCategories={payCategories}
+          refreshTransacciones={refershTransacciones}
+        />
+        <AlertPending
+          isOpen={pendTran}
+          pendingTransaction={tranPendiente}
+          isAccepted={isAccepted}
+          isRejected={isRejected}
+          payCategories={payCategories}
+        />
+        {showNotification && (
+          <AchievementNotification
+            achievement={achievementData}
+            onClose={() => setShowNotification(false)}
+          />
+        )}
+      </>
+      );
     </div>
   );
 }

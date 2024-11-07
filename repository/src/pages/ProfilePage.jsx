@@ -178,6 +178,7 @@ function ProfilePage() {
       if (response.ok) {
         setPayOptions([]); // Limpiar las opciones
         await fetchPersonalTipoGastos(); // Volver a obtener los tipos de gasto actualizados
+        await getTransacciones();
       }
     } catch (err) {
       console.log(err);

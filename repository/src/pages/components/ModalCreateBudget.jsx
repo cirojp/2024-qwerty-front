@@ -30,11 +30,6 @@ function ModalCreateBudget({ closeModal = () => {}, initialBudget = null }) {
       iconPath: "fa-solid fa-blender",
     },
     { value: "Clase", label: "Clase", iconPath: "fa-solid fa-chalkboard-user" },
-    {
-      value: "Ingreso de Dinero",
-      label: "Ingreso de Dinero",
-      iconPath: "fa-solid fa-money-bill",
-    },
   ]);
 
   const [budgetValues, setBudgetValues] = useState({});
@@ -116,11 +111,11 @@ function ModalCreateBudget({ closeModal = () => {}, initialBudget = null }) {
       0
     );
 
-    if (totalCategoryBudget > totalBudget) {
+    if (totalCategoryBudget >= totalBudget) {
       setErrors((prevErrors) => ({
         ...prevErrors,
         totalBudget:
-          "La suma de los presupuestos no debe exceder el presupuesto total",
+          "La suma de los presupuestos no debe igualar o exceder el presupuesto total",
       }));
       return;
     } else {
@@ -244,7 +239,7 @@ function ModalCreateBudget({ closeModal = () => {}, initialBudget = null }) {
           <input
             type="number"
             placeholder="Monto Total"
-            className="input input-bordered w-full"
+            className="input input-bordered w-full bg-[#1D232A]"
             value={totalBudget}
             onChange={(e) => setTotalBudget(parseFloat(e.target.value))}
             required
@@ -306,7 +301,11 @@ function ModalCreateBudget({ closeModal = () => {}, initialBudget = null }) {
         {formMessage && <p className="text-green-500 text-sm">{formMessage}</p>}
 
         <div className="flex flex-wrap justify-end gap-4 mt-6">
-          <button type="button" className="btn btn-ghost" onClick={closeModal}>
+          <button
+            type="button"
+            className="btn btn-ghost bg-red-500 hover:bg-red-700"
+            onClick={closeModal}
+          >
             Cancelar
           </button>
           <button type="submit" className="btn bg-yellow-500 text-black">

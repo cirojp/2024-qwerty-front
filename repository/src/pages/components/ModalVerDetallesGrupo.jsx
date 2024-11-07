@@ -19,7 +19,7 @@ function ModalVerDetallesGrupo({
   payCategories,
   setGrupos,
   grupos,
-  getTransacciones
+  getTransacciones,
 }) {
   const [transacciones, setTransacciones] = useState([]);
   const [isLoading, setIsLoading] = useState(false);

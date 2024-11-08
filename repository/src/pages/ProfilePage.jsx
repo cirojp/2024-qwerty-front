@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
-import ActionButtons from "./ActionButtons";
+import ActionButtons from "./components/ActionButtons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import "./styles/ProfilePage.css";
 import logo from "../assets/logo-removebg-preview.png";
 import { useNavigate } from "react-router-dom";
-import ConfirmDeleteMedioDePago from "./ConfirmDeleteMedioDePago";
-import ModalMedioDePago from "./ModalMedioDePago";
-import MonthlyGraphic from "./MonthlyGraphic";
+import ConfirmDeleteMedioDePago from "./components/ConfirmDeleteMedioDePago";
+import ModalMedioDePago from "./components/ModalMedioDePago";
+import MonthlyGraphic from "./components/MonthlyGraphic";
+import LoadingSpinner from "./components/LoadingSpinner";
 
 function ProfilePage() {
   library.add(fas);
@@ -33,11 +34,16 @@ function ProfilePage() {
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState({});
   const [transacciones, setTransacciones] = useState([]);
+  const [loadingGraphic, setLoadingGraphic] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   useEffect(() => {
     getTransacciones();
+    setLoadingGraphic(false);
   }, []);
   const getTransacciones = async () => {
+    setIsLoading(true);
+    setLoadingGraphic(true);
     const token = localStorage.getItem("token");
     if (await checkIfValidToken(token)) {
       let url = `https://two024-qwerty-back-2.onrender.com/api/transacciones/user/filter`;
@@ -54,18 +60,16 @@ function ProfilePage() {
         }
 
         const data = await response.json();
-        setTransacciones(data);
+        setTransacciones(data.transaccionesFiltradas);
       } catch (err) {
         console.error("Error fetching transactions:", err);
       } finally {
-        setIsLoadingFilter(false);
+        setLoadingGraphic(false);
       }
-      fetchPersonalCategorias();
-      showTransactionsPendientes();
     } else {
-      console.log("deberia redirec");
       navigate("/");
     }
+    setIsLoading(false);
   };
   const checkIfValidToken = async (token) => {
     try {
@@ -91,6 +95,7 @@ function ProfilePage() {
     }
   };
   const fetchPersonalTipoGastos = async () => {
+    setIsLoading(true);
     const token = localStorage.getItem("token");
     if (await checkIfValidToken(token)) {
       try {
@@ -121,6 +126,7 @@ function ProfilePage() {
       console.log("deberia redirec");
       navigate("/");
     }
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -160,6 +166,7 @@ function ProfilePage() {
   const handleDelete = async (medioPagoValue) => {
     const token = localStorage.getItem("token");
     setConfirmDeleteOpen(false);
+    setLoadingGraphic(true);
     try {
       const response = await fetch(
         "https://two024-qwerty-back-2.onrender.com/api/personal-tipo-gasto/eliminar",
@@ -176,9 +183,12 @@ function ProfilePage() {
       if (response.ok) {
         setPayOptions([]); // Limpiar las opciones
         await fetchPersonalTipoGastos(); // Volver a obtener los tipos de gasto actualizados
+        await getTransacciones();
       }
     } catch (err) {
       console.log(err);
+    } finally {
+      setLoadingGraphic(false);
     }
   };
 
@@ -222,7 +232,7 @@ function ProfilePage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-900 py-10">
+    <div className="min-h-screen flex flex-col bg-black py-10">
       <div className="text-2xl font-bold text-gray-100 text-center mb-4">
         Mi Cuenta
       </div>
@@ -234,81 +244,101 @@ function ProfilePage() {
       </div>
 
       <div className="flex flex-col flex-grow px-4">
-        <div className="bg-gray-800 p-4 rounded-lg shadow-lg text-white">
-          <div className="font-bold text-yellow-500 text-xl text-center mb-4">
-            Mis Medios De Pago
-          </div>
-          <ul>
-            {defaultMediosDePago.map((medioDePago) => (
-              <li
-                key={medioDePago.value}
-                className="bg-gray-700 p-3 rounded-md shadow mb-3"
-              >
-                <div className="flex items-center">
-                  <div className={medioDePago.textColor}>
-                    {medioDePago.label}
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
-          <ul>
-            {payOptions.slice(3).map((medioDePago) => (
-              <li
-                key={medioDePago.value}
-                className="bg-gray-700 p-3 rounded-md shadow mb-3 flex justify-between"
-              >
-                <div className="flex items-center">
-                  <div className={medioDePago.textColor}>
-                    {medioDePago.label}
-                  </div>
-                </div>
-                <div className="flex items-center">
-                  <button
-                    className="text-blue-500 hover:text-blue-700 mr-2"
-                    onClick={() => {
-                      setEditPayOption(medioDePago);
-                      setIsEditMode(true);
-                      setIsModalOpen(true);
-                    }}
-                  >
-                    Editar
-                  </button>
-                  <button
-                    className="text-red-500 hover:text-red-700"
-                    onClick={() => confirmDelete(medioDePago.value)}
-                  >
-                    X
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-
-          <button
-            className="mt-4 px-4 py-2 bg-yellow-500 text-black rounded-md hover:bg-yellow-700"
-            onClick={() => {
-              setEditPayOption({});
-              setIsEditMode(false);
-              setIsModalOpen(true);
-            }}
-          >
-            Agregar Medio de Pago
-          </button>
-        </div>
-        <div className="flex items-center">
-          <h2 className="text-2xl py-2 font-bold text-gray-100">
-            Monto por Medio de Pago
-          </h2>
-        </div>
-        <MonthlyGraphic
-          type="tipoGasto"
-          transacciones={transacciones}
-          payCategories={payOptions}
-        />
         <div className="m-4">
           <ActionButtons />
         </div>
+        <>
+          {isLoading && (
+            <div className="fixed inset-0 bg-black bg-opacity-500 flex justify-center items-center z-50">
+              <div className="flex items-center justify-center">
+                <div className="animate-spin border-t-4 border-blue-500 border-solid w-16 h-16 rounded-full"></div>
+              </div>
+            </div>
+          )}
+          {loadingGraphic ? ( // Muestra el spinner si está cargando
+            <LoadingSpinner />
+          ) : (
+            <div className="bg-gray-800 p-4 rounded-lg shadow-lg text-white">
+              <div className="font-bold text-yellow-500 text-xl text-center mb-4">
+                Mis Medios De Pago
+              </div>
+              <ul>
+                {defaultMediosDePago.map((medioDePago) => (
+                  <li
+                    key={medioDePago.value}
+                    className="bg-gray-700 p-3 rounded-md shadow mb-3"
+                  >
+                    <div className="flex items-center">
+                      <div className={medioDePago.textColor}>
+                        {medioDePago.label}
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+              <ul>
+                {payOptions.slice(3).map((medioDePago) => (
+                  <li
+                    key={medioDePago.value}
+                    className="bg-gray-700 p-3 rounded-md shadow mb-3 flex justify-between"
+                  >
+                    <div className="flex items-center">
+                      <div className={medioDePago.textColor}>
+                        {medioDePago.label}
+                      </div>
+                    </div>
+                    <div className="flex items-center">
+                      <button
+                        className="text-blue-500 hover:text-blue-700 mr-2"
+                        onClick={() => {
+                          setEditPayOption(medioDePago);
+                          setIsEditMode(true);
+                          setIsModalOpen(true);
+                        }}
+                      >
+                        Editar
+                      </button>
+                      <button
+                        className="text-red-500 hover:text-red-700"
+                        onClick={() => confirmDelete(medioDePago.value)}
+                      >
+                        X
+                      </button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+
+              <button
+                className="mt-4 px-4 py-2 bg-yellow-500 text-black rounded-md hover:bg-yellow-700"
+                onClick={() => {
+                  setEditPayOption({});
+                  setIsEditMode(false);
+                  setIsModalOpen(true);
+                }}
+              >
+                Agregar Medio de Pago
+              </button>
+            </div>
+          )}
+
+          {transacciones[0] != null && (
+            <div className="flex items-center">
+              <h2 className="text-2xl py-2 font-bold text-gray-100">
+                Monto por Medio de Pago
+              </h2>
+            </div>
+          )}
+
+          {!loadingGraphic && transacciones[0] != null && (
+            <MonthlyGraphic
+              type="tipoGasto"
+              transacciones={transacciones}
+              payCategories={payOptions}
+              loading={loadingGraphic}
+            />
+          )}
+        </>
       </div>
       <ModalMedioDePago
         isOpen={isModalOpen}

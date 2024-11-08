@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import Select from "react-select";
 import "./styles/ModalForm.css";
 import ModalCategoria from "./ModalCategoria";
-import CreatableSelect from 'react-select/creatable';
+import CreatableSelect from "react-select/creatable";
 
 function ModalForm({
   isModalOpen,
@@ -20,10 +20,13 @@ function ModalForm({
   handleCategoryChange,
   handleCreateCat,
   setFecha,
-  handlePayChange, 
+  handlePayChange,
   selectedPayMethod,
-  payOptions, 
+  payOptions,
   handleCreateTP,
+  handleGroupChange,
+  selectedGroup,
+  grupos,
 }) {
   const customStyles = {
     overlay: {
@@ -88,7 +91,35 @@ function ModalForm({
   };
   const [modalError, setModalError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [activeGroups, setActiveGroups] = useState([]);
   const [isModalCategoriaOpen, setIsModalCategoriaOpen] = useState(false);
+  const [isGroupDisabled, setIsGroupDisabled] = useState(false);
+  const [isCategoryDisabled, setIsCategoryDisabled] = useState(false);
+  useEffect(() => {
+    if (grupos == null) {
+      grupos = [selectedGroup];
+    }
+    setActiveGroups(grupos.filter((grupo) => grupo.estado === true));
+    console.log(selectedGroup);
+  }, [grupos]);
+  useEffect(() => {
+    if (selectedCategory && selectedCategory.value === "Gasto Grupal") {
+      setIsGroupDisabled(false);
+      setIsCategoryDisabled(false);
+    } else if (selectedCategory && selectedCategory.value != "Gasto Grupal") {
+      setIsGroupDisabled(true);
+      setIsCategoryDisabled(false);
+    } else if (selectedGroup) {
+      setIsGroupDisabled(false);
+      setIsCategoryDisabled(true);
+    } else {
+      setIsCategoryDisabled(false);
+      setIsGroupDisabled(false);
+    }
+    if (edit && handleGroupChange != null) {
+      setIsGroupDisabled(true);
+    }
+  }, [selectedCategory, selectedGroup]);
   const openModalCategoria = () => {
     setIsModalCategoriaOpen(true);
   };
@@ -116,6 +147,28 @@ function ModalForm({
     setModalError("");
     closeModal();
   };
+
+  const handleCategorySelect = (category) => {
+    handleCategoryChange(category);
+    if (category.value === "Gasto Grupal") {
+      setIsGroupDisabled(false); // Habilita grupo si es gasto grupal
+      setIsCategoryDisabled(true); // Desactiva categoría
+    } else {
+      setIsGroupDisabled(true); // Desactiva grupo
+      handleGroupChange(null); // Limpia selección de grupo
+    }
+  };
+
+  const handleGroupSelect = (group) => {
+    handleGroupChange(group);
+    if (group) {
+      setIsCategoryDisabled(true); // Desactiva categoría si hay grupo seleccionado
+      handleCategoryChange({ value: "Gasto Grupal", label: "Gasto Grupal" });
+    } else {
+      setIsCategoryDisabled(false); // Habilita categoría si no hay grupo
+    }
+  };
+
   return (
     <Modal
       isOpen={isModalOpen}
@@ -149,36 +202,53 @@ function ModalForm({
           />
         </div>
         <div>
-          <label className="text-center text-gray-100 mb-6">Medio de Pago:</label>
+          <label className="text-center text-gray-100 mb-6">
+            Medio de Pago:
+          </label>
           <CreatableSelect
-              options={payOptions}
-              onChange={handlePayChange}
-              onCreateOption={handleCreateTP}
-              value={selectedPayMethod}
-              className="custom-select mt-1 block w-full border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm border-transparent"
-              styles={customSelectStyles}
-              required
+            options={payOptions}
+            onChange={handlePayChange}
+            onCreateOption={handleCreateTP}
+            value={selectedPayMethod}
+            className="custom-select mt-1 block w-full border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm border-transparent"
+            styles={customSelectStyles}
+            required
           />
         </div>
         <div>
           <label className="text-center text-gray-100 mb-6">Categoria:</label>
-          <div className="flex items-center">
-            <Select
-              options={payCategories}
-              onChange={handleCategoryChange}
-              value={selectedCategory}
-              className="custom-select mt-1 block w-full border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm border-transparent"
-              styles={customSelectStyles}
-              required
+          {handleGroupChange ? (
+            <div className="flex items-center">
+              <Select
+                options={payCategories}
+                onChange={handleCategorySelect}
+                value={selectedCategory}
+                isDisabled={isCategoryDisabled} // Desactivar si ya hay un grupo seleccionado
+                className="custom-select mt-1 block w-full border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm border-transparent"
+                styles={customSelectStyles}
+                required
+              />
+              <button
+                type="button"
+                onClick={() => openModalCategoria()}
+                className="ml-2 bg-blue-500 text-white py-1 px-2 rounded"
+              >
+                +
+              </button>
+            </div>
+          ) : (
+            // Renderiza un input de solo lectura cuando handleGroupChange es null
+            <input
+              type="text"
+              value={
+                selectedCategory
+                  ? selectedCategory.label
+                  : "Ningún grupo seleccionado"
+              }
+              readOnly
+              className="mt-1 block w-full border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm border-transparent text-center"
             />
-            <button
-              type="button"
-              onClick={() => openModalCategoria()}
-              className="ml-2 bg-blue-500 text-white py-1 px-2 rounded"
-            >
-              +
-            </button>
-          </div>
+          )}
         </div>
         <div>
           <label className="text-center text-gray-100 mb-6">Fecha:</label>
@@ -189,6 +259,47 @@ function ModalForm({
             className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
             required
           />
+        </div>
+        <div>
+          <label className="text-center text-gray-100 mb-6">
+            Si es un gasto grupal seleccione el grupo:
+          </label>
+          {isGroupDisabled && (
+            <p className="text-yellow-500 text-sm text-center mb-2">
+              {edit && selectedCategory.label == "Gasto Grupal"
+                ? "(no se pueden agregar transacciones propias a grupos)"
+                : "(Opción habilitada únicamente para categoría: Gasto Grupal)"}
+            </p>
+          )}
+          {handleGroupChange ? (
+            // Renderiza el componente Select cuando handleGroupChange no es null
+            <Select
+              options={[
+                { value: null, label: "Select..." },
+                ...activeGroups.map((grupo) => ({
+                  value: grupo.id,
+                  label: grupo.nombre,
+                })),
+              ]}
+              onChange={handleGroupSelect}
+              value={selectedGroup}
+              isDisabled={isGroupDisabled} // Desactivar si la categoría no es "Gasto Grupal"
+              className="custom-select mt-1 block w-full border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm border-transparent"
+              styles={customSelectStyles}
+            />
+          ) : (
+            // Renderiza un input de solo lectura cuando handleGroupChange es null
+            <input
+              type="text"
+              value={
+                selectedGroup
+                  ? selectedGroup.nombre
+                  : "Ningún grupo seleccionado"
+              }
+              readOnly
+              className="mt-1 block w-full border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm border-transparent text-center"
+            />
+          )}
         </div>
         {modalError && (
           <div className="text-red-500 text-sm text-center">{modalError}</div>

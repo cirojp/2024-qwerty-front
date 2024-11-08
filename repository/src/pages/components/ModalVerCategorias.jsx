@@ -1,12 +1,8 @@
 import Modal from "react-modal";
-import Select from "react-select";
 import "./styles/ModalForm.css";
 import ModalCategoria from "./ModalCategoria";
 import React, { useEffect, useState } from "react";
-import ActionButtons from "./ActionButtons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { fas } from "@fortawesome/free-solid-svg-icons";
-import { library } from "@fortawesome/fontawesome-svg-core";
 import ConfirmDeleteCategory from "./ConfirmDeleteCategory";
 
 function ModalVerCategorias({
@@ -284,7 +280,7 @@ function ModalVerCategorias({
           </ul>
 
           <ul>
-            {payCategories.slice(8).map((category) => (
+            {payCategories.slice(9).map((category) => (
               <li
                 key={category.value}
                 className="bg-gray-700 p-3 rounded-md shadow mb-3 flex justify-between"

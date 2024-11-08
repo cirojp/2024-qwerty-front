@@ -24,6 +24,7 @@ function ModalSendPayment({ isModalOpen = false, payCategories }) {
   const [valor, setValor] = useState(0);
   const [fecha, setFecha] = useState(new Date().toISOString().split("T")[0]);
   const [modalError, setModalError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const idReserva = 0;
 
   const fetchPersonalTipoGastos = async () => {
@@ -61,15 +62,18 @@ function ModalSendPayment({ isModalOpen = false, payCategories }) {
   const validateForm = () => {
     if (!emailReceptor || !motivo || !valor || !fecha) {
       setModalError("Todos los campos son obligatorios.");
+      setIsLoading(false);
       return false;
     }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(emailReceptor)) {
       setModalError("Ingrese un email válido.");
+      setIsLoading(false);
       return false;
     }
     if (valor <= 0) {
       setModalError("El valor debe ser mayor que 0.");
+      setIsLoading(false);
       return false;
     }
     setModalError("");
@@ -89,6 +93,8 @@ function ModalSendPayment({ isModalOpen = false, payCategories }) {
   };
 
   const handleSubmit = async (e) => {
+    setModalError("");
+    setIsLoading(true);
     e.preventDefault();
     const token = localStorage.getItem("token");
     const transaccion = {
@@ -99,7 +105,6 @@ function ModalSendPayment({ isModalOpen = false, payCategories }) {
       fecha: fecha,
     };
     if (await userExists(emailReceptor)) {
-      console.log("vino aca igual");
       if (validateForm()) {
         const response = await fetch(
           "https://two024-qwerty-back-2.onrender.com/api/transaccionesPendientes/askPayUser",
@@ -117,8 +122,11 @@ function ModalSendPayment({ isModalOpen = false, payCategories }) {
         }
         cleanForm();
         document.getElementById("generatePayModal").close();
+      } else {
+        setIsLoading(false);
       }
     } else {
+      setIsLoading(false);
       setModalError("El mail no pertenece a un usuario de este sitio");
     }
   };
@@ -137,6 +145,7 @@ function ModalSendPayment({ isModalOpen = false, payCategories }) {
     setValor(0);
     setPayOption("");
     setCategoria("");
+    setIsLoading(false);
     setFecha(new Date().toISOString().split("T")[0]);
   };
 
@@ -193,19 +202,31 @@ function ModalSendPayment({ isModalOpen = false, payCategories }) {
           {modalError && (
             <div className="text-red-500 text-sm text-center">{modalError}</div>
           )}
-          <div className="flex justify-end mt-4">
+          <div className="flex flex-col md:flex-row justify-end mt-4 space-y-2 md:space-y-0 md:space-x-2">
             <button
               type="button"
-              className="btn mr-2"
+              className="btn w-full md:w-auto bg-gray-700 text-white"
               onClick={() => {
                 cleanForm();
+                setModalError("");
                 document.getElementById("generatePayModal").close();
               }}
             >
               Cerrar
             </button>
-            <button type="submit" className="btn bg-yellow-500 text-black">
-              Enviar
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="btn w-full sm:w-auto bg-yellow-500 text-black"
+            >
+              {isLoading ? (
+                <div>
+                  <span className="loading loading-spinner loading-sm text-white"></span>
+                  <div className="text-white p-0 m-0">Cargando...</div>
+                </div>
+              ) : (
+                "Enviar"
+              )}
             </button>
           </div>
         </form>

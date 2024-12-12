@@ -13,14 +13,11 @@ function PresupuestosWidget({ transacciones = [], filtroMes, filtroAno }) {
   const getPersonalPresupuestos = async () => {
     const token = localStorage.getItem("token");
     try {
-      const response = await fetch(
-        "https://two024-qwerty-back-2.onrender.com/api/presupuesto",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await fetch("http://localhost:8080/api/presupuesto", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       if (response.ok) {
         const data = await response.json();
@@ -50,15 +47,16 @@ function PresupuestosWidget({ transacciones = [], filtroMes, filtroAno }) {
           Presupuestos Actuales
         </button>
       )}
-
-      {presupuestos.map((presupuesto, index) => (
-        <BudgetCard
-          key={presupuesto.id || index} // Se debe usar un identificador único (preferiblemente `presupuesto.id`)
-          budget={presupuesto}
-          transacciones={transacciones}
-          widget={true}
-        />
-      ))}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {presupuestos.map((presupuesto, index) => (
+          <BudgetCard
+            key={presupuesto.id || index} // Se debe usar un identificador único (preferiblemente `presupuesto.id`)
+            budget={presupuesto}
+            transacciones={transacciones}
+            widget={true}
+          />
+        ))}
+      </div>
     </div>
   );
 }

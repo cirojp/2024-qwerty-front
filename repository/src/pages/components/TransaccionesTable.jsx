@@ -1,129 +1,93 @@
 import React from "react";
-import DataTable, { createTheme } from "react-data-table-component";
-import ExpandedRow from "./ExpandedRow";
-import deleteIcon from "../../assets/delete-icon.png";
-import editIcon from "../../assets/edit-icon.png";
 
-function TransaccionesTable({
-  transacciones,
-  editRow,
-  deleteRow,
-  onTableEmpty = () => {},
-  onTransactions = () => {},
-  payCategories = [],
-  grupoAbierto = true,
-}) {
-  createTheme("dark", {
-    background: {
-      default: "#1E2126",
-    },
-  });
+const TransaccionesTable = ({ transactions = [] }) => {
+  const statusStyles = {
+    Rejected: "bg-red-500 text-white",
+    "On Progress": "bg-yellow-500 text-white",
+    Completed: "bg-green-500 text-white",
+    "On Hold": "bg-orange-500 text-white",
+  };
 
-  const userEmail = localStorage.getItem("mail");
+  return (
+    <div className="w-full p-4 bg-gray-900 text-white rounded-md">
+      <h2 className="text-lg font-semibold mb-4">Recent Transactions</h2>
 
-  const columns = [
-    // Columna de Motivo
-    {
-      name: (
-        <span className="text-sm sm:text-lg font-bold text-center">Motivo</span>
-      ),
-      selector: (row) => row.motivo,
-      cell: (row) => <div className="text-sm text-center">{row.motivo}</div>,
-      wrap: true, // Envolver texto si es largo
-      minWidth: "150px", // Establecer un ancho mínimo para que no sea muy pequeño
-    },
-    // Columna de Valor
-    {
-      name: (
-        <span className="text-sm sm:text-lg font-bold text-center">
-          Valor ($)
-        </span>
-      ),
-      selector: (row) => row.valor,
-      sortable: true,
-      cell: (row) => <div className="text-sm text-center">{row.valor}</div>,
-      minWidth: "100px", // Limitar el tamaño de la columna
-      wrap: true,
-    },
-    {
-      name: (
-        <span className="text-sm sm:text-lg font-bold text-center">
-          Acciones
-        </span>
-      ),
-      cell: (row) =>
-        grupoAbierto ? ( // Mostrar los botones solo si grupoAbierto es true
-          row.users === undefined || row.users === userEmail ? (
-            <div className="flex justify-center space-x-2 sm:space-x-4">
-              <button
-                className="bg-yellow-500 text-white font-bold py-1 px-2 sm:px-3 rounded hover:bg-yellow-600 transition-colors duration-300"
-                onClick={() => editRow(row)}
+      {/* Contenedor de la tabla */}
+      <div className="overflow-x-auto">
+        <table className="w-full table-auto border-collapse hidden md:table">
+          <thead>
+            <tr className="text-left border-b border-gray-700">
+              <th className="py-2">Fecha</th>
+              <th className="py-2">Motivo</th>
+              <th className="py-2">Valor</th>
+              <th className="py-2">Categoria</th>
+              <th className="py-2">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {transactions.map((transaction, index) => (
+              <tr
+                key={index}
+                className="border-b border-gray-700 hover:bg-gray-800"
               >
-                <img
-                  src={editIcon}
-                  alt="Edit"
-                  className="w-4 h-4 sm:w-5 sm:h-5 justify-center"
-                />
+                <td className="py-2">{transaction.fecha}</td>
+                <td className="py-2">{transaction.motivo}</td>
+                <td className="py-2">{transaction.valor}</td>
+                <td className="py-2">
+                  <span>{transaction.categoria}</span>
+                </td>
+                <td className="py-2 flex space-x-2">
+                  <button className="p-1 bg-gray-700 rounded hover:bg-gray-600">
+                    🔍
+                  </button>
+                  <button className="p-1 bg-gray-700 rounded hover:bg-gray-600">
+                    🗑️
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Vista responsiva: tarjetas */}
+      <div className="space-y-4 md:hidden">
+        {transactions.map((transaction, index) => (
+          <div
+            key={index}
+            className="p-4 bg-gray-800 rounded-md shadow-md border border-gray-700"
+          >
+            <div className="flex justify-between mb-2">
+              <span className="font-semibold text-sm">Date:</span>
+              <span>{transaction.fecha}</span>
+            </div>
+            <div className="flex justify-between mb-2">
+              <span className="font-semibold text-sm mr-2">Description:</span>
+              <span className="truncate">{transaction.motivo}</span>
+            </div>
+            <div className="flex justify-between mb-2">
+              <span className="font-semibold text-sm">Amount:</span>
+              <span>{transaction.valor}</span>
+            </div>
+            <div className="flex justify-between items-center mb-2">
+              <span className="font-semibold text-sm">Status:</span>
+              <span className={`px-2 py-1 rounded-md text-s`}>
+                {transaction.categoria}
+              </span>
+            </div>
+            <div className="flex space-x-2">
+              <button className="p-1 bg-gray-700 rounded hover:bg-gray-600">
+                🔍
               </button>
-              <button
-                className="bg-red-600 text-white font-bold py-1 px-2 sm:px-3 rounded hover:bg-red-700 transition-colors duration-300"
-                onClick={() => deleteRow(row.id)}
-              >
-                <img
-                  src={deleteIcon}
-                  alt="Delete"
-                  className="w-4 h-4 sm:w-5 sm:h-5 justify-center"
-                />
+              <button className="p-1 bg-gray-700 rounded hover:bg-gray-600">
+                🗑️
               </button>
             </div>
-          ) : (
-            <div className="text-sm text-center">Sin permiso</div>
-          )
-        ) : (
-          <div className="text-sm text-center">Sin acciones</div> // Mostrar "Sin acciones" si grupoAbierto es false
-        ),
-      button: true,
-      minWidth: "120px",
-      wrap: true,
-    },
-  ];
-
-  const conditionalRowStyles = [
-    {
-      when: (row) => row.categoria == "Ingreso de Dinero",
-      style: {
-        backgroundColor: "rgba(44, 148, 30, 1)",
-        color: "white",
-        "&:hover": {
-          cursor: "pointer",
-        },
-      },
-    },
-  ];
-
-  // Verificar si hay transacciones
-  if (transacciones[0] == null) {
-    onTableEmpty();
-  } else {
-    onTransactions();
-
-    return (
-      <DataTable
-        className="w-full border-collapse bg-gray-800 rounded-lg shadow-lg mb-0"
-        columns={columns}
-        data={transacciones}
-        pagination
-        expandableRows={true}
-        expandableRowsComponent={({ data }) => (
-          <ExpandedRow data={data} payCategories={payCategories} />
-        )}
-        theme="dark"
-        conditionalRowStyles={conditionalRowStyles}
-        responsive
-        noHeader
-      />
-    );
-  }
-}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 export default TransaccionesTable;

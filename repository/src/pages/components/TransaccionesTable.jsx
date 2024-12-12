@@ -1,54 +1,116 @@
-import React from "react";
+import React, { useState } from "react";
+import { fas } from "@fortawesome/free-solid-svg-icons";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const TransaccionesTable = ({ transactions = [] }) => {
-  const statusStyles = {
-    Rejected: "bg-red-500 text-white",
-    "On Progress": "bg-yellow-500 text-white",
-    Completed: "bg-green-500 text-white",
-    "On Hold": "bg-orange-500 text-white",
+const TransaccionesTable = ({
+  transactions = [],
+  editRow,
+  deleteRow,
+  onTableEmpty,
+  onTransactions,
+}) => {
+  library.add(fas);
+
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
+
+  const sortedTransactions = React.useMemo(() => {
+    if (sortConfig.key) {
+      const sorted = [...transactions].sort((a, b) => {
+        const aValue = a[sortConfig.key];
+        const bValue = b[sortConfig.key];
+
+        if (aValue < bValue) {
+          return sortConfig.direction === "asc" ? -1 : 1;
+        }
+        if (aValue > bValue) {
+          return sortConfig.direction === "asc" ? 1 : -1;
+        }
+        return 0;
+      });
+      return sorted;
+    }
+    return transactions;
+  }, [transactions, sortConfig]);
+
+  const handleSort = (key) => {
+    setSortConfig((prevConfig) => ({
+      key,
+      direction: prevConfig.key === key && prevConfig.direction === "asc" ? "desc" : "asc",
+    }));
   };
 
-  return (
-    <div className="w-full p-4 bg-gray-900 text-white rounded-md">
-      <h2 className="text-lg font-semibold mb-4">Recent Transactions</h2>
+  if (transactions.length === 0) {
+    onTableEmpty();
+  } else {
+    onTransactions();
+    return (
+      <div className="w-full p-4 bg-gray-900 text-white rounded-md">
+        <h2 className="text-xl md:text-2xl py-2 font-bold text-gray-100">
+          Historial de Transacciones
+        </h2>
 
-      {/* Contenedor de la tabla */}
-      <div className="overflow-x-auto">
-        <table className="w-full table-auto border-collapse hidden md:table">
-          <thead>
-            <tr className="text-left border-b border-gray-700">
-              <th className="py-2">Fecha</th>
-              <th className="py-2">Motivo</th>
-              <th className="py-2">Valor</th>
-              <th className="py-2">Categoria</th>
-              <th className="py-2">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {transactions.map((transaction, index) => (
-              <tr
-                key={index}
-                className="border-b border-gray-700 hover:bg-gray-800"
-              >
-                <td className="py-2">{transaction.fecha}</td>
-                <td className="py-2">{transaction.motivo}</td>
-                <td className="py-2">{transaction.valor}</td>
-                <td className="py-2">
-                  <span>{transaction.categoria}</span>
-                </td>
-                <td className="py-2 flex space-x-2">
-                  <button className="p-1 bg-gray-700 rounded hover:bg-gray-600">
-                    🔍
-                  </button>
-                  <button className="p-1 bg-gray-700 rounded hover:bg-gray-600">
-                    🗑️
-                  </button>
-                </td>
+        {/* Contenedor de la tabla */}
+        <div className="overflow-x-auto">
+          <table className="w-full table-auto border-collapse hidden md:table">
+            <thead>
+              <tr className="text-left border-b border-gray-700">
+                <th className="py-2 cursor-pointer" onClick={() => handleSort("fecha")}>
+                  Fecha {sortConfig.key === "fecha" && (sortConfig.direction === "asc" ? "▲" : "▼")}
+                </th>
+                <th className="py-2 cursor-pointer" onClick={() => handleSort("motivo")}>
+                  Motivo {sortConfig.key === "motivo" && (sortConfig.direction === "asc" ? "▲" : "▼")}
+                </th>
+                <th className="py-2 cursor-pointer" onClick={() => handleSort("valor")}>
+                  Valor {sortConfig.key === "valor" && (sortConfig.direction === "asc" ? "▲" : "▼")}
+                </th>
+                <th className="py-2">
+                  Categoria 
+                </th>
+                <th className="py-2">
+                  Medio de Pago
+                </th>
+                <th className="py-2"></th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {sortedTransactions.map((transaction, index) => (
+                <tr
+                  key={index}
+                  className="border-b border-gray-700 hover:bg-gray-800"
+                >
+                  <td className="py-2">{transaction.fecha}</td>
+                  <td className="py-2">{transaction.motivo}</td>
+                  <td className="py-2">{transaction.valor}</td>
+                  <td className="py-2">{transaction.categoria}</td>
+                  <td className="py-2">{transaction.tipoGasto}</td>
+                  <td className="py-2 flex space-x-2">
+                    <button
+                      className="p-1 bg-yellow-500 rounded hover:bg-yellow-700"
+                      onClick={() => editRow(transaction)}
+                    >
+                      <FontAwesomeIcon
+                        icon="fa-solid fa-pen-to-square"
+                        style={{ color: "#000000" }}
+                        size="lg"
+                      />
+                    </button>
+                    <button
+                      className="p-1 bg-red-600 rounded hover:bg-red-700"
+                      onClick={() => deleteRow(transaction.id)}
+                    >
+                      <FontAwesomeIcon
+                        icon="fa-solid fa-trash"
+                        style={{ color: "#000000" }}
+                        size="lg"
+                      />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
       {/* Vista responsiva: tarjetas */}
       <div className="space-y-4 md:hidden">
@@ -86,8 +148,9 @@ const TransaccionesTable = ({ transactions = [] }) => {
           </div>
         ))}
       </div>
-    </div>
-  );
+      </div>
+    );
+  }
 };
 
 export default TransaccionesTable;

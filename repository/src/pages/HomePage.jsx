@@ -867,15 +867,6 @@ function HomePage() {
           </div>
         ) : (
           <>
-            <div className="bg-black flex flex-col w-full overflow-x-auto">
-              <div className="flex justify-between items-center w-full px-4 py-6">
-                <div className="flex items-center">
-                  <h2 className="text-xl md:text-2xl py-2 font-bold text-gray-100">
-                    Historial de Transacciones
-                  </h2>
-                </div>
-              </div>
-            </div>
             <TransaccionesTable
               transactions={transacciones}
               payCategories={payCategories}

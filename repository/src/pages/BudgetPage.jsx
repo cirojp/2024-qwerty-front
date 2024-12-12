@@ -11,6 +11,9 @@ function BudgetPage() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const [filtro, setFiltro] = useState("Todos");
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const itemsPerPage = 3; // Número de elementos por página
 
   const onEdit = () => {
     setPresupuestos([]);
@@ -41,7 +44,10 @@ function BudgetPage() {
     const currentMonth = new Date().getMonth();
     const currentYear = new Date().getFullYear();
 
-    // Filtrar transacciones del mes actual y anterior
+    const previousMonth =
+      currentMonth === 0 ? 11 : currentMonth - 1; // Manejar cambio de año
+    const previousYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+
     const currentMonthTransactions = transacciones.filter((transaction) => {
       const transDate = new Date(transaction.fecha);
       return (
@@ -53,12 +59,11 @@ function BudgetPage() {
     const previousMonthTransactions = transacciones.filter((transaction) => {
       const transDate = new Date(transaction.fecha);
       return (
-        transDate.getMonth() === currentMonth - 1 &&
-        transDate.getFullYear() === currentYear
+        transDate.getMonth() === previousMonth &&
+        transDate.getFullYear() === previousYear
       );
     });
 
-    // Agrupar por categoría
     const currentMonthByCategory = currentMonthTransactions.reduce(
       (acc, trans) => {
         acc[trans.categoria] = (acc[trans.categoria] || 0) + trans.valor;
@@ -75,13 +80,15 @@ function BudgetPage() {
       {}
     );
 
-    // Generar sugerencias
     const suggestions = [];
     for (const category in currentMonthByCategory) {
       const currentAmount = currentMonthByCategory[category];
       const previousAmount = previousMonthByCategory[category] || 0;
+
       const difference =
-        ((currentAmount - previousAmount) / previousAmount) * 100;
+        previousAmount === 0
+          ? 100
+          : ((currentAmount - previousAmount) / previousAmount) * 100;
 
       if (difference > 20) {
         suggestions.push({
@@ -92,8 +99,17 @@ function BudgetPage() {
         });
       }
     }
-    console.log(suggestions);
     return suggestions;
+  };
+
+  const handleNextSlide = (totalPages) => {
+    setCurrentSlide((prevSlide) => (prevSlide + 1) % totalPages);
+  };
+
+  const handlePrevSlide = (totalPages) => {
+    setCurrentSlide((prevSlide) =>
+      prevSlide === 0 ? totalPages - 1 : prevSlide - 1
+    );
   };
 
   const handleDelete = async (budget) => {
@@ -150,10 +166,6 @@ function BudgetPage() {
     getPersonalPresupuestos();
   }, []);
 
-  const handleFilterChange = (e) => {
-    setFiltro(e.target.value);
-  };
-
   const filtrarPresupuestos = () => {
     const fechaActual = new Date();
     const mesActual = fechaActual.getMonth() + 1;
@@ -184,14 +196,14 @@ function BudgetPage() {
           >
             HomePage
           </button>
-          <div className="text-2xl font-semibold text-center sm:flex-1">
+          <div className="text-2xl font-semibold justify-start sm:flex-1">
             Presupuestos Mensuales
           </div>
           <div className="mt-4 sm:mt-0 sm:order-2">
             <select
               className="select select-bordered w-full max-w-xs bg-yellow-400 text-black"
               value={filtro}
-              onChange={handleFilterChange}
+              onChange={(e) => setFiltro(e.target.value)}
             >
               <option value="Todos">Mostrar Todos</option>
               <option value="Pasados">Pasados</option>
@@ -212,32 +224,58 @@ function BudgetPage() {
 
         {showSuggestions && (
           <div className="carousel w-full">
-            <div
-              id="slide1"
-              className="carousel-item relative w-full grid grid-cols-3"
-            >
-              <div className="relative w-1/3">
-                {analyzeSpendingPatterns(transacciones)}
-              </div>
-              <div className="relative w-1/3">
-                NO PAGUES MAS PUTAS MAN, NO ES TAN DIFICIL
-              </div>
-              <div className="relative w-1/3">O hacelo, que se yo</div>
-              <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-                <a href="#slide4" className="btn btn-circle">
-                  ❮
-                </a>
-                <a href="#slide2" className="btn btn-circle">
-                  ❯
-                </a>
-              </div>
+            <div className="carousel-item relative w-full">
+              {(() => {
+                const suggestions = analyzeSpendingPatterns(transacciones);
+                const totalPages = Math.ceil(suggestions.length / itemsPerPage);
+
+                // Obtener elementos de la página actual
+                const currentSuggestions = suggestions.slice(
+                  currentSlide * itemsPerPage,
+                  currentSlide * itemsPerPage + itemsPerPage
+                );
+                return (
+                  <div className="w-full">
+                    <div className="flex justify-between items-center">
+                      {/* Flecha Izquierda */}
+                      <button
+                        className="btn btn-circle bg-yellow-400 text-black"
+                        onClick={() => handlePrevSlide(totalPages)}
+                      >
+                        ❮
+                      </button>
+                
+                      {/* Contenedor de Sugerencias */}
+                      <div className="flex justify-center flex-1 space-x-6">
+                        {currentSuggestions.map((suggestion, index) => (
+                          <div
+                            key={index}
+                            className="flex-1 max-w-xs p-6 bg-gray-700 text-center rounded shadow-md"
+                          >
+                            <p className="text-lg font-semibold">{suggestion.message}</p>
+                          </div>
+                        ))}
+                      </div>
+                
+                      {/* Flecha Derecha */}
+                      <button
+                        className="btn btn-circle bg-yellow-400 text-black"
+                        onClick={() => handleNextSlide(totalPages)}
+                      >
+                        ❯
+                      </button>
+                    </div>
+                  </div>
+                );
+                
+              })()}
             </div>
           </div>
         )}
 
-        {/* Mostrar un mensaje de carga o renderizar los BudgetCard */}
+
         {loading ? (
-          <div className="text-center">
+          <div className="text-center mt-5">
             <span className="loading loading-spinner loading-lg"></span>{" "}
             Cargando presupuestos...
           </div>
@@ -252,7 +290,7 @@ function BudgetPage() {
             <p className="text-lg mt-4">No tienes presupuestos aún.</p>
           </div>
         ) : (
-          <div className=" grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-2 gap-6 mt-5">
             {filtrarPresupuestos().map((budget) => (
               <BudgetCard
                 key={budget.id}

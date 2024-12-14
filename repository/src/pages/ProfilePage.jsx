@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import ConfirmDeleteMedioDePago from "./components/ConfirmDeleteMedioDePago";
 import ModalMedioDePago from "./components/ModalMedioDePago";
 import MonthlyGraphic from "./components/MonthlyGraphic";
-import LoadingSpinner from "./components/LoadingSpinner";
+import LoadingSpinner from "./components/LoadingSpinner"; 
 
 function ProfilePage() {
   library.add(fas);

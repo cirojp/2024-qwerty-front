@@ -21,6 +21,7 @@ function HomePage() {
   const [error, setError] = useState(null);
   const [edit, setEdit] = useState(false);
   const [tipoGasto, setTipoGasto] = useState("Efectivo");
+  const [moneda, setMoneda] = useState("ARG");
   const [tranPendiente, setTranPendiente] = useState({});
   const [categoria, setCategoria] = useState("");
   const [payCategories, setPayCategories] = useState([]);
@@ -60,10 +61,18 @@ function HomePage() {
     { value: "Tarjeta de Debito", label: "Tarjeta de debito" },
     { value: "Efectivo", label: "Efectivo" },
   ]);
+  const defaultMonedas = [
+    { value: 1040, label: "USD", textColor: "mr-2 text-yellow-500",},
+    { value: 1100, label: "EUR", textColor: "mr-2 text-yellow-500",},
+    { value: 1, label: "ARG", textColor: "mr-2 text-yellow-500" },
+  ];
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedPayMethod, setSelectedPayMethod] = useState({
     value: "Efectivo",
     label: "Efectivo",
+  });
+  const [selectedCurrency, setSelectedCurrency] = useState({
+    value: 1, label: "ARG", textColor: "mr-2 text-yellow-500",
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [transaccionId, setTransaccionId] = useState(null);
@@ -325,6 +334,12 @@ function HomePage() {
       value: "Efectivo",
       label: "Efectivo",
     });
+    setMoneda("ARG");
+    setSelectedCurrency({
+      value: 1,
+      label: "ARG",
+      textColor: "mr-2 text-yellow-500",
+    });
   };
 
   const editRow = (row) => {
@@ -341,6 +356,7 @@ function HomePage() {
     setSelectedCategory(selectedPayCategory || null);
     setFecha(row.fecha);
     setTransaccionId(row.id);
+    setSelectedCurrency(selectedCurrency || null);
     openModal();
   };
 
@@ -474,14 +490,16 @@ function HomePage() {
       }
     }
   };
-  const agregarTransaccion = async (e, categoria) => {
+  const agregarTransaccion = async (e, categoria, selectedCurrency) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
     let bodyJson = "";
     let url = "";
+    let currencyValue = selectedCurrency.value;
+    let currencyLabel = selectedCurrency.label;
     setTransaccionesCargadas(false);
     if (selectedGroup == null) {
-      bodyJson = JSON.stringify({ motivo, valor, fecha, categoria, tipoGasto });
+      bodyJson = JSON.stringify({ motivo, valor, fecha, categoria, tipoGasto, currencyValue, currencyLabel });
       url = edit
         ? `https://two024-qwerty-back-2.onrender.com/api/transacciones/${transaccionId}`
         : "https://two024-qwerty-back-2.onrender.com/api/transacciones";
@@ -494,6 +512,8 @@ function HomePage() {
         categoria,
         tipoGasto,
         grupo,
+        currencyValue, 
+        currencyLabel
       });
       url = edit
         ? `https://two024-qwerty-back-2.onrender.com/api/grupos/transaccion/${transaccionId}`
@@ -622,6 +642,10 @@ function HomePage() {
   const handlePayChange = (value) => {
     setTipoGasto(value ? value.value : "");
     setSelectedPayMethod(value);
+  };
+  const handleCurrencyChange = (value) => {
+    setMoneda(value ? value.value : "");
+    setSelectedCurrency(value);
   };
   const handleCreateTP = async (inputValue) => {
     const token = localStorage.getItem("token");
@@ -936,6 +960,8 @@ function HomePage() {
           handleGroupChange={handleGroupChange}
           selectedGroup={selectedGroup}
           grupos={grupos}
+          handleCurrencyChange={handleCurrencyChange}
+          selectedCurrency={selectedCurrency}
         />
         <ModalAskPayment payCategories={payCategories} />
         <ModalSendPayment

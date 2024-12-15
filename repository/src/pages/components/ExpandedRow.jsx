@@ -34,6 +34,8 @@ const ExpandedRow = ({
         <div className="text-gray-200">{data.tipoGasto}</div>
         <div className="font-bold text-gray-300">Fecha:</div>
         <div className="text-gray-200">{data.fecha}</div>
+        <div className="font-bold text-gray-300">En Moneda Original:</div>
+        <div className="text-gray-200">{data.valor/data.currencyValue} {data.currencyLabel}</div>
       </div>
     </div>
   );

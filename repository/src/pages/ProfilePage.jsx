@@ -26,6 +26,19 @@ function ProfilePage() {
     },
     { value: "Efectivo", label: "Efectivo", textColor: "mr-2 text-yellow-500" },
   ];
+  const defaultMonedas = [
+    {
+      value: 1040,
+      label: "USD",
+      textColor: "mr-2 text-yellow-500",
+    },
+    {
+      value: 1100,
+      label: "EUR",
+      textColor: "mr-2 text-yellow-500",
+    },
+    { value: 1, label: "ARG", textColor: "mr-2 text-yellow-500" },
+  ];
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [payOptions, setPayOptions] = useState([]);

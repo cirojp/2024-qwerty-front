@@ -27,6 +27,8 @@ function ModalForm({
   handleGroupChange,
   selectedGroup,
   grupos,
+  handleCurrencyChange,
+  selectedCurrency
 }) {
   const customStyles = {
     overlay: {
@@ -95,6 +97,11 @@ function ModalForm({
   const [isModalCategoriaOpen, setIsModalCategoriaOpen] = useState(false);
   const [isGroupDisabled, setIsGroupDisabled] = useState(false);
   const [isCategoryDisabled, setIsCategoryDisabled] = useState(false);
+  const defaultMonedas = [
+    { value: 1040, label: "USD", textColor: "mr-2 text-yellow-500",},
+    { value: 1100, label: "EUR", textColor: "mr-2 text-yellow-500",},
+    { value: 1, label: "ARG", textColor: "mr-2 text-yellow-500" },
+  ];
   useEffect(() => {
     if (grupos == null) {
       grupos = [selectedGroup];
@@ -134,7 +141,7 @@ function ModalForm({
     }
     setIsLoading(true);
     try {
-      await agregarTransaccion(e, selectedCategory.value); // Espera a que se complete la transacción
+      await agregarTransaccion(e, selectedCategory.value, selectedCurrency); // Espera a que se complete la transacción
     } catch (error) {
       console.error("Error al agregar transacción:", error);
     } finally {
@@ -193,14 +200,29 @@ function ModalForm({
         </div>
         <div>
           <label className="text-center text-gray-100 mb-6">Valor:</label>
-          <input
-            type="number"
-            value={valor}
-            onChange={(e) => setValor(e.target.value)}
-            className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
-            required
-          />
-        </div>
+          <div className="flex space-x-4">
+            <div className="w-3/4">
+              <input
+                type="number"
+                value={valor}
+                onChange={(e) => setValor(e.target.value)}
+                className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
+                required
+              />
+            </div>
+            <div className="w-1/4">
+              <Select
+                options={defaultMonedas}
+                onChange={handleCurrencyChange}
+                value={selectedCurrency}
+                className="custom-select mt-1 block w-full border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm border-transparent"
+                styles={customSelectStyles}
+                required
+                >
+              </Select>
+            </div>  
+          </div>
+        </div> 
         <div>
           <label className="text-center text-gray-100 mb-6">
             Medio de Pago:

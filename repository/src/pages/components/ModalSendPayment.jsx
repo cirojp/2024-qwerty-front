@@ -34,7 +34,7 @@ function ModalSendPayment({
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(
-        "https://two024-qwerty-back-2.onrender.com/api/personal-tipo-gasto",
+        "http://localhost:8080/api/personal-tipo-gasto",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -80,8 +80,7 @@ function ModalSendPayment({
     return true;
   };
   const userExists = async (mail) => {
-    let url =
-      "https://two024-qwerty-back-2.onrender.com/api/public/exists/" + mail;
+    let url = "http://localhost:8080/api/public/exists/" + mail;
     const response = await fetch(url);
     if (response.ok) {
       const exists = await response.json();
@@ -106,8 +105,7 @@ function ModalSendPayment({
     if (await userExists(emailReceptor)) {
       if (validateForm()) {
         const response = await fetch(
-          "https://two024-qwerty-back-2.onrender.com/api/transacciones/enviarPago/" +
-            emailReceptor,
+          "http://localhost:8080/api/transacciones/enviarPago/" + emailReceptor,
           {
             method: "POST",
             headers: {

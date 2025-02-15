@@ -111,7 +111,7 @@ function ModalVerDetallesGrupo({
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(
-        "https://two024-qwerty-back-2.onrender.com/api/personal-tipo-gasto",
+        "http://localhost:8080/api/personal-tipo-gasto",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -137,7 +137,7 @@ function ModalVerDetallesGrupo({
   const fetchTransaccionesDelGrupo = async () => {
     setIsLoading(true);
     const token = localStorage.getItem("token");
-    let url = `https://two024-qwerty-back-2.onrender.com/api/grupos/${grupo.id}/transacciones`;
+    let url = `http://localhost:8080/api/grupos/${grupo.id}/transacciones`;
     try {
       const response = await fetch(url, {
         method: "GET",
@@ -229,7 +229,7 @@ function ModalVerDetallesGrupo({
 
   const cerrarGrupo = async () => {
     const token = localStorage.getItem("token");
-    const url = `https://two024-qwerty-back-2.onrender.com/api/grupos/${grupo.id}/cerrar`;
+    const url = `http://localhost:8080/api/grupos/${grupo.id}/cerrar`;
     try {
       const response = await fetch(url, {
         method: "POST",
@@ -281,7 +281,7 @@ function ModalVerDetallesGrupo({
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(
-        `https://two024-qwerty-back-2.onrender.com/api/grupos/transaccion/${id}`,
+        `http://localhost:8080/api/grupos/transaccion/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -319,7 +319,7 @@ function ModalVerDetallesGrupo({
     e.preventDefault();
     const token = localStorage.getItem("token");
     console.log(transaccionId);
-    let url = `https://two024-qwerty-back-2.onrender.com/api/grupos/transaccion/${transaccionId}`;
+    let url = `http://localhost:8080/api/grupos/transaccion/${transaccionId}`;
     let bodyJson = JSON.stringify({
       motivo,
       valor,
@@ -380,7 +380,7 @@ function ModalVerDetallesGrupo({
         iconPath: icono,
       };
       const response = await fetch(
-        "https://two024-qwerty-back-2.onrender.com/api/personal-categoria",
+        "http://localhost:8080/api/personal-categoria",
         {
           method: "POST",
           headers: {
@@ -416,7 +416,7 @@ function ModalVerDetallesGrupo({
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(
-        `https://two024-qwerty-back-2.onrender.com/api/personal-tipo-gasto`,
+        `http://localhost:8080/api/personal-tipo-gasto`,
         {
           method: "POST",
           headers: {

@@ -1,129 +1,156 @@
-import React from "react";
-import DataTable, { createTheme } from "react-data-table-component";
-import ExpandedRow from "./ExpandedRow";
-import deleteIcon from "../../assets/delete-icon.png";
-import editIcon from "../../assets/edit-icon.png";
+import React, { useState } from "react";
+import { fas } from "@fortawesome/free-solid-svg-icons";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-function TransaccionesTable({
-  transacciones,
+const TransaccionesTable = ({
+  transactions = [],
   editRow,
   deleteRow,
-  onTableEmpty = () => {},
-  onTransactions = () => {},
-  payCategories = [],
-  grupoAbierto = true,
-}) {
-  createTheme("dark", {
-    background: {
-      default: "#1E2126",
-    },
-  });
+  onTableEmpty,
+  onTransactions,
+}) => {
+  library.add(fas);
 
-  const userEmail = localStorage.getItem("mail");
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
 
-  const columns = [
-    // Columna de Motivo
-    {
-      name: (
-        <span className="text-sm sm:text-lg font-bold text-center">Motivo</span>
-      ),
-      selector: (row) => row.motivo,
-      cell: (row) => <div className="text-sm text-center">{row.motivo}</div>,
-      wrap: true, // Envolver texto si es largo
-      minWidth: "150px", // Establecer un ancho mínimo para que no sea muy pequeño
-    },
-    // Columna de Valor
-    {
-      name: (
-        <span className="text-sm sm:text-lg font-bold text-center">
-          Valor ($)
-        </span>
-      ),
-      selector: (row) => row.valor,
-      sortable: true,
-      cell: (row) => <div className="text-sm text-center">{row.valor}</div>,
-      minWidth: "100px", // Limitar el tamaño de la columna
-      wrap: true,
-    },
-    {
-      name: (
-        <span className="text-sm sm:text-lg font-bold text-center">
-          Acciones
-        </span>
-      ),
-      cell: (row) =>
-        grupoAbierto ? ( // Mostrar los botones solo si grupoAbierto es true
-          row.users === undefined || row.users === userEmail ? (
-            <div className="flex justify-center space-x-2 sm:space-x-4">
-              <button
-                className="bg-yellow-500 text-white font-bold py-1 px-2 sm:px-3 rounded hover:bg-yellow-600 transition-colors duration-300"
-                onClick={() => editRow(row)}
-              >
-                <img
-                  src={editIcon}
-                  alt="Edit"
-                  className="w-4 h-4 sm:w-5 sm:h-5 justify-center"
-                />
-              </button>
-              <button
-                className="bg-red-600 text-white font-bold py-1 px-2 sm:px-3 rounded hover:bg-red-700 transition-colors duration-300"
-                onClick={() => deleteRow(row.id)}
-              >
-                <img
-                  src={deleteIcon}
-                  alt="Delete"
-                  className="w-4 h-4 sm:w-5 sm:h-5 justify-center"
-                />
-              </button>
-            </div>
-          ) : (
-            <div className="text-sm text-center">Sin permiso</div>
-          )
-        ) : (
-          <div className="text-sm text-center">Sin acciones</div> // Mostrar "Sin acciones" si grupoAbierto es false
-        ),
-      button: true,
-      minWidth: "120px",
-      wrap: true,
-    },
-  ];
+  const sortedTransactions = React.useMemo(() => {
+    if (sortConfig.key) {
+      const sorted = [...transactions].sort((a, b) => {
+        const aValue = a[sortConfig.key];
+        const bValue = b[sortConfig.key];
 
-  const conditionalRowStyles = [
-    {
-      when: (row) => row.categoria == "Ingreso de Dinero",
-      style: {
-        backgroundColor: "rgba(44, 148, 30, 1)",
-        color: "white",
-        "&:hover": {
-          cursor: "pointer",
-        },
-      },
-    },
-  ];
+        if (aValue < bValue) {
+          return sortConfig.direction === "asc" ? -1 : 1;
+        }
+        if (aValue > bValue) {
+          return sortConfig.direction === "asc" ? 1 : -1;
+        }
+        return 0;
+      });
+      return sorted;
+    }
+    return transactions;
+  }, [transactions, sortConfig]);
 
-  // Verificar si hay transacciones
-  if (transacciones[0] == null) {
+  const handleSort = (key) => {
+    setSortConfig((prevConfig) => ({
+      key,
+      direction: prevConfig.key === key && prevConfig.direction === "asc" ? "desc" : "asc",
+    }));
+  };
+
+  if (transactions.length === 0) {
     onTableEmpty();
   } else {
     onTransactions();
-
     return (
-      <DataTable
-        className="w-full border-collapse bg-gray-800 rounded-lg shadow-lg mb-0"
-        columns={columns}
-        data={transacciones}
-        pagination
-        expandableRows={true}
-        expandableRowsComponent={({ data }) => (
-          <ExpandedRow data={data} payCategories={payCategories} />
-        )}
-        theme="dark"
-        conditionalRowStyles={conditionalRowStyles}
-        responsive
-        noHeader
-      />
+      <div className="w-full p-4 bg-gray-900 text-white rounded-md">
+        <h2 className="text-xl md:text-2xl py-2 font-bold text-gray-100">
+          Historial de Transacciones
+        </h2>
+
+        {/* Contenedor de la tabla */}
+        <div className="overflow-x-auto">
+          <table className="w-full table-auto border-collapse hidden md:table">
+            <thead>
+              <tr className="text-left border-b border-gray-700">
+                <th className="py-2 cursor-pointer" onClick={() => handleSort("fecha")}>
+                  Fecha {sortConfig.key === "fecha" && (sortConfig.direction === "asc" ? "▲" : "▼")}
+                </th>
+                <th className="py-2 cursor-pointer" onClick={() => handleSort("motivo")}>
+                  Motivo {sortConfig.key === "motivo" && (sortConfig.direction === "asc" ? "▲" : "▼")}
+                </th>
+                <th className="py-2 cursor-pointer" onClick={() => handleSort("valor")}>
+                  Valor {sortConfig.key === "valor" && (sortConfig.direction === "asc" ? "▲" : "▼")}
+                </th>
+                <th className="py-2">
+                  Categoria 
+                </th>
+                <th className="py-2">
+                  Medio de Pago
+                </th>
+                <th className="py-2"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {sortedTransactions.map((transaction, index) => (
+                <tr
+                  key={index}
+                  className="border-b border-gray-700 hover:bg-gray-800"
+                >
+                  <td className="py-2">{transaction.fecha}</td>
+                  <td className="py-2">{transaction.motivo}</td>
+                  <td className="py-2">{transaction.valor}</td>
+                  <td className="py-2">{transaction.categoria}</td>
+                  <td className="py-2">{transaction.tipoGasto}</td>
+                  <td className="py-2 flex space-x-2">
+                    <button
+                      className="p-1 bg-yellow-500 rounded hover:bg-yellow-700"
+                      onClick={() => editRow(transaction)}
+                    >
+                      <FontAwesomeIcon
+                        icon="fa-solid fa-pen-to-square"
+                        style={{ color: "#000000" }}
+                        size="lg"
+                      />
+                    </button>
+                    <button
+                      className="p-1 bg-red-600 rounded hover:bg-red-700"
+                      onClick={() => deleteRow(transaction.id)}
+                    >
+                      <FontAwesomeIcon
+                        icon="fa-solid fa-trash"
+                        style={{ color: "#000000" }}
+                        size="lg"
+                      />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+      {/* Vista responsiva: tarjetas */}
+      <div className="space-y-4 md:hidden">
+        {transactions.map((transaction, index) => (
+          <div
+            key={index}
+            className="p-4 bg-gray-800 rounded-md shadow-md border border-gray-700"
+          >
+            <div className="flex justify-between mb-2">
+              <span className="font-semibold text-sm">Date:</span>
+              <span>{transaction.fecha}</span>
+            </div>
+            <div className="flex justify-between mb-2">
+              <span className="font-semibold text-sm mr-2">Description:</span>
+              <span className="truncate">{transaction.motivo}</span>
+            </div>
+            <div className="flex justify-between mb-2">
+              <span className="font-semibold text-sm">Amount:</span>
+              <span>{transaction.valor}</span>
+            </div>
+            <div className="flex justify-between items-center mb-2">
+              <span className="font-semibold text-sm">Status:</span>
+              <span className={`px-2 py-1 rounded-md text-s`}>
+                {transaction.categoria}
+              </span>
+            </div>
+            <div className="flex space-x-2">
+              <button className="p-1 bg-gray-700 rounded hover:bg-gray-600">
+                🔍
+              </button>
+              <button className="p-1 bg-gray-700 rounded hover:bg-gray-600">
+                🗑️
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+      </div>
     );
   }
-}
+};
 
 export default TransaccionesTable;

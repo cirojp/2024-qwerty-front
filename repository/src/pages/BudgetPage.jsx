@@ -7,13 +7,9 @@ function BudgetPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [presupuestos, setPresupuestos] = useState([]);
   const [transacciones, setTransacciones] = useState([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const [filtro, setFiltro] = useState("Todos");
-  const [currentSlide, setCurrentSlide] = useState(0);
-
-  const itemsPerPage = 3; // Número de elementos por página
 
   const onEdit = () => {
     setPresupuestos([]);
@@ -22,7 +18,7 @@ function BudgetPage() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    fetch("http://localhost:8080/api/transacciones/user", {
+    fetch("https://two024-qwerty-back-2.onrender.com/api/transacciones/user", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -40,83 +36,11 @@ function BudgetPage() {
       });
   }, []);
 
-  const analyzeSpendingPatterns = (transacciones) => {
-    const currentMonth = new Date().getMonth();
-    const currentYear = new Date().getFullYear();
-
-    const previousMonth =
-      currentMonth === 0 ? 11 : currentMonth - 1; // Manejar cambio de año
-    const previousYear = currentMonth === 0 ? currentYear - 1 : currentYear;
-
-    const currentMonthTransactions = transacciones.filter((transaction) => {
-      const transDate = new Date(transaction.fecha);
-      return (
-        transDate.getMonth() === currentMonth &&
-        transDate.getFullYear() === currentYear
-      );
-    });
-
-    const previousMonthTransactions = transacciones.filter((transaction) => {
-      const transDate = new Date(transaction.fecha);
-      return (
-        transDate.getMonth() === previousMonth &&
-        transDate.getFullYear() === previousYear
-      );
-    });
-
-    const currentMonthByCategory = currentMonthTransactions.reduce(
-      (acc, trans) => {
-        acc[trans.categoria] = (acc[trans.categoria] || 0) + trans.valor;
-        return acc;
-      },
-      {}
-    );
-
-    const previousMonthByCategory = previousMonthTransactions.reduce(
-      (acc, trans) => {
-        acc[trans.categoria] = (acc[trans.categoria] || 0) + trans.valor;
-        return acc;
-      },
-      {}
-    );
-
-    const suggestions = [];
-    for (const category in currentMonthByCategory) {
-      const currentAmount = currentMonthByCategory[category];
-      const previousAmount = previousMonthByCategory[category] || 0;
-
-      const difference =
-        previousAmount === 0
-          ? 100
-          : ((currentAmount - previousAmount) / previousAmount) * 100;
-
-      if (difference > 20) {
-        suggestions.push({
-          category,
-          message: `Has aumentado tu gasto en ${category} un ${difference.toFixed(
-            1
-          )}% respecto al mes anterior`,
-        });
-      }
-    }
-    return suggestions;
-  };
-
-  const handleNextSlide = (totalPages) => {
-    setCurrentSlide((prevSlide) => (prevSlide + 1) % totalPages);
-  };
-
-  const handlePrevSlide = (totalPages) => {
-    setCurrentSlide((prevSlide) =>
-      prevSlide === 0 ? totalPages - 1 : prevSlide - 1
-    );
-  };
-
   const handleDelete = async (budget) => {
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(
-        `http://localhost:8080/api/presupuesto/${budget.id}`,
+        `https://two024-qwerty-back-2.onrender.com/api/presupuesto/${budget.id}`,
         {
           method: "DELETE",
           headers: {
@@ -147,11 +71,14 @@ function BudgetPage() {
   const getPersonalPresupuestos = async () => {
     const token = localStorage.getItem("token");
     try {
-      const response = await fetch("http://localhost:8080/api/presupuesto", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        "https://two024-qwerty-back-2.onrender.com/api/presupuesto",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (response.ok) {
         const data = await response.json();
@@ -165,6 +92,10 @@ function BudgetPage() {
   useEffect(() => {
     getPersonalPresupuestos();
   }, []);
+
+  const handleFilterChange = (e) => {
+    setFiltro(e.target.value);
+  };
 
   const filtrarPresupuestos = () => {
     const fechaActual = new Date();
@@ -196,14 +127,14 @@ function BudgetPage() {
           >
             HomePage
           </button>
-          <div className="text-2xl font-semibold justify-start sm:flex-1">
+          <div className="text-2xl font-semibold text-center sm:flex-1">
             Presupuestos Mensuales
           </div>
           <div className="mt-4 sm:mt-0 sm:order-2">
             <select
               className="select select-bordered w-full max-w-xs bg-yellow-400 text-black"
               value={filtro}
-              onChange={(e) => setFiltro(e.target.value)}
+              onChange={handleFilterChange}
             >
               <option value="Todos">Mostrar Todos</option>
               <option value="Pasados">Pasados</option>
@@ -213,69 +144,9 @@ function BudgetPage() {
           </div>
         </div>
 
-        <div className="flex flex-col items-center justify-center my-5">
-          <button
-            className="btn bg-yellow-400 text-black w-64 h-10"
-            onClick={() => setShowSuggestions(!showSuggestions)}
-          >
-            Mostrar sugerencias de Ahorro
-          </button>
-        </div>
-
-        {showSuggestions && (
-          <div className="carousel w-full">
-            <div className="carousel-item relative w-full">
-              {(() => {
-                const suggestions = analyzeSpendingPatterns(transacciones);
-                const totalPages = Math.ceil(suggestions.length / itemsPerPage);
-
-                // Obtener elementos de la página actual
-                const currentSuggestions = suggestions.slice(
-                  currentSlide * itemsPerPage,
-                  currentSlide * itemsPerPage + itemsPerPage
-                );
-                return (
-                  <div className="w-full">
-                    <div className="flex justify-between items-center">
-                      {/* Flecha Izquierda */}
-                      <button
-                        className="btn btn-circle bg-yellow-400 text-black"
-                        onClick={() => handlePrevSlide(totalPages)}
-                      >
-                        ❮
-                      </button>
-                
-                      {/* Contenedor de Sugerencias */}
-                      <div className="flex justify-center flex-1 space-x-6">
-                        {currentSuggestions.map((suggestion, index) => (
-                          <div
-                            key={index}
-                            className="flex-1 max-w-xs p-6 bg-gray-700 text-center rounded shadow-md"
-                          >
-                            <p className="text-lg font-semibold">{suggestion.message}</p>
-                          </div>
-                        ))}
-                      </div>
-                
-                      {/* Flecha Derecha */}
-                      <button
-                        className="btn btn-circle bg-yellow-400 text-black"
-                        onClick={() => handleNextSlide(totalPages)}
-                      >
-                        ❯
-                      </button>
-                    </div>
-                  </div>
-                );
-                
-              })()}
-            </div>
-          </div>
-        )}
-
-
+        {/* Mostrar un mensaje de carga o renderizar los BudgetCard */}
         {loading ? (
-          <div className="text-center mt-5">
+          <div className="text-center">
             <span className="loading loading-spinner loading-lg"></span>{" "}
             Cargando presupuestos...
           </div>
@@ -290,7 +161,7 @@ function BudgetPage() {
             <p className="text-lg mt-4">No tienes presupuestos aún.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-6 mt-5">
+          <div className="flex flex-col gap-6">
             {filtrarPresupuestos().map((budget) => (
               <BudgetCard
                 key={budget.id}

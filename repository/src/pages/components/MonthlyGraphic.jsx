@@ -41,102 +41,174 @@ function MonthlyGraphic({
             (transaccion) => transaccion.categoria !== "Ingreso de Dinero"
           )
         : transacciones;
-  
-    let transaccionesConOtros = gastos;
-  
+
     if (
       filtroCategoria &&
       filtroCategoria !== "Todas" &&
       filtroCategoria !== "Ingreso de Dinero"
     ) {
-      const transaccionesFiltradas = transaccionesSinFiltroCat
-        .filter(
-          (transaccion) =>
-            transaccion.categoria !== "Ingreso de Dinero" &&
-            transaccion.categoria !== filtroCategoria
-        )
-        .map((transaccion) => ({
-          ...transaccion,
-          categoria: "Otros",
-        }));
-      transaccionesConOtros = [...gastos, ...transaccionesFiltradas];
+      setTransaccionesRestantes([]);
+      setTransaccionesRestantes(transaccionesSinFiltroCat);
+      console.log(transaccionesSinFiltroCat);
+      let transaccionesFiltradas = transaccionesSinFiltroCat.filter(
+        (transaccion) =>
+          transaccion.categoria !== "Ingreso de Dinero" &&
+          transaccion.categoria !== filtroCategoria
+      );
+      transaccionesFiltradas = transaccionesFiltradas.map((transaccion) => ({
+        ...transaccion,
+        categoria: "Otros",
+      }));
+      setTransaccionesRestantes([...transaccionesFiltradas, ...gastos]);
+    } else {
+      setTransaccionesRestantes([]);
     }
-  
-    // Agrupar las transacciones por categoría (incluyendo "Otros")
-    const sumaPorCategoria = transaccionesConOtros.reduce((acc, transaccion) => {
+
+    const sumaPorCategoria = gastos.reduce((acc, transaccion) => {
       const categoria = transaccion.categoria;
-      acc[categoria] = (acc[categoria] || 0) + transaccion.valor;
+      if (!acc[categoria]) {
+        acc[categoria] = 0;
+      }
+      acc[categoria] += transaccion.valor;
       return acc;
     }, {});
-  
-    // Agrupar las transacciones por tipo de gasto
+    let sumaPorCategoriaOtros = 0;
+    if (
+      filtroCategoria &&
+      filtroCategoria !== "Todas" &&
+      filtroCategoria !== "Ingreso de Dinero"
+    ) {
+      sumaPorCategoriaOtros = transaccionesRestantes.reduce(
+        (acc, transaccion) => {
+          const categoria = transaccion.categoria;
+          if (!acc[categoria]) {
+            acc[categoria] = 0;
+          }
+          acc[categoria] += transaccion.valor;
+          return acc;
+        },
+        {}
+      );
+    }
+
     const sumaPorTipoGasto = gastos.reduce((acc, transaccion) => {
       const tipoGasto = transaccion.tipoGasto;
-      acc[tipoGasto] = (acc[tipoGasto] || 0) + transaccion.valor;
+      if (!acc[tipoGasto]) {
+        acc[tipoGasto] = 0;
+      }
+      acc[tipoGasto] += transaccion.valor;
       return acc;
     }, {});
-  
+
     const allMonths = Array.from({ length: 12 }, (_, index) =>
       new Date(2024, index).toLocaleString("default", { month: "short" })
     );
-  
-    const allDays = (month) => {
-      const daysInMonth = new Date(2024, month + 1, 0).getDate();
-      return Array.from({ length: daysInMonth }, (_, index) => index + 1);
-    };
-  
-    let newDataLine;
-  
+
+    let newDataLine = [];
+
     if (filtroMes) {
       const selectedMonth = parseInt(filtroMes, 10) - 1;
-      const days = allDays(selectedMonth);
-  
       const gastosPorDia = gastos.reduce((acc, transaccion) => {
         const fecha = new Date(transaccion.fecha);
-        const mes = fecha.getUTCMonth(); // Usar UTC para evitar errores de zona horaria
+        const mes = fecha.getMonth();
         if (mes === selectedMonth) {
-          const dia = fecha.getUTCDate(); // Obtener el día usando UTC
-          acc[dia] = (acc[dia] || 0) + transaccion.valor;
+          const dia = fecha.getDate();
+          if (!acc[dia]) {
+            acc[dia] = 0;
+          }
+          acc[dia] += transaccion.valor;
         }
         return acc;
       }, {});
-  
-      newDataLine = days.map((day) => ({
-        label: day.toString(),
-        total: gastosPorDia[day] || 0,
+
+      //para la parte de otros
+      if (
+        filtroCategoria !== "Todas" &&
+        filtroCategoria !== "Ingreso de Dinero"
+      ) {
+        const gastosPorDiaOtros = transaccionesRestantes.reduce(
+          (acc, transaccion) => {
+            const fecha = new Date(transaccion.fecha);
+            const mes = fecha.getMonth();
+            if (mes === selectedMonth) {
+              const dia = fecha.getDate();
+              if (!acc[dia]) {
+                acc[dia] = 0;
+              }
+              acc[dia] += transaccion.valor;
+            }
+            return acc;
+          },
+          {}
+        );
+      }
+
+      const daysInMonth = new Date(2024, selectedMonth + 1, 0).getDate();
+      newDataLine = Array.from({ length: daysInMonth }, (_, index) => ({
+        day: (index + 2).toString(),
+        total: gastosPorDia[index + 1] || 0,
       }));
     } else {
       const gastosPorMes = gastos.reduce((acc, transaccion) => {
-        const mes = new Date(transaccion.fecha).getUTCMonth(); // Usar UTC para el mes
-        acc[mes] = (acc[mes] || 0) + transaccion.valor;
+        const mes = new Date(transaccion.fecha).getMonth();
+        if (!acc[mes]) {
+          acc[mes] = 0;
+        }
+        acc[mes] += transaccion.valor;
         return acc;
       }, {});
-  
+
+      //para la parte de otros
+      if (
+        filtroCategoria !== "Todas" &&
+        filtroCategoria !== "Ingreso de Dinero"
+      ) {
+        const gastosPorMesOtros = transaccionesRestantes.reduce(
+          (acc, transaccion) => {
+            const mes = new Date(transaccion.fecha).getMonth();
+            if (!acc[mes]) {
+              acc[mes] = 0;
+            }
+            acc[mes] += transaccion.valor;
+            return acc;
+          },
+          {}
+        );
+      }
+
       newDataLine = allMonths.map((month, index) => ({
-        label: month,
+        month,
         total: gastosPorMes[index] || 0,
       }));
     }
-  
-    // Actualizar estados
-    setData(
-      Object.entries(sumaPorCategoria).map(([categoria, monto]) => ({
-        name: categoria,
-        value: monto,
-      }))
-    );
-  
+    if (
+      filtroCategoria !== "Todas" &&
+      filtroCategoria !== "Ingreso de Dinero"
+    ) {
+      setData(
+        Object.entries(sumaPorCategoriaOtros).map(([categoria, monto]) => ({
+          name: categoria,
+          value: monto,
+        }))
+      );
+    } else {
+      setData(
+        Object.entries(sumaPorCategoria).map(([categoria, monto]) => ({
+          name: categoria,
+          value: monto,
+        }))
+      );
+    }
     setDataPay(
       Object.entries(sumaPorTipoGasto).map(([tipoGasto, monto]) => ({
         name: tipoGasto,
         value: monto,
       }))
     );
-  
+
     setDataLine(newDataLine);
     setLoadingg(false);
   }, [payCategories, transacciones, filtroMes, filtroCategoria]);
-  
 
   const COLORS = [
     "#0088FE",
@@ -145,7 +217,6 @@ function MonthlyGraphic({
     "#FF8042",
     "#fe1900",
     "#a500fe",
-    "#784315"
   ];
 
   const getCategoryIcon = (categoryName) => {
@@ -159,8 +230,8 @@ function MonthlyGraphic({
         <LoadingSpinner />
       ) : (
         <div className="flex flex-col md:flex-row justify-center items-center w-full">
-          <div className="w-full md:w-7/12 md:h-2/6 flex justify-center items-center">
-            <ResponsiveContainer width="50%" aspect={1}>
+          <div className="w-full md:w-1/2 flex justify-center items-center">
+            <ResponsiveContainer width="100%" aspect={1}>
               <PieChart>
                 <Pie
                   data={type === "categorias" ? data : dataPay}
@@ -222,10 +293,10 @@ function MonthlyGraphic({
                 ))}
             </div>
           </div>
-          <div className="w-full md:w-5/12 md:h-2/6 flex justify-center items-center mt-4 md:mt-0">
+          <div className="w-full md:w-1/2 flex justify-center items-center mt-4 md:mt-0">
             <ResponsiveContainer width="100%" aspect={1.5}>
               <BarChart data={dataLine}>
-                <XAxis dataKey="label" stroke="#ffffff" />
+                <XAxis dataKey={filtroMes ? "day" : "month"} stroke="#ffffff" />
                 <YAxis stroke="#ffffff" />
                 <Tooltip />
                 <Bar type="monotone" dataKey="total" fill="#FFD700" />

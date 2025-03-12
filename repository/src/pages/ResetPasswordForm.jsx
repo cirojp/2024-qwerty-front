@@ -39,7 +39,7 @@ function ResetPasswordForm() {
       setLoading(true);
       try {
         const response = await fetch(
-          `https://two024-qwerty-back-2.onrender.com/api/auth/reset-password?token=${token}&newPassword=${newPassword}`,
+          `https://two024-qwerty-back-1.onrender.com/api/auth/reset-password?token=${token}&newPassword=${newPassword}`,
           {
             method: "POST",
           }

@@ -36,7 +36,7 @@ function ChangePasswordForm() {
 
     try {
       const response = await fetch(
-        "https://two024-qwerty-back-2.onrender.com/api/users/change-password",
+        "https://two024-qwerty-back-1.onrender.com/api/users/change-password",
         {
           method: "PUT",
           headers: {

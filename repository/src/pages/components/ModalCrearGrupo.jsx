@@ -58,7 +58,7 @@ const ModalCrearGrupo = ({
       try {
         // Realiza la llamada al backend para verificar el usuario
         const response = await fetch(
-          `https://two024-qwerty-back-2.onrender.com/api/grupos/${grupoAAgregar}/verificar-usuario?email=${correoUsuario}`,
+          `https://two024-qwerty-back-1.onrender.com/api/grupos/${grupoAAgregar}/verificar-usuario?email=${correoUsuario}`,
           {
             method: "GET",
             headers: {
@@ -93,7 +93,7 @@ const ModalCrearGrupo = ({
   };
   const userExists = async (mail) => {
     let url =
-      "https://two024-qwerty-back-2.onrender.com/api/public/exists/" + mail;
+      "https://two024-qwerty-back-1.onrender.com/api/public/exists/" + mail;
     const response = await fetch(url);
     if (response.ok) {
       const exists = await response.json();
@@ -117,7 +117,7 @@ const ModalCrearGrupo = ({
       try {
         // Aquí iría la lógica para crear el grupo usando `grupoNombre` y `usuarios`
         const response = await fetch(
-          "https://two024-qwerty-back-2.onrender.com/api/grupos/crear",
+          "https://two024-qwerty-back-1.onrender.com/api/grupos/crear",
           {
             // Ajusta la URL según tu endpoint
             method: "POST",
@@ -155,7 +155,7 @@ const ModalCrearGrupo = ({
       try {
         // Aquí iría la lógica para crear el grupo usando `grupoNombre` y `usuarios`
         const response = await fetch(
-          `https://two024-qwerty-back-2.onrender.com/api/grupos/${grupoAAgregar}/agregar-usuario`,
+          `https://two024-qwerty-back-1.onrender.com/api/grupos/${grupoAAgregar}/agregar-usuario`,
           {
             // Ajusta la URL según tu endpoint
             method: "POST",

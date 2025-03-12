@@ -149,7 +149,7 @@ function ModalVerCategorias({
     };
     try {
       const response = await fetch(
-        "https://two024-qwerty-back-2.onrender.com/api/personal-categoria/" +
+        "https://two024-qwerty-back-1.onrender.com/api/personal-categoria/" +
           inputValue.nombre,
         {
           method: "PUT",
@@ -183,7 +183,7 @@ function ModalVerCategorias({
     setConfirmDeleteOpen(false);
     try {
       const response = await fetch(
-        "https://two024-qwerty-back-2.onrender.com/api/personal-categoria",
+        "https://two024-qwerty-back-1.onrender.com/api/personal-categoria",
         {
           method: "DELETE",
           headers: {
@@ -217,7 +217,7 @@ function ModalVerCategorias({
     };
     try {
       const response = await fetch(
-        "https://two024-qwerty-back-2.onrender.com/api/personal-categoria",
+        "https://two024-qwerty-back-1.onrender.com/api/personal-categoria",
         {
           method: "POST",
           headers: {

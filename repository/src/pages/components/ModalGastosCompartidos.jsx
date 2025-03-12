@@ -28,7 +28,7 @@ function ModalGastosCompartidos({
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(
-        "https://two024-qwerty-back-2.onrender.com/api/grupos/mis-grupos",
+        "https://two024-qwerty-back-1.onrender.com/api/grupos/mis-grupos",
         {
           method: "GET",
           headers: {
@@ -53,7 +53,7 @@ function ModalGastosCompartidos({
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(
-        `https://two024-qwerty-back-2.onrender.com/api/grupos/${grupo.id}/usuarios`,
+        `https://two024-qwerty-back-1.onrender.com/api/grupos/${grupo.id}/usuarios`,
         {
           method: "GET",
           headers: {
@@ -107,7 +107,7 @@ function ModalGastosCompartidos({
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(
-        `https://two024-qwerty-back-2.onrender.com/api/grupos/${grupoAEliminar.id}`,
+        `https://two024-qwerty-back-1.onrender.com/api/grupos/${grupoAEliminar.id}`,
         {
           method: "DELETE",
           headers: {

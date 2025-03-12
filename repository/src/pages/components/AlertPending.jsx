@@ -31,7 +31,7 @@ function AlertPending({
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(
-        "https://two024-qwerty-back-2.onrender.com/api/personal-tipo-gasto",
+        "https://two024-qwerty-back-1.onrender.com/api/personal-tipo-gasto",
         {
           headers: {
             Authorization: `Bearer ${token}`,

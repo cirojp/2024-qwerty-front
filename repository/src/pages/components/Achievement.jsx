@@ -7,7 +7,7 @@ const Achievement = ({ achievement }) => {
   const checkIfCompleted = async () => {
     const token = localStorage.getItem("token");
     fetch(
-      "https://two024-qwerty-back-2.onrender.com/api/users/userTransaction",
+      "https://two024-qwerty-back-1.onrender.com/api/users/userTransaction",
       {
         method: "GET",
         headers: {

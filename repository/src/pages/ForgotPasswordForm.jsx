@@ -12,7 +12,7 @@ function ForgotPasswordForm() {
     setLoading(true);
     try {
       const response = await fetch(
-        "https://two024-qwerty-back-2.onrender.com/api/auth/forgot-password?email=" +
+        "https://two024-qwerty-back-1.onrender.com/api/auth/forgot-password?email=" +
           email,
         {
           method: "POST",

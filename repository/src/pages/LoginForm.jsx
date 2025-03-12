@@ -19,7 +19,7 @@ function LoginForm() {
     setIsLoading(true);
     try {
       const response = await fetch(
-        "https://two024-qwerty-back-2.onrender.com/api/auth/login",
+        "https://two024-qwerty-back-1.onrender.com/api/auth/login",
         {
           method: "POST",
           headers: {

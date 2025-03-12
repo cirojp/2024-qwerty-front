@@ -18,7 +18,7 @@ function BudgetPage() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    fetch("https://two024-qwerty-back-2.onrender.com/api/transacciones/user", {
+    fetch("https://two024-qwerty-back-1.onrender.com/api/transacciones/user", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -40,7 +40,7 @@ function BudgetPage() {
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(
-        `https://two024-qwerty-back-2.onrender.com/api/presupuesto/${budget.id}`,
+        `https://two024-qwerty-back-1.onrender.com/api/presupuesto/${budget.id}`,
         {
           method: "DELETE",
           headers: {
@@ -72,7 +72,7 @@ function BudgetPage() {
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(
-        "https://two024-qwerty-back-2.onrender.com/api/presupuesto",
+        "https://two024-qwerty-back-1.onrender.com/api/presupuesto",
         {
           headers: {
             Authorization: `Bearer ${token}`,

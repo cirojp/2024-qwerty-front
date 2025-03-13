@@ -73,7 +73,7 @@ function HomePage() {
   const [isLoadingFilter, setIsLoadingFilter] = useState(true);
   const [pendTran, setPendTran] = useState(false);
   const [filtroMes, setFiltroMes] = useState(""); // Ej: "10" para octubre
-  const [filtroAno, setFiltroAno] = useState("2024"); //
+  const [filtroAno, setFiltroAno] = useState("2025"); //
   const [filterEmpty, setFilterEmpty] = useState(false);
   const [loadGraphic, setLoadGraphic] = useState(true);
   const [grupos, setGrupos] = useState([]);
@@ -706,7 +706,7 @@ function HomePage() {
   };
   const resetFilters = () => {
     setCategoriaSeleccionada("Todas");
-    setFiltroAno("2024");
+    setFiltroAno("2025");
     setFiltroMes("");
   };
   const refershTransacciones = (transaccionNueva) => {
@@ -897,7 +897,7 @@ function HomePage() {
             {showNoTransactions && (
               <div className="flex flex-col justify-center items-center mb-0">
                 {(categoriaSeleccionada !== "Todas" ||
-                  filtroAno !== "2024" ||
+                  filtroAno !== "2025" ||
                   filtroMes !== "") && (
                   <p className="text-red-500 font-bold mb-4">
                     Su filtro no coincide con ninguna transacción

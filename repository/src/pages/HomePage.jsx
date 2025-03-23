@@ -81,6 +81,12 @@ function HomePage() {
   const [transaccionesSinFiltroCat, setTransaccionesSinFiltroCat] = useState(
     []
   );
+  const [monedas, setMonedas] = useState([ 
+      { value: 1, label: "ARG" }, 
+      { value: 1250, label: "USD" }, 
+      { value: 1300, label: "EUR" }, 
+    ]);
+  const [monedaSeleccionada, setMonedaSeleccionada] = useState(monedas[0]);
   const [isLoading, setIsLoading] = useState(true);
   const handleGroupChange = (selectedOption) => {
     if (selectedOption && selectedOption.value === null) {
@@ -325,12 +331,14 @@ function HomePage() {
       value: "Efectivo",
       label: "Efectivo",
     });
+    setMonedaSeleccionada({ value: 1, label: "ARG" });
   };
 
   const editRow = (row) => {
     setEdit(true);
     setMotivo(row.motivo);
     setValor(row.valor);
+    setMonedaSeleccionada(monedas.find(m => m.label == row.monedaOriginal));
     const selectedOption = payOptions.find(
       (option) => option.value === row.tipoGasto
     );
@@ -476,12 +484,16 @@ function HomePage() {
   };
   const agregarTransaccion = async (e, categoria) => {
     e.preventDefault();
+    let moneda = monedas.find(m => m.value == monedaSeleccionada);
     const token = localStorage.getItem("token");
     let bodyJson = "";
     let url = "";
+    let monedaOriginal = moneda.label;
+    let montoOriginal = valor;
+    let valorAux = valor * moneda.value;
     setTransaccionesCargadas(false);
     if (selectedGroup == null) {
-      bodyJson = JSON.stringify({ motivo, valor, fecha, categoria, tipoGasto });
+      bodyJson = JSON.stringify({ motivo, valor: valorAux, fecha, categoria, tipoGasto, monedaOriginal, montoOriginal });
       url = edit
         ? `https://two024-qwerty-back-1.onrender.com/api/transacciones/${transaccionId}`
         : "https://two024-qwerty-back-1.onrender.com/api/transacciones";
@@ -489,11 +501,13 @@ function HomePage() {
       const grupo = selectedGroup.value;
       bodyJson = JSON.stringify({
         motivo,
-        valor,
+        valor: valorAux,
         fecha,
         categoria,
         tipoGasto,
         grupo,
+        monedaOriginal, 
+        montoOriginal
       });
       url = edit
         ? `https://two024-qwerty-back-1.onrender.com/api/grupos/transaccion/${transaccionId}`
@@ -936,6 +950,9 @@ function HomePage() {
           handleGroupChange={handleGroupChange}
           selectedGroup={selectedGroup}
           grupos={grupos}
+          monedas={monedas}
+          monedaSeleccionada={monedaSeleccionada}
+          setMonedaSeleccionada={setMonedaSeleccionada}
         />
         <ModalAskPayment payCategories={payCategories} />
         <ModalSendPayment

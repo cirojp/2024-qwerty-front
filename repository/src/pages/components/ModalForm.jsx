@@ -27,6 +27,9 @@ function ModalForm({
   handleGroupChange,
   selectedGroup,
   grupos,
+  monedas,
+  monedaSeleccionada,
+  setMonedaSeleccionada,
 }) {
   const customStyles = {
     overlay: {
@@ -95,12 +98,6 @@ function ModalForm({
   const [isModalCategoriaOpen, setIsModalCategoriaOpen] = useState(false);
   const [isGroupDisabled, setIsGroupDisabled] = useState(false);
   const [isCategoryDisabled, setIsCategoryDisabled] = useState(false);
-  const [monedas, setMonedas] = useState([ 
-    { value: 1, label: "ARG" }, 
-    { value: 1250, label: "USD" }, 
-    { value: 1300, label: "EUR" }, 
-  ]);
-  const [monedaSeleccionada, setMonedaSeleccionada] = useState(monedas[0].value);
   useEffect(() => {
     if (grupos == null) {
       grupos = [selectedGroup];
@@ -211,8 +208,11 @@ function ModalForm({
             </div>
             <div className="flex-10">
             <select
-              value={monedaSeleccionada}
-              onChange={(e) => setMonedaSeleccionada(e.target.value)}
+              value={monedaSeleccionada?.value || ""}
+              onChange={(e) => {
+                const monedaObj = monedas.find((m) => m.value == e.target.value);
+                setMonedaSeleccionada(monedaObj || { value: 1, label: "ARG" }); // Fallback si no encuentra la moneda
+              }}
               className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
             >
               {monedas.map((moneda) => (
@@ -223,9 +223,9 @@ function ModalForm({
             </select>
             </div></div>
                   {/* Mostrar el valor convertido si la moneda seleccionada no es ARG */}
-        {monedaSeleccionada !== "1" && valor && (
+        {monedaSeleccionada.value !== 1 && valor && (
           <div className="mt-2 text-yellow-400">
-            Valor en pesos ARG = {valor * monedas.find(m => m.value == monedaSeleccionada)?.value}
+            Valor en pesos ARG = {valor * monedaSeleccionada.value}
           </div>
         )}
         </div>

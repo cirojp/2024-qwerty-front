@@ -208,11 +208,8 @@ function ModalForm({
             </div>
             <div className="flex-10">
             <select
-              value={monedaSeleccionada?.value || ""}
-              onChange={(e) => {
-                const monedaObj = monedas.find((m) => m.value == e.target.value);
-                setMonedaSeleccionada(monedaObj || { value: 1, label: "ARG" }); // Fallback si no encuentra la moneda
-              }}
+              value={monedaSeleccionada}
+              onChange={(e) => setMonedaSeleccionada(e.target.value)}
               className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
             >
               {monedas.map((moneda) => (
@@ -223,9 +220,9 @@ function ModalForm({
             </select>
             </div></div>
                   {/* Mostrar el valor convertido si la moneda seleccionada no es ARG */}
-        {monedaSeleccionada.value !== 1 && valor && (
+        {monedaSeleccionada !== 1 && valor && (
           <div className="mt-2 text-yellow-400">
-            Valor en pesos ARG = {valor * monedaSeleccionada.value}
+            Valor en pesos ARG = {valor * monedas.find(m => m.value == monedaSeleccionada)?.value}
           </div>
         )}
         </div>

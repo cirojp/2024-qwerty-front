@@ -86,7 +86,7 @@ function HomePage() {
       { value: 1250, label: "USD" }, 
       { value: 1300, label: "EUR" }, 
     ]);
-  const [monedaSeleccionada, setMonedaSeleccionada] = useState(monedas[0]);
+  const [monedaSeleccionada, setMonedaSeleccionada] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const handleGroupChange = (selectedOption) => {
     if (selectedOption && selectedOption.value === null) {
@@ -331,14 +331,16 @@ function HomePage() {
       value: "Efectivo",
       label: "Efectivo",
     });
-    setMonedaSeleccionada({ value: 1, label: "ARG" });
+    setMonedaSeleccionada(1);
   };
 
   const editRow = (row) => {
     setEdit(true);
     setMotivo(row.motivo);
-    setValor(row.valor);
-    setMonedaSeleccionada(monedas.find(m => m.label == row.monedaOriginal));
+    let monedaDeTransac = monedas.find(m => m.label == row.monedaOriginal)
+    setMonedaSeleccionada(monedaDeTransac.value);
+    setValor(row.montoOriginal);
+    
     const selectedOption = payOptions.find(
       (option) => option.value === row.tipoGasto
     );

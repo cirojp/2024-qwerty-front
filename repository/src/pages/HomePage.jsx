@@ -960,6 +960,7 @@ function HomePage() {
         <ModalSendPayment
           payCategories={payCategories}
           refreshTransacciones={refershTransacciones}
+          monedas={monedas}
         />
         <AlertPending
           isOpen={pendTran}

@@ -206,7 +206,17 @@ function AlertPending({
             Motivo: {pendingTransaction.motivo}
           </label>
           <label className="block mb-2">
-            Valor: {pendingTransaction.valor}
+            {pendingTransaction.monedaOriginal !== "ARG" ? (
+              <>
+                Valor: {pendingTransaction.montoOriginal} {pendingTransaction.monedaOriginal}
+                <br />
+                 ( {pendingTransaction.valor} ARG )
+              </>
+            ) : (
+              <>
+                Valor: {pendingTransaction.valor} ARG
+              </>
+            )}
           </label>
           <label className="block mb-2">
             Fecha: {pendingTransaction.fecha}

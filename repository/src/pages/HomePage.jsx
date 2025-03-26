@@ -403,6 +403,8 @@ function HomePage() {
       const motivo = transaccion.motivo;
       const valor = transaccion.valor;
       const fecha = transaccion.fecha;
+      const monedaOriginal = transaccion.monedaOriginal;
+      const montoOriginal = transaccion.montoOriginal;
       try {
         const response = await fetch(url, {
           method: "POST",
@@ -410,7 +412,7 @@ function HomePage() {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ motivo, valor, fecha, categoria, tipoGasto }),
+          body: JSON.stringify({ motivo, valor, fecha, categoria, tipoGasto, monedaOriginal, montoOriginal }),
         });
         if (response.ok) {
           const data = await response.json();
@@ -956,7 +958,7 @@ function HomePage() {
           monedaSeleccionada={monedaSeleccionada}
           setMonedaSeleccionada={setMonedaSeleccionada}
         />
-        <ModalAskPayment payCategories={payCategories} />
+        <ModalAskPayment payCategories={payCategories} monedas={monedas} />
         <ModalSendPayment
           payCategories={payCategories}
           refreshTransacciones={refershTransacciones}

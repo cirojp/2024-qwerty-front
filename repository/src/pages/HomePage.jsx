@@ -536,7 +536,7 @@ function HomePage() {
               t.id === data.id ? data : t
             );
             setTransacciones(updatedTransacciones);
-          } else {
+          } else if(fecha.split("-")[0] === filtroAno){
             const updatedTransacciones = [...transacciones, data];
             updatedTransacciones.sort(
               (a, b) => new Date(b.fecha) - new Date(a.fecha)

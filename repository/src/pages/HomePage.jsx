@@ -81,6 +81,12 @@ function HomePage() {
   const [transaccionesSinFiltroCat, setTransaccionesSinFiltroCat] = useState(
     []
   );
+  const [monedas, setMonedas] = useState([ 
+      { value: 1, label: "ARG" }, 
+      { value: 1250, label: "USD" }, 
+      { value: 1300, label: "EUR" }, 
+    ]);
+  const [monedaSeleccionada, setMonedaSeleccionada] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const handleGroupChange = (selectedOption) => {
     if (selectedOption && selectedOption.value === null) {
@@ -325,12 +331,16 @@ function HomePage() {
       value: "Efectivo",
       label: "Efectivo",
     });
+    setMonedaSeleccionada(1);
   };
 
   const editRow = (row) => {
     setEdit(true);
     setMotivo(row.motivo);
-    setValor(row.valor);
+    let monedaDeTransac = monedas.find(m => m.label == row.monedaOriginal)
+    setMonedaSeleccionada(monedaDeTransac.value);
+    setValor(row.montoOriginal);
+    
     const selectedOption = payOptions.find(
       (option) => option.value === row.tipoGasto
     );
@@ -393,6 +403,8 @@ function HomePage() {
       const motivo = transaccion.motivo;
       const valor = transaccion.valor;
       const fecha = transaccion.fecha;
+      const monedaOriginal = transaccion.monedaOriginal;
+      const montoOriginal = transaccion.montoOriginal;
       try {
         const response = await fetch(url, {
           method: "POST",
@@ -400,7 +412,7 @@ function HomePage() {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ motivo, valor, fecha, categoria, tipoGasto }),
+          body: JSON.stringify({ motivo, valor, fecha, categoria, tipoGasto, monedaOriginal, montoOriginal }),
         });
         if (response.ok) {
           const data = await response.json();
@@ -476,12 +488,16 @@ function HomePage() {
   };
   const agregarTransaccion = async (e, categoria) => {
     e.preventDefault();
+    let moneda = monedas.find(m => m.value == monedaSeleccionada);
     const token = localStorage.getItem("token");
     let bodyJson = "";
     let url = "";
+    let monedaOriginal = moneda.label;
+    let montoOriginal = valor;
+    let valorAux = valor * moneda.value;
     setTransaccionesCargadas(false);
     if (selectedGroup == null) {
-      bodyJson = JSON.stringify({ motivo, valor, fecha, categoria, tipoGasto });
+      bodyJson = JSON.stringify({ motivo, valor: valorAux, fecha, categoria, tipoGasto, monedaOriginal, montoOriginal });
       url = edit
         ? `https://two024-qwerty-back-1.onrender.com/api/transacciones/${transaccionId}`
         : "https://two024-qwerty-back-1.onrender.com/api/transacciones";
@@ -489,11 +505,13 @@ function HomePage() {
       const grupo = selectedGroup.value;
       bodyJson = JSON.stringify({
         motivo,
-        valor,
+        valor: valorAux,
         fecha,
         categoria,
         tipoGasto,
         grupo,
+        monedaOriginal, 
+        montoOriginal
       });
       url = edit
         ? `https://two024-qwerty-back-1.onrender.com/api/grupos/transaccion/${transaccionId}`
@@ -518,7 +536,7 @@ function HomePage() {
               t.id === data.id ? data : t
             );
             setTransacciones(updatedTransacciones);
-          } else {
+          } else if(fecha.split("-")[0] === filtroAno){
             const updatedTransacciones = [...transacciones, data];
             updatedTransacciones.sort(
               (a, b) => new Date(b.fecha) - new Date(a.fecha)
@@ -936,11 +954,15 @@ function HomePage() {
           handleGroupChange={handleGroupChange}
           selectedGroup={selectedGroup}
           grupos={grupos}
+          monedas={monedas}
+          monedaSeleccionada={monedaSeleccionada}
+          setMonedaSeleccionada={setMonedaSeleccionada}
         />
-        <ModalAskPayment payCategories={payCategories} />
+        <ModalAskPayment payCategories={payCategories} monedas={monedas} />
         <ModalSendPayment
           payCategories={payCategories}
           refreshTransacciones={refershTransacciones}
+          monedas={monedas}
         />
         <AlertPending
           isOpen={pendTran}

@@ -27,6 +27,9 @@ function ModalForm({
   handleGroupChange,
   selectedGroup,
   grupos,
+  monedas,
+  monedaSeleccionada,
+  setMonedaSeleccionada,
 }) {
   const customStyles = {
     overlay: {
@@ -193,13 +196,35 @@ function ModalForm({
         </div>
         <div>
           <label className="text-center text-gray-100 mb-6">Valor:</label>
-          <input
-            type="number"
-            value={valor}
-            onChange={(e) => setValor(e.target.value)}
-            className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
-            required
-          />
+          <div className="flex gap-2 ">
+          <div className="flex-1">
+            <input
+              type="number"
+              value={valor}
+              onChange={(e) => setValor(e.target.value)}
+              className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
+              required
+            />
+            </div>
+            <div className="flex-10">
+            <select
+              value={monedaSeleccionada}
+              onChange={(e) => setMonedaSeleccionada(e.target.value)}
+              className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
+            >
+              {(monedas || []).map((moneda) => (
+                <option key={moneda.value} value={moneda.value}>
+                  {moneda.label}
+                </option>
+              ))}
+            </select>
+            </div></div>
+                  {/* Mostrar el valor convertido si la moneda seleccionada no es ARG */}
+        {monedaSeleccionada !== 1 && valor && (
+          <div className="mt-2 text-yellow-400">
+            Valor en pesos ARG = {valor * monedas.find(m => m.value == monedaSeleccionada)?.value}
+          </div>
+        )}
         </div>
         <div>
           <label className="text-center text-gray-100 mb-6">

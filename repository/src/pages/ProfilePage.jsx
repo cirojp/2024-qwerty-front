@@ -331,12 +331,29 @@ function ProfilePage() {
           )}
 
           {!loadingGraphic && transacciones[0] != null && (
+            <>
             <MonthlyGraphic
               type="tipoGasto"
               transacciones={transacciones}
               payCategories={payOptions}
               loading={loadingGraphic}
             />
+            <div className="mt-6">
+            {transacciones[0] != null && (
+              <div className="flex items-center">
+                <h2 className="text-2xl py-2 font-bold text-gray-100">
+                  Monto por Moneda Utilizada
+                </h2>
+              </div>
+            )}
+                <MonthlyGraphic
+                  type="monedas"
+                  transacciones={transacciones}
+                  payCategories={payOptions}
+                  loading={loadingGraphic}
+                />
+              </div>
+            </>
           )}
         </>
       </div>

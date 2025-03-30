@@ -30,6 +30,7 @@ function MonthlyGraphic({
   // Estado para los datos
   const [data, setData] = useState([]);
   const [dataPay, setDataPay] = useState([]);
+  const [dataMonedas, setDataMonedas] = useState([]);
   const [dataLine, setDataLine] = useState([]);
   const [loadingg, setLoadingg] = useState(true);
   const [transaccionesRestantes, setTransaccionesRestantes] = useState([]);
@@ -97,6 +98,16 @@ function MonthlyGraphic({
         acc[tipoGasto] = 0;
       }
       acc[tipoGasto] += transaccion.valor;
+      return acc;
+    }, {});
+
+    const sumaPorMoneda = gastos.reduce((acc, transaccion) => {
+      const moneda = transaccion.monedaOriginal;
+      if (!acc[moneda]) {
+        acc[moneda] = [0,0];
+      }
+      acc[moneda][0] += transaccion.valor;
+      acc[moneda][1] += transaccion.montoOriginal;
       return acc;
     }, {});
 
@@ -205,6 +216,13 @@ function MonthlyGraphic({
         value: monto,
       }))
     );
+    setDataMonedas(
+      Object.entries(sumaPorMoneda).map(([moneda, valores]) => ({
+        name: moneda,
+        value: valores[0],
+        montoOriginal: valores[1],
+      }))
+    );
 
     setDataLine(newDataLine);
     setLoadingg(false);
@@ -228,7 +246,7 @@ function MonthlyGraphic({
     <div className="flex flex-col justify-center items-center py-4 bg-gray-950 h-full w-full">
       {loadingg ? (
         <LoadingSpinner />
-      ) : (
+      ) : type !== "monedas" ? ( 
         <div className="flex flex-col md:flex-row justify-center items-center w-full">
           <div className="w-full md:w-1/2 flex justify-center items-center">
             <ResponsiveContainer width="100%" aspect={1}>
@@ -304,6 +322,45 @@ function MonthlyGraphic({
             </ResponsiveContainer>
           </div>
         </div>
+        ):(
+          <div className="flex flex-col md:flex-row justify-center items-center w-full">
+            <div className="w-full md:w-1/2 flex justify-center items-center">
+              <ResponsiveContainer width="100%" aspect={1}>
+                <PieChart>
+                  <Pie
+                    data={dataMonedas}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={renderCustomizedLabel}
+                    outerRadius="80%"
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {dataMonedas.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip content={<CustomTooltip />} />
+                </PieChart>
+              </ResponsiveContainer>
+                <div className="legend flex flex-col mt-4 text-white">
+                  {dataMonedas.map((entry, index) => (
+                    <div key={`legend-item-${index}`} className="flex items-center mb-2">
+                      <div
+                        style={{
+                          width: "12px",
+                          height: "12px",
+                          backgroundColor: COLORS[index % COLORS.length],
+                          marginRight: "8px",
+                        }}
+                      ></div>
+                      <span>{entry.name}</span>
+                    </div>
+                  ))}
+                </div>
+            </div>
+          </div>
       )}
     </div>
   );
@@ -339,3 +396,19 @@ const renderCustomizedLabel = ({
     </text>
   );
 };
+
+const CustomTooltip = ({ active, payload }) => {
+  if (active && payload && payload.length) {
+    const { name, payload: data } = payload[0];
+
+    return (
+      <div className="bg-gray-800 text-white p-2 rounded">
+        <p className="font-bold text-center">{data.montoOriginal} {name} </p>
+        <p>({data.value} ARG) </p>
+      </div>
+    );
+  }
+
+  return null;
+};
+

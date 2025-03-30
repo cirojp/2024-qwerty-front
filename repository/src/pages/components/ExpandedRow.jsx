@@ -10,6 +10,8 @@ const ExpandedRow = ({
     categoria: "",
     fecha: "",
     tipoGasto: "",
+    monedaOriginal: "",
+    montoOriginal: "",
   },
   payCategories = [],
 }) => {
@@ -34,6 +36,8 @@ const ExpandedRow = ({
         <div className="text-gray-200">{data.tipoGasto}</div>
         <div className="font-bold text-gray-300">Fecha:</div>
         <div className="text-gray-200">{data.fecha}</div>
+        <div className="font-bold text-gray-300">Valor Original:</div>
+        <div className="text-gray-200">{data.montoOriginal} {data.monedaOriginal}</div>
       </div>
     </div>
   );

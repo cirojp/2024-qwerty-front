@@ -285,6 +285,7 @@ function ModalForm({
             type="date"
             value={fecha}
             onChange={(e) => setFecha(e.target.value)}
+            min={esRecurrente ? new Date().toISOString().split("T")[0] : undefined}
             className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
             required
           />

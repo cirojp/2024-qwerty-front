@@ -87,6 +87,8 @@ function HomePage() {
       { value: 1300, label: "EUR" }, 
     ]);
   const [monedaSeleccionada, setMonedaSeleccionada] = useState(1);
+  const [frecuenciaRecurrente, setFrecuenciaRecurrente] = useState("");
+  const [esRecurrente, setEsRecurrente] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const handleGroupChange = (selectedOption) => {
     if (selectedOption && selectedOption.value === null) {
@@ -332,6 +334,8 @@ function HomePage() {
       label: "Efectivo",
     });
     setMonedaSeleccionada(1);
+    setFrecuenciaRecurrente("");
+    setEsRecurrente(false);
   };
 
   const editRow = (row) => {
@@ -497,7 +501,7 @@ function HomePage() {
     let valorAux = valor * moneda.value;
     setTransaccionesCargadas(false);
     if (selectedGroup == null) {
-      bodyJson = JSON.stringify({ motivo, valor: valorAux, fecha, categoria, tipoGasto, monedaOriginal, montoOriginal });
+      bodyJson = JSON.stringify({ motivo, valor: valorAux, fecha, categoria, tipoGasto, monedaOriginal, montoOriginal, frecuenciaRecurrente: esRecurrente ? frecuenciaRecurrente : null });
       url = edit
         ? `https://two024-qwerty-back-1.onrender.com/api/transacciones/${transaccionId}`
         : "https://two024-qwerty-back-1.onrender.com/api/transacciones";
@@ -518,6 +522,7 @@ function HomePage() {
         : "https://two024-qwerty-back-1.onrender.com/api/grupos/transaccion";
     }
     const method = edit ? "PUT" : "POST";
+    console.log(bodyJson);
     try {
       const response = await fetch(url, {
         method: method,
@@ -957,6 +962,10 @@ function HomePage() {
           monedas={monedas}
           monedaSeleccionada={monedaSeleccionada}
           setMonedaSeleccionada={setMonedaSeleccionada}
+          frecuenciaRecurrente={frecuenciaRecurrente}
+          setFrecuenciaRecurrente={setFrecuenciaRecurrente}
+          esRecurrente={esRecurrente}
+          setEsRecurrente={setEsRecurrente}
         />
         <ModalAskPayment payCategories={payCategories} monedas={monedas} />
         <ModalSendPayment

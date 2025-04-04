@@ -30,6 +30,10 @@ function ModalForm({
   monedas,
   monedaSeleccionada,
   setMonedaSeleccionada,
+  frecuenciaRecurrente,
+  setFrecuenciaRecurrente,
+  esRecurrente,
+  setEsRecurrente
 }) {
   const customStyles = {
     overlay: {
@@ -326,6 +330,34 @@ function ModalForm({
             />
           )}
         </div>
+        <div className="flex items-center mt-3">
+        <input
+          type="checkbox"
+          checked={esRecurrente}
+          onChange={() => setEsRecurrente(!esRecurrente)}
+          className="mr-2 h-5 w-5 text-yellow-500 focus:ring-yellow-400"
+        />
+        <label className="text-gray-100">Hacer esta transacción recurrente</label>
+      </div>
+
+      {/* 🔹 Selector de periodicidad (se muestra solo si el checkbox está activado) */}
+      {esRecurrente && (
+        <div className="mt-2">
+          <label className="text-gray-100">Repetir transacción:</label>
+          <select
+            value={frecuenciaRecurrente}
+            onChange={(e) => setFrecuenciaRecurrente(e.target.value)}
+            required
+            className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
+          >
+            <option value="">Seleccione una opción</option>
+            <option value="diariamente">Diariamente</option>
+            <option value="semanalmente">Semanalmente</option>
+            <option value="mensualmente">Mensualmente</option>
+            <option value="anualmente">Anualmente</option>
+          </select>
+        </div>
+        )}
         {modalError && (
           <div className="text-red-500 text-sm text-center">{modalError}</div>
         )}

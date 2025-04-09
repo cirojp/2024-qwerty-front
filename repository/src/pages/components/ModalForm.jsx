@@ -33,7 +33,8 @@ function ModalForm({
   frecuenciaRecurrente,
   setFrecuenciaRecurrente,
   esRecurrente,
-  setEsRecurrente
+  setEsRecurrente,
+  lectura = false
 }) {
   const customStyles = {
     overlay: {
@@ -184,9 +185,14 @@ function ModalForm({
       style={customStyles}
       className="bg-gray-950 shadow-lg p-4 rounded-lg"
     >
-      <h2 className="text-2xl font-bold text-center mb-1 text-gray-100">
-        {edit ? "Editar Transacción" : "Agregar Nueva Transacción"}
+      <h2 className="text-2xl font-bold text-center mb-0 text-gray-100">
+        {edit ? (lectura ? "Editar Transacción Recurrente" : "Editar Transacción") : "Agregar Nueva Transacción"}
       </h2>
+      {lectura && (
+            <p className="text-yellow-500 text-sm text-center">
+              (Puede modificar Valor, Medio de Pago y Recurrencia)
+            </p>
+          )}
       <form onSubmit={sendTransaccion} className="flex flex-col gap-3">
         <div>
           <label className="text-center text-gray-100 mb-6">Motivo:</label>
@@ -196,6 +202,7 @@ function ModalForm({
             onChange={handleMotivoChange}
             className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
             required
+            disabled={lectura}
           />
         </div>
         <div>
@@ -285,7 +292,7 @@ function ModalForm({
             type="date"
             value={fecha}
             onChange={(e) => setFecha(e.target.value)}
-            min={esRecurrente ? new Date().toISOString().split("T")[0] : undefined}
+            min={(esRecurrente && !lectura) ? new Date().toISOString().split("T")[0] : undefined}
             className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
             required
           />
@@ -337,6 +344,7 @@ function ModalForm({
           checked={esRecurrente}
           onChange={() => setEsRecurrente(!esRecurrente)}
           className="mr-2 h-5 w-5 text-yellow-500 focus:ring-yellow-400"
+          disabled={lectura}
         />
         <label className="text-gray-100">Hacer esta transacción recurrente</label>
       </div>

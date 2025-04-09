@@ -3,6 +3,7 @@ import logo from "../../assets/logo-removebg-preview.png";
 import ModalVerCategorias from "./ModalVerCategorias";
 import { useNavigate } from "react-router-dom";
 import ModalGastosCompartidos from "./ModalGastosCompartidos";
+import ModalTransaccionesRecurrentes from "./ModalTransaccionesRecurrentes";
 
 function Header({
   payCategories,
@@ -10,10 +11,13 @@ function Header({
   fetchPersonalCategorias,
   getTransacciones,
   openModal = () => {},
+  checkIfValidToken,
+  monedas,
 }) {
   const [isModalCategoriaOpen, setIsModalCategoriaOpen] = useState(false);
   const [isModalGastosOpen, setIsModalGastosOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isModalRecurrentesOpen, setIsModalRecurrentesOpen] = useState(false);
   const navigate = useNavigate();
 
   const openModalCategoria = () => setIsModalCategoriaOpen(true);
@@ -21,6 +25,8 @@ function Header({
   const openModalGastos = () => setIsModalGastosOpen(true);
   const closeModalGastos = () => setIsModalGastosOpen(false);
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
+  const openModalRecurrentes = () => setIsModalRecurrentesOpen(true);
+  const closeModalRecurrentes = () => setIsModalRecurrentesOpen(false);
 
 
 
@@ -101,6 +107,14 @@ function Header({
                   onClick={openModalGastos}
                 >
                   Gastos Compartidos
+                </button>
+              </li>
+              <li>
+                <button
+                  className="w-full px-4 py-2 bg-yellow-500 text-gray-900 rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out"
+                  onClick={openModalRecurrentes}
+                >
+                  Transac. Recurrentes
                 </button>
               </li>
             </ul>
@@ -195,6 +209,17 @@ function Header({
                     Gastos Compartidos
                   </button>
                 </li>
+                <li>
+                  <button
+                    className="w-full px-4 py-2 bg-yellow-500 text-gray-900 rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out"
+                    onClick={() => {
+                      openModalRecurrentes();
+                      setIsModalRecurrentesOpen(false);
+                    }}
+                  >
+                    Transac. Recurrentes
+                  </button>
+                </li>
               </ul>
             </div>
           )}
@@ -213,6 +238,14 @@ function Header({
         isModalGastosOpen={isModalGastosOpen}
         closeModalGastos={closeModalGastos}
         payCategories={payCategories}
+        getTransacciones={getTransacciones}
+      />
+      <ModalTransaccionesRecurrentes
+        isModalRecurrentesOpen={isModalRecurrentesOpen}
+        closeModalRecurrentes={closeModalRecurrentes}
+        checkIfValidToken={checkIfValidToken}
+        payCategories={payCategories}
+        monedas={monedas}
         getTransacciones={getTransacciones}
       />
     </nav>

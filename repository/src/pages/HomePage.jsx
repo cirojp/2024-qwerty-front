@@ -344,7 +344,6 @@ function HomePage() {
     let monedaDeTransac = monedas.find(m => m.label == row.monedaOriginal)
     setMonedaSeleccionada(monedaDeTransac.value);
     setValor(row.montoOriginal);
-    
     const selectedOption = payOptions.find(
       (option) => option.value === row.tipoGasto
     );
@@ -354,6 +353,11 @@ function HomePage() {
     );
     setSelectedCategory(selectedPayCategory || null);
     setFecha(row.fecha);
+    if(row.frecuenciaRecurrente != "" && row.frecuenciaRecurrente != null){
+      console.log(row.frecuenciaRecurrente);
+      setEsRecurrente(true);
+      setFrecuenciaRecurrente(row.frecuenciaRecurrente);
+    }
     setTransaccionId(row.id);
     openModal();
   };
@@ -747,6 +751,8 @@ function HomePage() {
         fetchPersonalCategorias={fetchPersonalCategorias}
         getTransacciones={getTransacciones}
         openModal={openModal}
+        checkIfValidToken={checkIfValidToken}
+        monedas={monedas}
       />
       <>
         {isLoading && (
@@ -966,6 +972,7 @@ function HomePage() {
           setFrecuenciaRecurrente={setFrecuenciaRecurrente}
           esRecurrente={esRecurrente}
           setEsRecurrente={setEsRecurrente}
+          lectura={edit}
         />
         <ModalAskPayment payCategories={payCategories} monedas={monedas} />
         <ModalSendPayment

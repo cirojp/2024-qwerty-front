@@ -12,9 +12,11 @@ const ExpandedRow = ({
     tipoGasto: "",
     monedaOriginal: "",
     montoOriginal: "",
+    siguienteEjecucion: "",
   },
   payCategories = [],
 }) => {
+  console.log(data.siguienteEjecucion + "   a   a  aa ");
   library.add(fas);
   const category = payCategories.find((cat) => cat.value === data.categoria);
   return (

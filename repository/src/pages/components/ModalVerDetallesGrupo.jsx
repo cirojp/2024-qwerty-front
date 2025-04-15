@@ -318,14 +318,20 @@ function ModalVerDetallesGrupo({
   const agregarTransaccion = async (e, categoria) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
-    console.log(transaccionId);
+    let montoOriginal = valor;
+    let moneda = monedas.find(m => m.value == monedaSeleccionada);
+    let monedaOriginal = moneda.label;
+    let valorAux = valor * moneda.value;
     let url = `https://two024-qwerty-back-1.onrender.com/api/grupos/transaccion/${transaccionId}`;
     let bodyJson = JSON.stringify({
       motivo,
-      valor,
+      valor: valorAux, 
       fecha,
       categoria,
       tipoGasto,
+      monedaOriginal, 
+      montoOriginal, 
+      frecuenciaRecurrente: esRecurrente ? frecuenciaRecurrente : null
     });
     const method = "PUT";
     try {

@@ -20,6 +20,7 @@ function ModalVerDetallesGrupo({
   setGrupos,
   grupos,
   getTransacciones,
+  monedas
 }) {
   const [transacciones, setTransacciones] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -43,6 +44,7 @@ function ModalVerDetallesGrupo({
   const [fecha, setFecha] = useState(new Date().toISOString().split("T")[0]);
   const [tipoGasto, setTipoGasto] = useState("Efectivo");
   const [categoria, setCategoria] = useState("");
+  const [monedaSeleccionada, setMonedaSeleccionada] = useState("");
 
   const customStyles = {
     overlay: {
@@ -263,11 +265,14 @@ function ModalVerDetallesGrupo({
   const editRow = (row) => {
     setEdit(true);
     setMotivo(row.motivo);
-    setValor(row.valor);
+    let monedaDeTransac = monedas.find(m => m.label == row.monedaOriginal)
+    setMonedaSeleccionada(monedaDeTransac.value);
+    setValor(row.montoOriginal);
     const selectedOption = payOptions.find(
       (option) => option.value === row.tipoGasto
     );
     setSelectedPayMethod(selectedOption || null);
+    setTipoGasto(selectedOption.label || null);
     const selectedPayCategory = payCategories.find(
       (option) => option.value == row.categoria
     );
@@ -331,7 +336,7 @@ function ModalVerDetallesGrupo({
       tipoGasto,
       monedaOriginal, 
       montoOriginal, 
-      frecuenciaRecurrente: esRecurrente ? frecuenciaRecurrente : null
+      frecuenciaRecurrente: null
     });
     const method = "PUT";
     try {
@@ -536,6 +541,12 @@ function ModalVerDetallesGrupo({
         handleGroupChange={null}
         selectedGroup={grupo}
         grupos={null}
+        monedas={monedas}
+        monedaSeleccionada={monedaSeleccionada}
+        setMonedaSeleccionada={setMonedaSeleccionada}
+        frecuenciaRecurrente={null}
+        esRecurrente={false}
+        lectura={false}
       />
     </Modal>
   );

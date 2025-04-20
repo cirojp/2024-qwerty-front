@@ -973,7 +973,7 @@ function HomePage() {
           setFrecuenciaRecurrente={setFrecuenciaRecurrente}
           esRecurrente={esRecurrente}
           setEsRecurrente={setEsRecurrente}
-          lectura={edit}
+          lectura={false}
         />
         <ModalAskPayment payCategories={payCategories} monedas={monedas} />
         <ModalSendPayment

@@ -336,6 +336,7 @@ function HomePage() {
     setMonedaSeleccionada(1);
     setFrecuenciaRecurrente("");
     setEsRecurrente(false);
+    setSelectedGroup(null);
   };
 
   const editRow = (row) => {

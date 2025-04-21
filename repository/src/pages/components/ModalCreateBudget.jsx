@@ -148,22 +148,19 @@ function ModalCreateBudget({ closeModal = () => {}, initialBudget = null }) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
     if (!budgetName) {
       alert("El nombre del presupuesto es obligatorio.");
       return;
     }
-
     const totalCategoryBudget = Object.values(budgetValues).reduce(
       (acc, curr) => acc + (curr || 0),
       0
     );
-
-    if (totalCategoryBudget >= totalBudget) {
+    if (totalCategoryBudget > totalBudget) {
       setErrors((prevErrors) => ({
         ...prevErrors,
         totalBudget:
-          "La suma de los presupuestos no debe igualar o exceder el presupuesto total",
+          "La suma de los presupuestos no debe exceder el presupuesto total",
       }));
       return;
     } else {

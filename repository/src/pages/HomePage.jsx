@@ -349,7 +349,7 @@ function HomePage() {
       (option) => option.value === row.tipoGasto
     );
     setSelectedPayMethod(selectedOption || null);
-    setTipoGasto(selectedOption.label || null);
+    setTipoGasto(selectedOption.value || null);
     const selectedPayCategory = payCategories.find(
       (option) => option.value == row.categoria
     );

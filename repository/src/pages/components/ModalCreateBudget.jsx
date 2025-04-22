@@ -39,12 +39,12 @@ function ModalCreateBudget({ closeModal = () => {}, initialBudget = null }) {
     { value: "Clase", label: "Clase", iconPath: "fa-solid fa-chalkboard-user" },
   ]);
   const [selectedPayMethod, setSelectedPayMethod] = useState({
-      value: "Efectivo",
-      label: "Efectivo",
-    });
+    value: initialBudget?.payOptionBudget || "Efectivo",
+    label: initialBudget?.payOptionBudget || "Efectivo",
+  });
   const [budgetValues, setBudgetValues] = useState({});
   const [totalBudget, setTotalBudget] = useState("");
-  const [payOptionBudget, setPayOptionBudget] = useState("Efectivo");
+  const [payOptionBudget, setPayOptionBudget] = useState(initialBudget?.payOptionBudget || "Efectivo");
   const [errors, setErrors] = useState({});
   const [budgetName, setBudgetName] = useState("");
   const [budgetDate, setBudgetDate] = useState("");
@@ -116,6 +116,7 @@ function ModalCreateBudget({ closeModal = () => {}, initialBudget = null }) {
       setBudgetDate(initialBudget.budgetMonth || "");
       setTotalBudget(initialBudget.totalBudget || "");
       setBudgetValues(initialBudget.categoryBudgets || {});
+      setPayOptionBudget(initialBudget.payOptionBudget || "Efectivo");
     }
   }, [initialBudget]);
 

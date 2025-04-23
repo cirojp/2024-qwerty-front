@@ -50,8 +50,6 @@ function MonthlyGraphic({
         } else {
           setShowNoGraphs(true);
         }
-          console.log(gastos.length + "    1 ");
-          console.log(transacciones.length + "    2 ");
     if (
       filtroCategoria &&
       filtroCategoria !== "Todas" &&

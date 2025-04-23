@@ -24,6 +24,7 @@ function MonthlyGraphic({
   filtroCategoria,
   loading = true,
   transaccionesSinFiltroCat,
+  setShowNoGraphs,
 }) {
   library.add(fas);
 
@@ -42,7 +43,15 @@ function MonthlyGraphic({
             (transaccion) => transaccion.categoria !== "Ingreso de Dinero"
           )
         : transacciones;
-
+        /*console.log("10");
+        console.log(transacciones.length);*/
+        if (gastos.length === 0 && transacciones.length !== 0) {
+          setShowNoGraphs(false);
+        } else {
+          setShowNoGraphs(true);
+        }
+          console.log(gastos.length + "    1 ");
+          console.log(transacciones.length + "    2 ");
     if (
       filtroCategoria &&
       filtroCategoria !== "Todas" &&

@@ -36,6 +36,7 @@ function ProfilePage() {
   const [transacciones, setTransacciones] = useState([]);
   const [loadingGraphic, setLoadingGraphic] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
+  const [showNoGraphs, setShowNoGraphs] = useState(true);
   const navigate = useNavigate();
   useEffect(() => {
     getTransacciones();
@@ -322,7 +323,7 @@ function ProfilePage() {
             </div>
           )}
 
-          {transacciones[0] != null && (
+          {showNoGraphs && (
             <div className="flex items-center">
               <h2 className="text-2xl py-2 font-bold text-gray-100">
                 Monto por Medio de Pago
@@ -330,13 +331,14 @@ function ProfilePage() {
             </div>
           )}
 
-          {!loadingGraphic && transacciones[0] != null && (
+          {!loadingGraphic && showNoGraphs && (
             <>
             <MonthlyGraphic
               type="tipoGasto"
               transacciones={transacciones}
               payCategories={payOptions}
               loading={loadingGraphic}
+              setShowNoGraphs={setShowNoGraphs}
             />
             <div className="mt-6">
             {transacciones[0] != null && (
@@ -351,6 +353,7 @@ function ProfilePage() {
                   transacciones={transacciones}
                   payCategories={payOptions}
                   loading={loadingGraphic}
+                  setShowNoGraphs={setShowNoGraphs}
                 />
               </div>
             </>

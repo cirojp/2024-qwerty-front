@@ -16,6 +16,7 @@ function HomePage() {
   const [showNotification, setShowNotification] = useState(false);
   const [motivo, setMotivo] = useState("");
   const [showNoTransactions, setShowNoTransactions] = useState(false);
+  const [showNoGraphs, setShowNoGraphs] = useState(true);
   const [valor, setValor] = useState("");
   const [fecha, setFecha] = useState(new Date().toISOString().split("T")[0]);
   const [error, setError] = useState(null);
@@ -549,6 +550,7 @@ function HomePage() {
         }
         closeModal();
         setSelectedGroup(null);
+        setShowNoGraphs(true);
       } else {
         console.log("la respuesta no fue ok");
       }
@@ -769,7 +771,7 @@ function HomePage() {
           <PresupuestosWidget transacciones={transacciones} />
         )}
 
-        {!showNoTransactions && (
+        {(!showNoTransactions && showNoGraphs) && (
           <>
             <div className="flex items-center">
               <h2 className="text-xl md:text-2xl py-2 font-bold text-gray-100">
@@ -786,6 +788,7 @@ function HomePage() {
                 filtroCategoria={categoriaSeleccionada}
                 loading={loadGraphic}
                 transaccionesSinFiltroCat={transaccionesSinFiltroCat}
+                setShowNoGraphs={setShowNoGraphs}
               />
             )}
           </>

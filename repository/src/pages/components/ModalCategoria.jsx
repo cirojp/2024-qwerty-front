@@ -50,11 +50,10 @@ const ModalCategoria = ({
     if (edit) {
       setCategoriaNombre(editCat.value || "");
       setIconoSeleccionado(editCat.iconPath || "");
-    } /*else {
+    } else {
       setCategoriaNombre("");
-      console.log("222");
       setIconoSeleccionado("");
-    }*/
+    }
   }, [editCat, edit, isOpen]);
 
   const handleSubmit = async () => {

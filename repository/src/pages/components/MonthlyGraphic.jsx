@@ -50,7 +50,6 @@ function MonthlyGraphic({
     ) {
       setTransaccionesRestantes([]);
       setTransaccionesRestantes(transaccionesSinFiltroCat);
-      console.log(transaccionesSinFiltroCat);
       let transaccionesFiltradas = transaccionesSinFiltroCat.filter(
         (transaccion) =>
           transaccion.categoria !== "Ingreso de Dinero" &&
@@ -311,6 +310,7 @@ function MonthlyGraphic({
                 ))}
             </div>
           </div>
+          {type !== "tipoGasto" && (
           <div className="w-full md:w-1/2 flex justify-center items-center mt-4 md:mt-0">
             <ResponsiveContainer width="100%" aspect={1.5}>
               <BarChart data={dataLine}>
@@ -321,6 +321,7 @@ function MonthlyGraphic({
               </BarChart>
             </ResponsiveContainer>
           </div>
+          )}
         </div>
         ):(
           <div className="flex flex-col md:flex-row justify-center items-center w-full">

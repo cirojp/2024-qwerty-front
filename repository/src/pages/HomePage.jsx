@@ -146,7 +146,6 @@ function HomePage() {
 
   const showTransactionsPendientes = async () => {
     const token = localStorage.getItem("token");
-    console.log("buscando pendientes");
     try {
       const response = await fetch(
         "https://two024-qwerty-back-1.onrender.com/api/transaccionesPendientes/user",
@@ -165,8 +164,6 @@ function HomePage() {
       const data = await response.json();
       if (data[0] != null) {
         setTranPendiente(data[0]);
-        console.log(data[0]);
-        console.log("hay data");
         setPendTran(true);
       }
     } catch (err) {
@@ -266,7 +263,6 @@ function HomePage() {
       fetchPersonalCategorias();
       showTransactionsPendientes();
     } else {
-      console.log("deberia redirec");
       navigate("/");
     }
     setIsLoading(false);
@@ -356,7 +352,6 @@ function HomePage() {
     setSelectedCategory(selectedPayCategory || null);
     setFecha(row.fecha);
     if(row.frecuenciaRecurrente != "" && row.frecuenciaRecurrente != null){
-      console.log(row.frecuenciaRecurrente);
       setEsRecurrente(true);
       setFrecuenciaRecurrente(row.frecuenciaRecurrente);
     }
@@ -443,8 +438,6 @@ function HomePage() {
       url =
         "https://two024-qwerty-back-1.onrender.com/api/grupos/agregar-usuario";
       const grupoId = transaccion.grupoId;
-      console.log("este es el id " + grupoId);
-      console.log(transaccion);
       try {
         const response = await fetch(url, {
           method: "POST",
@@ -528,7 +521,6 @@ function HomePage() {
         : "https://two024-qwerty-back-1.onrender.com/api/grupos/transaccion";
     }
     const method = edit ? "PUT" : "POST";
-    console.log(bodyJson);
     try {
       const response = await fetch(url, {
         method: method,
@@ -682,7 +674,6 @@ function HomePage() {
     }
   };
   const handleCreateCat = async (nombre, icono) => {
-    console.log("entre      ");
     const token = localStorage.getItem("token");
     if (!nombre || !icono) {
       console.error("Nombre y icono son obligatorios");
@@ -712,13 +703,11 @@ function HomePage() {
           iconPath: newCategoria.iconPath,
         };
         setPayCategories((prevOptions) => [...prevOptions, newOption]);
-        console.log(payCategories);
         setSelectedCategory(newOption);
         setCategoria(newCategoria.nombre);
       } else {
         const errorMessage = await response.text();
         console.error("Error al agregar categoria:", errorMessage);
-        console.log("la categoria existeeeeeeeeeee");
         return "La categoria ya existe";
       }
     } catch (error) {

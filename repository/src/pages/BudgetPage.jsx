@@ -68,25 +68,54 @@ function BudgetPage() {
     getPersonalPresupuestos();
   };
 
-  const getPersonalPresupuestos = async () => {
-    const token = localStorage.getItem("token");
+  const checkIfValidToken = async (token) => {
     try {
       const response = await fetch(
-        "https://two024-qwerty-back-1.onrender.com/api/presupuesto",
+        "https://two024-qwerty-back-1.onrender.com/api/transacciones/userTest",
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
         }
       );
-
       if (response.ok) {
-        const data = await response.json();
-        setPresupuestos(data);
+        //entra aca si pasa la autenticacion
+        return true; //si esta activo tengo que devolver true
+      } else {
+        localStorage.removeItem("token");
+        return false;
       }
     } catch (error) {
-      console.error("Error al obtener las categorías personalizadas:", error);
+      localStorage.removeItem("token");
+      return false;
     }
+  };
+
+  const getPersonalPresupuestos = async () => {
+    const token = localStorage.getItem("token");
+    if (await checkIfValidToken(token)) {  
+      try {
+        const response = await fetch(
+          "https://two024-qwerty-back-1.onrender.com/api/presupuesto",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          setPresupuestos(data);
+        }
+      } catch (error) {
+        console.error("Error al obtener las categorías personalizadas:", error);
+      }
+    } else {
+      console.log("deberia redirec");
+      navigate("/");
+    }  
   };
 
   useEffect(() => {

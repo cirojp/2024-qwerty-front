@@ -43,17 +43,21 @@ const ModalMedioDePago = ({
 
   const [medioDePagoNombre, setMedioDePagoNombre] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (edit) {
       setMedioDePagoNombre(editTP.value);
+    } else {
+      setMedioDePagoNombre("");
     }
     console.log(editTP);
   }, [isOpen]);
 
   const handleSubmit = async () => {
+    setIsLoading(true);
     if (!medioDePagoNombre) {
-      setError("Debes ingresar un nombre y seleccionar un icono.");
+      setError("Debes ingresar un nombre.");
       return;
     }
     let errorMessage = "";
@@ -67,6 +71,7 @@ const ModalMedioDePago = ({
       return;
     }*/
     handleClose();
+    setIsLoading(false);
   };
 
   const handleClose = () => {
@@ -94,11 +99,42 @@ const ModalMedioDePago = ({
         className="mt-1 block w-full p-2 border border-gray-600 bg-gray-800 text-white rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
       />
       {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+
       <button
+        type="submit"
+        disabled={isLoading}
         onClick={handleSubmit}
-        className="mt-4 mr-2 w-full sm:w-auto bg-yellow-500 text-black font-bold py-2 px-4 rounded hover:bg-green-600 transition duration-300"
+        className="flex-1 bg-yellow-500 bg-opacity-80 font-bold text-gray-950 py-2 px-4 rounded-lg hover:bg-yellow-700"
       >
-        {edit ? "Editar Medio De Pago" : "Crear Medio de Pago"}
+        {isLoading ? (
+          <div className="flex items-center justify-center">
+            <svg
+              className="animate-spin h-5 w-5 text-gray-950"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+              ></path>
+            </svg>
+            <span className="ml-2">Cargando...</span>
+          </div>
+        ) : edit ? (
+          "Editar Medio De Pago"
+        ) : (
+          "Crear Medio de Pago"
+        )}
       </button>
       <button
         onClick={() => handleClose()}

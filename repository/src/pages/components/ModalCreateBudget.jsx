@@ -2,12 +2,18 @@ import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
+import Select from "react-select";
 
 function ModalCreateBudget({ closeModal = () => {}, initialBudget = null }) {
   library.add(fas);
   const [payCategories, setPayCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [formMessage, setFormMessage] = useState("");
+  const [payOptions, setPayOptions] = useState([
+      { value: "Tarjeta de credito", label: "Tarjeta de credito" },
+      { value: "Tarjeta de Debito", label: "Tarjeta de debito" },
+      { value: "Efectivo", label: "Efectivo" },
+    ]);
   const [payCategoriesDefault, setPayCategoriesDefault] = useState([
     {
       value: "Impuestos y Servicios",
@@ -32,13 +38,48 @@ function ModalCreateBudget({ closeModal = () => {}, initialBudget = null }) {
     },
     { value: "Clase", label: "Clase", iconPath: "fa-solid fa-chalkboard-user" },
   ]);
-
+  const [selectedPayMethod, setSelectedPayMethod] = useState({
+    value: initialBudget?.payOptionBudget || "Efectivo",
+    label: initialBudget?.payOptionBudget || "Efectivo",
+  });
   const [budgetValues, setBudgetValues] = useState({});
   const [totalBudget, setTotalBudget] = useState("");
+  const [payOptionBudget, setPayOptionBudget] = useState(initialBudget?.payOptionBudget || "Efectivo");
   const [errors, setErrors] = useState({});
   const [budgetName, setBudgetName] = useState("");
   const [budgetDate, setBudgetDate] = useState("");
-
+  const fetchPersonalTipoGastos = async () => {
+    setIsLoading(true);
+    const token = localStorage.getItem("token");
+    try {
+      const response = await fetch(
+        "https://two024-qwerty-back-1.onrender.com/api/personal-tipo-gasto",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.ok) {
+        const data = await response.json();
+        const customOptions = data.map((tipo) => ({
+          label: tipo.nombre,
+          value: tipo.nombre,
+        }));
+        setPayOptions([{ value: "Tarjeta de credito", label: "Tarjeta de credito" },
+          { value: "Tarjeta de Debito", label: "Tarjeta de debito" },
+          { value: "Efectivo", label: "Efectivo" }, ...customOptions]);
+      }
+    } catch (error) {
+      console.error(
+        "Error al obtener los tipos de gasto personalizados:",
+        error
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+ 
   useEffect(() => {
     const fetchPersonalCategorias = async () => {
       const token = localStorage.getItem("token");
@@ -66,6 +107,7 @@ function ModalCreateBudget({ closeModal = () => {}, initialBudget = null }) {
     };
 
     fetchPersonalCategorias();
+    fetchPersonalTipoGastos();
   }, []);
 
   useEffect(() => {
@@ -74,6 +116,7 @@ function ModalCreateBudget({ closeModal = () => {}, initialBudget = null }) {
       setBudgetDate(initialBudget.budgetMonth || "");
       setTotalBudget(initialBudget.totalBudget || "");
       setBudgetValues(initialBudget.categoryBudgets || {});
+      setPayOptionBudget(initialBudget.payOptionBudget || "Efectivo");
     }
   }, [initialBudget]);
 
@@ -90,6 +133,11 @@ function ModalCreateBudget({ closeModal = () => {}, initialBudget = null }) {
     }));
   };
 
+  const handlePayChange = (value) => {
+    setPayOptionBudget(value.value);
+    //setTipoGasto(value ? value.value : "");
+    setSelectedPayMethod(value);
+  };
   const addCategory = (category) => {
     if (!budgetValues[category.value] && category) {
       setBudgetValues((prevValues) => ({
@@ -101,22 +149,19 @@ function ModalCreateBudget({ closeModal = () => {}, initialBudget = null }) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
     if (!budgetName) {
       alert("El nombre del presupuesto es obligatorio.");
       return;
     }
-
     const totalCategoryBudget = Object.values(budgetValues).reduce(
       (acc, curr) => acc + (curr || 0),
       0
     );
-
-    if (totalCategoryBudget >= totalBudget) {
+    if (totalCategoryBudget > totalBudget) {
       setErrors((prevErrors) => ({
         ...prevErrors,
         totalBudget:
-          "La suma de los presupuestos no debe igualar o exceder el presupuesto total",
+          "La suma de los presupuestos no debe exceder el presupuesto total",
       }));
       return;
     } else {
@@ -143,12 +188,14 @@ function ModalCreateBudget({ closeModal = () => {}, initialBudget = null }) {
           totalBudget: totalBudget,
           budgetMonth: budgetDate,
           categoryBudgets: filteredBudgetValues,
+          payOptionBudget: payOptionBudget,
         }
       : {
           nameBudget: budgetName,
           totalBudget: totalBudget,
           budgetMonth: budgetDate,
           categoryBudgets: filteredBudgetValues,
+          payOptionBudget: payOptionBudget,
         };
 
     createOrUpdateBudget(formData);
@@ -195,6 +242,43 @@ function ModalCreateBudget({ closeModal = () => {}, initialBudget = null }) {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const customSelectStyles = {
+    control: (provided) => ({
+      ...provided,
+      backgroundColor: "#111827",
+      color: "white",
+    }),
+    menu: (provided) => ({
+      ...provided,
+      backgroundColor: "#111827",
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      backgroundColor: state.isSelected ? "#4588f5" : "#111827",
+      color: state.isSelected ? "black" : "white",
+    }),
+    singleValue: (provided) => ({
+      ...provided,
+      color: "white",
+    }),
+    placeholder: (provided) => ({
+      ...provided,
+      color: "white",
+    }),
+    input: (provided) => ({
+      ...provided,
+      color: "grey",
+    }),
+    indicatorSeparator: (provided) => ({
+      ...provided,
+      backgroundColor: "transparent",
+    }),
+    dropdownIndicator: (provided) => ({
+      ...provided,
+      color: "grey",
+    }),
   };
 
   return (
@@ -251,6 +335,29 @@ function ModalCreateBudget({ closeModal = () => {}, initialBudget = null }) {
           {errors.totalBudget && (
             <p className="text-red-500 text-sm">{errors.totalBudget}</p>
           )}
+        </div>
+        <div className="mb-4">
+          <label className="block text-sm font-semibold mb-1 text-white">
+            <FontAwesomeIcon
+              className="mr-2"
+              color="#FFFFFF"
+              icon="fa-solid fa-wallet"
+            />
+            Medio De Pago
+          </label>
+            <div className="mb-4">
+            <label className="text-center text-gray-100 mb-6">
+              Medio de Pago:
+            </label>
+            <Select
+              options={payOptions}
+              onChange={handlePayChange}
+              value={selectedPayMethod}
+              className="custom-select mt-1 block w-full input-bordered bg-gray-900 text-white rounded-md border-transparent"
+              styles={customSelectStyles}
+              required
+            />
+          </div>
         </div>
 
         <div className="mb-4">

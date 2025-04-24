@@ -103,6 +103,7 @@ function ModalForm({
   const [isModalCategoriaOpen, setIsModalCategoriaOpen] = useState(false);
   const [isGroupDisabled, setIsGroupDisabled] = useState(false);
   const [isCategoryDisabled, setIsCategoryDisabled] = useState(false);
+  const [isRecurrentDisabled, setIsRecurrentDisabled] = useState(false);
   useEffect(() => {
     if (grupos == null) {
       grupos = [selectedGroup];
@@ -169,11 +170,15 @@ function ModalForm({
 
   const handleGroupSelect = (group) => {
     handleGroupChange(group);
-    if (group) {
+    if (group.value!=null) {
       setIsCategoryDisabled(true); // Desactiva categoría si hay grupo seleccionado
       handleCategoryChange({ value: "Gasto Grupal", label: "Gasto Grupal" });
+      setFrecuenciaRecurrente("");
+      setIsRecurrentDisabled(true);
+      setEsRecurrente(false)
     } else {
       setIsCategoryDisabled(false); // Habilita categoría si no hay grupo
+      setIsRecurrentDisabled(false);
     }
   };
 
@@ -344,10 +349,15 @@ function ModalForm({
           checked={esRecurrente}
           onChange={() => setEsRecurrente(!esRecurrente)}
           className="mr-2 h-5 w-5 text-yellow-500 focus:ring-yellow-400"
-          disabled={lectura}
+          disabled={lectura || isRecurrentDisabled}
         />
         <label className="text-gray-100">Hacer esta transacción recurrente</label>
       </div>
+      {isRecurrentDisabled && (
+            <p className="text-yellow-500 text-sm text-center">
+                transacciones grupales no pueden ser recurrentes
+            </p>
+          )}
 
       {/* 🔹 Selector de periodicidad (se muestra solo si el checkbox está activado) */}
       {esRecurrente && (

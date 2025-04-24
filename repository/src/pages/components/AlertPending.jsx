@@ -71,10 +71,14 @@ function AlertPending({
     setErrorMessage("");
     isAccepted(pendingTransaction, categoria, payOption);
     setIsLoading(false);
+    setCategoria("");
+    setPayOption("");
   };
 
   const handleReject = () => {
     isRejected(pendingTransaction);
+    setCategoria("");
+    setPayOption("");
   };
 
   const handleCategoryChange = (e) => {

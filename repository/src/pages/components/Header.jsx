@@ -239,6 +239,7 @@ function Header({
         closeModalGastos={closeModalGastos}
         payCategories={payCategories}
         getTransacciones={getTransacciones}
+        monedas={monedas}
       />
       <ModalTransaccionesRecurrentes
         isModalRecurrentesOpen={isModalRecurrentesOpen}

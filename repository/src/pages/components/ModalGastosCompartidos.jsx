@@ -9,6 +9,7 @@ function ModalGastosCompartidos({
   closeModalGastos,
   payCategories,
   getTransacciones,
+  monedas,
 }) {
   const [modalError, setModalError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -255,6 +256,7 @@ function ModalGastosCompartidos({
           setGrupos={setGrupos}
           grupos={grupos}
           getTransacciones={getTransacciones}
+          monedas={monedas}
         />
       )}
 

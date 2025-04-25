@@ -8,6 +8,7 @@ import logo from "../assets/logo-removebg-preview.png";
 import { useNavigate } from "react-router-dom";
 import ConfirmDeleteMedioDePago from "./components/ConfirmDeleteMedioDePago";
 import ModalMedioDePago from "./components/ModalMedioDePago";
+import ModalMonedas from "./components/ModalMonedas";
 import MonthlyGraphic from "./components/MonthlyGraphic";
 import LoadingSpinner from "./components/LoadingSpinner";
 
@@ -26,9 +27,16 @@ function ProfilePage() {
     },
     { value: "Efectivo", label: "Efectivo", textColor: "mr-2 text-yellow-500" },
   ];
+  const defaultMonedas = [
+    { value: 1, label: "ARG", textColor: "mr-2 text-yellow-500" }, 
+    { value: 1250, label: "USD", textColor: "mr-2 text-yellow-500" }, 
+    { value: 1300, label: "EUR", textColor: "mr-2 text-yellow-500" }, 
+  ];
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [payOptions, setPayOptions] = useState([]);
+  const [isModalMonedaOpen, setIsModalMonedaOpen] = useState(false);
+  const [monedas, setMonedas] = useState([]);
   const [editPayOption, setEditPayOption] = useState({});
   const [isEditMode, setIsEditMode] = useState(false);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
@@ -130,8 +138,46 @@ function ProfilePage() {
     setIsLoading(false);
   };
 
+  const fetchPersonalMonedas = async () => {
+    setIsLoading(true);
+    const token = localStorage.getItem("token");
+    if (await checkIfValidToken(token)) {
+      try {
+        const response = await fetch(
+          "https://two024-qwerty-back-1.onrender.com/api/personal-moneda",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (response.ok) {
+          const data = await response.json();
+          const customMonedas = data.map((moneda) => ({
+            label: moneda.nombre,
+            value: moneda.valor,
+            textColor: "mr-2 text-white",
+          }));
+          console.log(data);
+          setMonedas([...defaultMonedas, ...customMonedas]);
+        }
+      } catch (error) {
+        console.error(
+          "Error al obtener las Monedas personalizados:",
+          error
+        );
+      }
+    } else {
+      console.log("deberia redirec");
+      navigate("/");
+    }
+    setIsLoading(false);
+  };
+
   useEffect(() => {
     fetchPersonalTipoGastos();
+    fetchPersonalMonedas();
+    console.log(monedas);
   }, []);
 
   const handleEdit = async (medioPagoValue, newName) => {
@@ -232,6 +278,66 @@ function ProfilePage() {
     setItemToDelete(medioPagoValue);
   };
 
+  const handleCreateMoneda = async (nombre, valor) => {
+    const token = localStorage.getItem("token");
+    console.log(nombre + "   estaaa " + valor);
+    try {
+      const response = await fetch(
+        `https://two024-qwerty-back-1.onrender.com/api/personal-moneda`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        body: JSON.stringify({ nombre, valor }),
+        }
+      );
+      console.log(response);
+      if (response.ok) {
+        const newMoneda = await response.json();
+        const newOption = {
+          label: newMoneda.nombre,
+          value: newMoneda.valor,
+        };
+        setMonedas((prevOptions) => [...prevOptions, newOption]);
+        //setSelectedPayMethod(newOption);
+      }
+    } catch (error) {
+      console.error("Error al agregar la moneda personalizada:", error);
+    }
+  };
+
+  const handleEditMoneda = async (medioPagoValue, newName) => {
+    const token = localStorage.getItem("token");
+    const jsonResp = {
+      nombreActual: medioPagoValue.label,
+      nombreNuevo: newName,
+    };
+
+    try {
+      const response = await fetch(
+        "https://two024-qwerty-back-1.onrender.com/api/personal-tipo-gasto/editar",
+        {
+          method: "POST", // Cambiado a POST
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(jsonResp),
+        }
+      );
+
+      if (response.ok) {
+        setPayOptions([]); // Limpiar las opciones
+        await fetchPersonalTipoGastos(); // Volver a obtener los tipos de gasto actualizados
+        setIsModalOpen(false); // Cerrar el modal después de editar
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-black py-10">
       <div className="text-2xl font-bold text-gray-100 text-center mb-4">
@@ -259,68 +365,129 @@ function ProfilePage() {
           {loadingGraphic ? ( // Muestra el spinner si está cargando
             <LoadingSpinner />
           ) : (
-            <div className="bg-gray-800 p-4 rounded-lg shadow-lg text-white">
-              <div className="font-bold text-yellow-500 text-xl text-center mb-4">
-                Mis Medios De Pago
+            <div className="flex flex-col md:flex-row gap-6">
+              {/* Primera columna */}
+              <div className="bg-gray-800 p-4 rounded-lg shadow-lg text-white w-full md:w-1/2">
+                <div className="font-bold text-yellow-500 text-xl text-center mb-4">
+                  Mis Medios De Pago
+                </div>
+                <ul>
+                  {defaultMediosDePago.map((medioDePago) => (
+                    <li
+                      key={medioDePago.value}
+                      className="bg-gray-700 p-3 rounded-md shadow mb-3"
+                    >
+                      <div className="flex items-center">
+                        <div className={medioDePago.textColor}>
+                          {medioDePago.label}
+                        </div>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+                <ul>
+                  {payOptions.slice(3).map((medioDePago) => (
+                    <li
+                      key={medioDePago.value}
+                      className="bg-gray-700 p-3 rounded-md shadow mb-3 flex justify-between"
+                    >
+                      <div className="flex items-center">
+                        <div className={medioDePago.textColor}>
+                          {medioDePago.label}
+                        </div>
+                      </div>
+                      <div className="flex items-center">
+                        <button
+                          className="text-blue-500 hover:text-blue-700 mr-2"
+                          onClick={() => {
+                            setEditPayOption(medioDePago);
+                            setIsEditMode(true);
+                            setIsModalOpen(true);
+                          }}
+                        >
+                          Editar
+                        </button>
+                        <button
+                          className="text-red-500 hover:text-red-700"
+                          onClick={() => confirmDelete(medioDePago.value)}
+                        >
+                          X
+                        </button>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+                <button
+                  className="mt-4 px-4 py-2 bg-yellow-500 text-black rounded-md hover:bg-yellow-700"
+                  onClick={() => {
+                    setEditPayOption({});
+                    setIsEditMode(false);
+                    setIsModalOpen(true);
+                  }}
+                >
+                  Agregar Medio de Pago
+                </button>
               </div>
-              <ul>
-                {defaultMediosDePago.map((medioDePago) => (
-                  <li
-                    key={medioDePago.value}
-                    className="bg-gray-700 p-3 rounded-md shadow mb-3"
-                  >
-                    <div className="flex items-center">
-                      <div className={medioDePago.textColor}>
-                        {medioDePago.label}
-                      </div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-              <ul>
-                {payOptions.slice(3).map((medioDePago) => (
-                  <li
-                    key={medioDePago.value}
-                    className="bg-gray-700 p-3 rounded-md shadow mb-3 flex justify-between"
-                  >
-                    <div className="flex items-center">
-                      <div className={medioDePago.textColor}>
-                        {medioDePago.label}
-                      </div>
-                    </div>
-                    <div className="flex items-center">
-                      <button
-                        className="text-blue-500 hover:text-blue-700 mr-2"
-                        onClick={() => {
-                          setEditPayOption(medioDePago);
-                          setIsEditMode(true);
-                          setIsModalOpen(true);
-                        }}
-                      >
-                        Editar
-                      </button>
-                      <button
-                        className="text-red-500 hover:text-red-700"
-                        onClick={() => confirmDelete(medioDePago.value)}
-                      >
-                        X
-                      </button>
-                    </div>
-                  </li>
-                ))}
-              </ul>
 
-              <button
-                className="mt-4 px-4 py-2 bg-yellow-500 text-black rounded-md hover:bg-yellow-700"
-                onClick={() => {
-                  setEditPayOption({});
-                  setIsEditMode(false);
-                  setIsModalOpen(true);
-                }}
-              >
-                Agregar Medio de Pago
-              </button>
+              {/* Segunda columna (idéntica o modificada si querés que muestre otra cosa) */}
+              <div className="bg-gray-800 p-4 rounded-lg shadow-lg text-white w-full md:w-1/2">
+                <div className="font-bold text-yellow-500 text-xl text-center mb-4">
+                  Mis Monedas
+                </div>
+                <ul>
+                  {defaultMonedas.map((moneda) => (
+                    <li
+                      key={moneda.label}
+                      className="bg-gray-700 p-3 rounded-md shadow mb-3 flex justify-between"
+                    >
+                      <span className={`w-1/3 text-left ${moneda.textColor}`}>{moneda.label}</span>
+                      <span className={`w-1/3 text-center ${moneda.textColor}`}>${moneda.value}</span>
+                      <span className={`w-1/3 text-right ${moneda.textColor}`}></span>
+                    </li>
+                  ))}
+                </ul>
+                <ul>
+                  {monedas.slice(3).map((moneda) => (
+                    <li
+                      key={moneda.label}
+                      className="bg-gray-700 p-3 rounded-md shadow mb-3 flex justify-between"
+                    >
+                      <span className={moneda.textColor}>{moneda.label}</span>
+                      <span className={moneda.textColor}>${moneda.value}</span>
+                      <div className="flex items-center">
+                        <button
+                          className="text-blue-500 hover:text-blue-700 mr-2"
+                          onClick={() => {
+                            setEditPayOption(moneda);
+                            setIsEditMode(true);
+                            setIsModalOpen(true);
+                          }}
+                        >
+                          Editar
+                        </button>
+                        <button
+                          className="text-red-500 hover:text-red-700"
+                          onClick={() => confirmDelete(medioDePago.value)}
+                        >
+                          X
+                        </button>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+                <button
+                  className="mt-4 px-4 py-2 bg-yellow-500 text-black rounded-md hover:bg-yellow-700"
+                  onClick={() => {
+                    setEditPayOption({});
+                    setIsEditMode(false);
+                    setIsModalMonedaOpen(true);
+                  }}
+                >
+                  Agregar Moneda
+                </button>
+              </div>
             </div>
+
           )}
 
           {showNoGraphs && (
@@ -374,6 +541,14 @@ function ProfilePage() {
         handleDelete={() => {
           handleDelete(itemToDelete);
         }}
+      />
+      <ModalMonedas
+        isOpen={isModalMonedaOpen}
+        onRequestClose={() => setIsModalMonedaOpen(false)}
+        handleCreateMoneda={handleCreateMoneda}
+        handleEditMoneda={handleEditMoneda}
+        edit={isEditMode}
+        editTP={editPayOption}
       />
     </div>
   );

@@ -282,6 +282,14 @@ function ProfilePage() {
   };
 
   const handleCreateMoneda = async (nombre, valor) => {
+    const nombreExiste = monedas.some(
+      (moneda) => moneda.label.toLowerCase() === nombre.toLowerCase()
+    );
+  
+    if (nombreExiste) {
+      throw new Error("Ya existe una moneda con ese nombre.");
+      return;
+    }
     const token = localStorage.getItem("token");
     console.log(nombre + "   estaaa " + valor);
     try {
@@ -312,6 +320,16 @@ function ProfilePage() {
   };
 
   const handleEditMoneda = async (editMoneda, nuevoNombre, nuevoValor) => {
+    const nombreExiste = monedas.some(
+      (moneda) =>
+        moneda.label.toLowerCase() === nuevoNombre.toLowerCase() &&
+        moneda.label.toLowerCase() !== editMoneda.label.toLowerCase()
+    );
+  
+    if (nombreExiste) {
+      throw new Error("Ya existe una moneda con ese nombre.");
+      return;
+    }
     const token = localStorage.getItem("token");
     const jsonResp = {
       nombreActual: editMoneda.label,

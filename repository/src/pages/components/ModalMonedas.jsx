@@ -79,8 +79,9 @@ const ModalMonedas = ({
         }
         handleClose();
         } catch (err) {
-        console.error("Error en handleSubmit:", err);
-        setError("Ocurrió un error al crear la moneda.");
+            console.error("Error en handleSubmit:", err);
+            const mensajeError = err?.message || "Ocurrió un error al crear la moneda.";
+            setError(mensajeError);
         }
         setIsLoading(false);
     };

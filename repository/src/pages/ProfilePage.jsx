@@ -248,6 +248,15 @@ function ProfilePage() {
   };
 
   const handleCreateTP = async (inputValue) => {
+    console.log(inputValue);
+    const nombreExiste = payOptions.some(
+      (pago) => pago.label.toLowerCase() === inputValue.toLowerCase()
+    );
+  
+    if (nombreExiste) {
+      throw new Error("Ya existe un medio de pago con ese nombre.");
+      return;
+    }
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(
@@ -269,7 +278,7 @@ function ProfilePage() {
           value: newTipoGasto.nombre,
         };
         setPayOptions((prevOptions) => [...prevOptions, newOption]);
-        setSelectedPayMethod(newOption);
+        //setSelectedPayMethod(newOption);
       }
     } catch (error) {
       console.error("Error al agregar el tipo de gasto personalizado:", error);
@@ -291,7 +300,6 @@ function ProfilePage() {
       return;
     }
     const token = localStorage.getItem("token");
-    console.log(nombre + "   estaaa " + valor);
     try {
       const response = await fetch(
         `https://two024-qwerty-back-1.onrender.com/api/personal-moneda`,
@@ -304,7 +312,6 @@ function ProfilePage() {
         body: JSON.stringify({ nombre, valor }),
         }
       );
-      console.log(response);
       if (response.ok) {
         const newMoneda = await response.json();
         const newOption = {

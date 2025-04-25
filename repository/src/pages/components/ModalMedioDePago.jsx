@@ -55,23 +55,25 @@ const ModalMedioDePago = ({
 
   const handleSubmit = async () => {
     setIsLoading(true);
+    setError("");
     if (!medioDePagoNombre) {
       setError("Debes ingresar un nombre.");
       setIsLoading(false);
       return;
     }
-    let errorMessage = "";
-    if (!edit) {
-      errorMessage = await handleCreateTP(medioDePagoNombre);
-    } else {
-      errorMessage = await handleEditTP(editTP, medioDePagoNombre);
-    }
-    /*if (errorMessage != "") {
-      setError(errorMessage);
-      return;
-    }*/
-    handleClose();
-    setIsLoading(false);
+    try { 
+      if (!edit) {
+        await handleCreateTP(medioDePagoNombre);
+      } else {
+        await handleEditTP(editTP, medioDePagoNombre);
+      }
+      handleClose();
+    } catch (err) {
+      console.error("Error en handleSubmit:", err);
+      const mensajeError = err?.message || "Ocurrió un error al crear Medio de Pago.";
+      setError(mensajeError);
+  }
+  setIsLoading(false);
   };
 
   const handleClose = () => {

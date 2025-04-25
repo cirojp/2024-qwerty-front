@@ -8,9 +8,9 @@ const ModalMonedas = ({
   isOpen = false,
   onRequestClose = () => {},
   handleCreateMoneda = () => {},
-  handleEditTP = () => {},
+  handleEditMoneda = () => {},
   edit = false,
-  editTP = {},
+  editMoneda = {},
 }) => {
     
   library.add(fas);
@@ -48,13 +48,15 @@ const ModalMonedas = ({
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    setIsLoading(false);
-    if (edit) {
-      setMedioDePagoNombre(editTP.value);
-    } else {
+
+    if (edit && editMoneda?.label !== undefined && editMoneda?.value !== undefined) {
+      setMonedaNombre(editMoneda.label);
+      setMonedaValor(editMoneda.value);
+    } else if (isOpen && !edit) {
       setMonedaNombre("");
+      setMonedaValor("");
     }
-  }, [isOpen]);
+  }, [isOpen, edit, editMoneda]);
 
   const handleSubmit = async () => {
     setIsLoading(true);
@@ -73,13 +75,12 @@ const ModalMonedas = ({
         if (!edit) {
             await handleCreateMoneda(monedaNombre, monedaValor);
         } else {
-        //errorMessage = await handleEditMoneda(editTP, monedaNombre, monedaValor);
+            await handleEditMoneda(editMoneda, monedaNombre, monedaValor);
         }
         /*if (errorMessage != "") {
         setError(errorMessage);
         return;
         }*/
-        console.log("aca"); // ✅ Este log sí va a salir si todo va bien
         handleClose();
         } catch (err) {
         console.error("Error en handleSubmit:", err);

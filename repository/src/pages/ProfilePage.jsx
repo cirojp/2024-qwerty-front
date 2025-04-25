@@ -38,6 +38,7 @@ function ProfilePage() {
   const [isModalMonedaOpen, setIsModalMonedaOpen] = useState(false);
   const [monedas, setMonedas] = useState([]);
   const [editPayOption, setEditPayOption] = useState({});
+  const [editMoneda, setEditMoneda] = useState({});
   const [isEditMode, setIsEditMode] = useState(false);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState({});
@@ -171,6 +172,7 @@ function ProfilePage() {
       console.log("deberia redirec");
       navigate("/");
     }
+    console.log(monedas);
     setIsLoading(false);
   };
 
@@ -308,18 +310,20 @@ function ProfilePage() {
     }
   };
 
-  const handleEditMoneda = async (medioPagoValue, newName) => {
+  const handleEditMoneda = async (editMoneda, nuevoNombre, nuevoValor) => {
     const token = localStorage.getItem("token");
     const jsonResp = {
-      nombreActual: medioPagoValue.label,
-      nombreNuevo: newName,
+      nombreActual: editMoneda.label,
+      nombreNuevo: nuevoNombre,
+      valorActual: editMoneda.value,
+      valorNuevo: nuevoValor,
     };
 
     try {
       const response = await fetch(
-        "https://two024-qwerty-back-1.onrender.com/api/personal-tipo-gasto/editar",
+        `https://two024-qwerty-back-1.onrender.com/api/personal-moneda`,
         {
-          method: "POST", // Cambiado a POST
+          method: "PUT", 
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -329,9 +333,9 @@ function ProfilePage() {
       );
 
       if (response.ok) {
-        setPayOptions([]); // Limpiar las opciones
-        await fetchPersonalTipoGastos(); // Volver a obtener los tipos de gasto actualizados
-        setIsModalOpen(false); // Cerrar el modal después de editar
+        setMonedas([]); 
+        await fetchPersonalMonedas(); 
+        setIsModalMonedaOpen(false); 
       }
     } catch (err) {
       console.log(err);
@@ -458,16 +462,16 @@ function ProfilePage() {
                         <button
                           className="text-blue-500 hover:text-blue-700 mr-2"
                           onClick={() => {
-                            setEditPayOption(moneda);
+                            setEditMoneda(moneda);
                             setIsEditMode(true);
-                            setIsModalOpen(true);
+                            setIsModalMonedaOpen(true);
                           }}
                         >
                           Editar
                         </button>
                         <button
                           className="text-red-500 hover:text-red-700"
-                          onClick={() => confirmDelete(medioDePago.value)}
+                          onClick={() => confirmDelete(moneda.label)}
                         >
                           X
                         </button>
@@ -548,7 +552,7 @@ function ProfilePage() {
         handleCreateMoneda={handleCreateMoneda}
         handleEditMoneda={handleEditMoneda}
         edit={isEditMode}
-        editTP={editPayOption}
+        editMoneda={editMoneda}
       />
     </div>
   );

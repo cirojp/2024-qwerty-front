@@ -51,13 +51,13 @@ const ModalMedioDePago = ({
     } else {
       setMedioDePagoNombre("");
     }
-    console.log(editTP);
   }, [isOpen]);
 
   const handleSubmit = async () => {
     setIsLoading(true);
     if (!medioDePagoNombre) {
       setError("Debes ingresar un nombre.");
+      setIsLoading(false);
       return;
     }
     let errorMessage = "";

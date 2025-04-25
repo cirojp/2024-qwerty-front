@@ -8,6 +8,7 @@ function ConfirmDeleteMedioDePago({
   isOpen = false,
   handleClose = () => {},
   handleDelete = () => {},
+  pagoOmoneda
 }) {
   library.add(fas);
   const customStyles = {
@@ -45,12 +46,18 @@ function ConfirmDeleteMedioDePago({
           size="4x"
         />
         <h3 className="text-lg font-black text-white">
-          Confirmar Borrado de Medio De Pago
+          {pagoOmoneda === "pago"
+            ? "Confirmar Borrado de Medio De Pago"
+            : "Confirmar Borrado de Moneda"}
         </h3>
         <p className="text-sm text-gray-200">
-          Se eliminara este medio de pago de sus medios de pago y de todas las
-          transacciones que lo esten utilizando actualmente. Las transacciones
-          que utilizaban este medio de pago pasaran al medio de pago "Otros"
+          {pagoOmoneda === "pago"
+            ? `Se eliminara este medio de pago de sus medios de pago y de todas las
+              transacciones que lo esten utilizando actualmente. Las transacciones
+              que utilizaban este medio de pago pasaran al medio de pago "Otros"`
+            : `Se eliminara esta moneda de sus monedas cargadas y de todas las 
+              transacciones que la esten utilizando actualmente. Las transacciones 
+              que utilizaban esta moneda pasaran todo a ARG.`}
         </p>
         <button
           onClick={() => handleDelete()}

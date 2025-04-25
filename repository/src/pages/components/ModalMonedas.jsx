@@ -77,10 +77,6 @@ const ModalMonedas = ({
         } else {
             await handleEditMoneda(editMoneda, monedaNombre, monedaValor);
         }
-        /*if (errorMessage != "") {
-        setError(errorMessage);
-        return;
-        }*/
         handleClose();
         } catch (err) {
         console.error("Error en handleSubmit:", err);

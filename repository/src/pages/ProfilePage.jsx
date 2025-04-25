@@ -45,6 +45,7 @@ function ProfilePage() {
   const [transacciones, setTransacciones] = useState([]);
   const [loadingGraphic, setLoadingGraphic] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
+  const [pagoOmoneda, setPagoOmoneda] = useState("");
   const [showNoGraphs, setShowNoGraphs] = useState(true);
   const navigate = useNavigate();
   useEffect(() => {
@@ -342,6 +343,35 @@ function ProfilePage() {
     }
   };
 
+  const handleDeleteMoneda = async (monedaNombre) => {
+    const token = localStorage.getItem("token");
+    setConfirmDeleteOpen(false);
+    setLoadingGraphic(true);
+    try {
+      const response = await fetch(
+        "https://two024-qwerty-back-1.onrender.com/api/personal-moneda",
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ nombre: monedaNombre }), // Enviamos directamente el nombre como string
+        }
+      );
+
+      if (response.ok) {
+        setMonedas([]);
+        await fetchPersonalMonedas();
+        await getTransacciones();
+      }
+    } catch (err) {
+      console.log("Error al eliminar moneda", err);
+    } finally {
+      setLoadingGraphic(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-black py-10">
       <div className="text-2xl font-bold text-gray-100 text-center mb-4">
@@ -413,7 +443,10 @@ function ProfilePage() {
                         </button>
                         <button
                           className="text-red-500 hover:text-red-700"
-                          onClick={() => confirmDelete(medioDePago.value)}
+                          onClick={() => {
+                            confirmDelete(medioDePago.value);
+                            setPagoOmoneda("pago");
+                          }}
                         >
                           X
                         </button>
@@ -471,7 +504,10 @@ function ProfilePage() {
                         </button>
                         <button
                           className="text-red-500 hover:text-red-700"
-                          onClick={() => confirmDelete(moneda.label)}
+                          onClick={() => {
+                            confirmDelete(moneda.label);
+                            setPagoOmoneda("moneda");
+                          }}
                         >
                           X
                         </button>
@@ -543,8 +579,13 @@ function ProfilePage() {
         isOpen={confirmDeleteOpen}
         handleClose={cancelDelete}
         handleDelete={() => {
-          handleDelete(itemToDelete);
+          if (pagoOmoneda === "pago") {
+            handleDelete(itemToDelete);
+          } else {
+            handleDeleteMoneda(itemToDelete);
+          }
         }}
+        pagoOmoneda={pagoOmoneda}
       />
       <ModalMonedas
         isOpen={isModalMonedaOpen}

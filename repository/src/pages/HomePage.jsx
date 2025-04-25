@@ -115,6 +115,7 @@ function HomePage() {
   }, [payCategories]);
   useEffect(() => {
     fetchPersonalTipoGastos();
+    fetchPersonalMonedas();
     fetchGrupos();
   }, []);
 
@@ -203,6 +204,42 @@ function HomePage() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const fetchPersonalMonedas = async () => {
+    setIsLoading(true);
+    const token = localStorage.getItem("token");
+    if (await checkIfValidToken(token)) {
+      try {
+        const response = await fetch(
+          "https://two024-qwerty-back-1.onrender.com/api/personal-moneda",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (response.ok) {
+          const data = await response.json();
+          const customMonedas = data.map((moneda) => ({
+            label: moneda.nombre,
+            value: moneda.valor,
+            textColor: "mr-2 text-white",
+          }));
+          console.log(data);
+          setMonedas([...monedas, ...customMonedas]);
+        }
+      } catch (error) {
+        console.error(
+          "Error al obtener las Monedas personalizados:",
+          error
+        );
+      }
+    } else {
+      console.log("deberia redirec");
+      navigate("/");
+    }
+    setIsLoading(false);
   };
   const checkIfValidToken = async (token) => {
     try {

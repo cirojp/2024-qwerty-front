@@ -374,6 +374,7 @@ function HomePage() {
   };
 
   const editRow = (row) => {
+    console.log(row);
     setEdit(true);
     setMotivo(row.motivo);
     let monedaDeTransac = monedas.find(m => m.label == row.monedaOriginal)

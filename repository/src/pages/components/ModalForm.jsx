@@ -188,7 +188,7 @@ function ModalForm({
       onRequestClose={closeModal}
       contentLabel="Agregar Transacción"
       style={customStyles}
-      className="bg-gray-950 shadow-lg p-4 rounded-lg"
+      className="bg-gray-950 shadow-lg p-4 rounded-lg max-h-screen overflow-y-auto"
     >
       <h2 className="text-2xl font-bold text-center mb-0 text-gray-100">
         {edit ? (lectura ? "Editar Transacción Recurrente" : "Editar Transacción") : "Agregar Nueva Transacción"}

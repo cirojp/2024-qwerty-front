@@ -47,24 +47,24 @@ const ModalCategoria = ({
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (edit) {
-      setCategoriaNombre(editCat.value || "");
-      setIconoSeleccionado(editCat.iconPath || "");
-    } else {
-      setCategoriaNombre("");
-      setIconoSeleccionado("");
+    if (isOpen) {
+      if (edit && editCat) {
+        setCategoriaNombre(editCat.value || "");
+        setIconoSeleccionado(editCat.iconPath || "");
+      } else {
+        setCategoriaNombre("");
+        setIconoSeleccionado("");
+      }
     }
-  }, [editCat, edit, isOpen]);
+  }, [isOpen]);
 
   const handleSubmit = async () => {
-    setIsLoading(true); // Inicia el estado de carga
-
+    setIsLoading(true);
     if (!categoriaNombre || !iconoSeleccionado) {
       setError("Debes ingresar un nombre y seleccionar un icono.");
-      setIsLoading(false); // Aseguramos que se desactiva isLoading en caso de error
+      setIsLoading(false);
       return;
     }
-
     let errorMessage = "";
     try {
       if (!edit) {
@@ -88,7 +88,6 @@ const ModalCategoria = ({
 
       // Si todo está bien, limpiamos el estado
       setCategoriaNombre("");
-      console.log("333");
       setIconoSeleccionado("");
       setError("");
       onRequestClose();
@@ -102,7 +101,6 @@ const ModalCategoria = ({
   const handleClose = () => {
     setError("");
     setCategoriaNombre("");
-    console.log("444");
     setIconoSeleccionado("");
     onRequestClose();
   };

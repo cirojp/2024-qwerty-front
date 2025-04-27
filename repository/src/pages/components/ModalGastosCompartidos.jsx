@@ -49,7 +49,6 @@ function ModalGastosCompartidos({
     } finally {
       setIsLoading(false);
     }
-    console.log(grupos);
   };
   const fetchMiembros = async (grupo) => {
     const token = localStorage.getItem("token");

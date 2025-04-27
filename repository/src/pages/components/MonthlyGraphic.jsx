@@ -43,7 +43,7 @@ function MonthlyGraphic({
             (transaccion) => transaccion.categoria !== "Ingreso de Dinero"
           )
         : transacciones;
-        if ((gastos.length === 0 && transacciones.length !== 0) || transacciones.length=== 0) {
+        if (gastos.length === 0 && transacciones.length !== 0) {
           setShowNoGraphs(false);
         } else {
           setShowNoGraphs(true);

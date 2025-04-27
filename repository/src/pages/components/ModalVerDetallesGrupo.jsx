@@ -324,9 +324,7 @@ function ModalVerDetallesGrupo({
     e.preventDefault();
     const token = localStorage.getItem("token");
     let montoOriginal = valor;
-    console.log(monedaSeleccionada + "xsxsxsxsxs");
     let moneda = monedas.find(m => m.value == monedaSeleccionada);
-    console.log(moneda);
     let monedaOriginal = moneda.label;
     let valorAux = valor * moneda.value;
     let url = `https://two024-qwerty-back-1.onrender.com/api/grupos/transaccion/${transaccionId}`;
@@ -381,7 +379,6 @@ function ModalVerDetallesGrupo({
     setSelectedPayMethod(value);
   };
   const handleCreateCat = async (nombre, icono) => {
-    console.log("entre      ");
     const token = localStorage.getItem("token");
     if (!nombre || !icono) {
       console.error("Nombre y icono son obligatorios");
@@ -411,7 +408,6 @@ function ModalVerDetallesGrupo({
           iconPath: newCategoria.iconPath,
         };
         setPayCategories((prevOptions) => [...prevOptions, newOption]);
-        console.log(payCategories);
         setSelectedCategory(newOption);
         setCategoria(newCategoria.nombre);
       } else {

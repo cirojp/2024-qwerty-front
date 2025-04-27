@@ -160,9 +160,8 @@ function ProfilePage() {
             value: moneda.valor,
             textColor: "mr-2 text-white",
           }));
-          console.log(data);
           setMonedas([...defaultMonedas, ...customMonedas]);
-        }
+        } 
       } catch (error) {
         console.error(
           "Error al obtener las Monedas personalizados:",
@@ -173,14 +172,12 @@ function ProfilePage() {
       console.log("deberia redirec");
       navigate("/");
     }
-    console.log(monedas);
     setIsLoading(false);
   };
 
   useEffect(() => {
     fetchPersonalTipoGastos();
     fetchPersonalMonedas();
-    console.log(monedas);
   }, []);
 
   const handleEdit = async (medioPagoValue, newName) => {
@@ -248,7 +245,6 @@ function ProfilePage() {
   };
 
   const handleCreateTP = async (inputValue) => {
-    console.log(inputValue);
     const nombreExiste = payOptions.some(
       (pago) => pago.label.toLowerCase() === inputValue.toLowerCase()
     );

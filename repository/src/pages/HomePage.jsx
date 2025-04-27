@@ -227,7 +227,6 @@ function HomePage() {
             value: moneda.valor,
             textColor: "mr-2 text-white",
           }));
-          console.log(data);
           setMonedas([...monedas, ...customMonedas]);
         }
       } catch (error) {
@@ -385,7 +384,6 @@ function HomePage() {
       const valorCalculado = row.valor / row.montoOriginal;
       setMonedaDesconocida({ value: valorCalculado, label: row.monedaOriginal });
       setMonedaSeleccionada(row.monedaOriginal);
-      //console.log(monedaDesconocida);
     }
     setValor(row.montoOriginal);
     const selectedOption = payOptions.find(
@@ -678,8 +676,6 @@ function HomePage() {
         if (data == 1 || data == 5 || data == 10) {
           setAchievementData(data);
           setShowNotification(true);
-        } else {
-          console.log(data);
         }
       });
   };

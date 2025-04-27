@@ -100,7 +100,9 @@ function ModalTransaccionesRecurrentes({
   const editRow = (row) => {
     setEdit(true);
     setMotivo(row.motivo);
-    setValor(row.valor);
+    setValor(row.montoOriginal);
+    let monedaDeTransac = monedas.find(m => m.label == row.monedaOriginal)
+    setMonedaSeleccionada(monedaDeTransac.value);
     const selectedOption = payOptions.find(
       (option) => option.value === row.tipoGasto
     );
@@ -113,7 +115,6 @@ function ModalTransaccionesRecurrentes({
     setTransaccionId(row.id);
     setEsRecurrente(true);
     setFrecuenciaRecurrente(row.frecuenciaRecurrente);
-    setMonedaSeleccionada(1);
     openModal();
   };
 
@@ -188,7 +189,6 @@ function ModalTransaccionesRecurrentes({
     }
   };
   const handleCreateCat = async (nombre, icono) => {
-    console.log("entre      ");
     const token = localStorage.getItem("token");
     if (!nombre || !icono) {
       console.error("Nombre y icono son obligatorios");
@@ -218,7 +218,6 @@ function ModalTransaccionesRecurrentes({
           iconPath: newCategoria.iconPath,
         };
         setPayCategories((prevOptions) => [...prevOptions, newOption]);
-        console.log(payCategories);
         setSelectedCategory(newOption);
         setCategoria(newCategoria.nombre);
       } else {

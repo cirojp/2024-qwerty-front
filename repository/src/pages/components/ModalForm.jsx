@@ -4,6 +4,7 @@ import Select from "react-select";
 import "./styles/ModalForm.css";
 import ModalCategoria from "./ModalCategoria";
 import CreatableSelect from "react-select/creatable";
+import { faL } from "@fortawesome/free-solid-svg-icons";
 
 function ModalForm({
   isModalOpen,
@@ -111,7 +112,6 @@ function ModalForm({
       grupos = [selectedGroup];
     }
     setActiveGroups(grupos.filter((grupo) => grupo.estado === true));
-    console.log(selectedGroup);
   }, [grupos]);
   useEffect(() => {
     if (selectedCategory && selectedCategory.value === "Gasto Grupal") {
@@ -123,6 +123,7 @@ function ModalForm({
     } else if (selectedGroup) {
       setIsGroupDisabled(false);
       setIsCategoryDisabled(true);
+      setIsRecurrentDisabled(true);
     } else {
       setIsCategoryDisabled(false);
       setIsGroupDisabled(false);
@@ -139,10 +140,15 @@ function ModalForm({
       setMonedaSeleccionada(monedaDesconocida);
     }
   }, [selectedOption]);
+  const [lecturaLocal, setLecturaLocal] = useState(lectura);
+
   useEffect(() => {
-    console.log(monedaSeleccionada);
-    console.log(monedaDesconocida);
-  }, [monedaSeleccionada]);
+    if (isModalOpen && esRecurrente) {
+      setLecturaLocal(true);
+    } else {
+      setLecturaLocal(lectura);
+    }
+  }, [isModalOpen, lectura]);
   const openModalCategoria = () => {
     setIsModalCategoriaOpen(true);
   };
@@ -158,14 +164,11 @@ function ModalForm({
     setIsLoading(true);
     try {
       if(selectedOption == "crear"){
-        console.log("fue por crear");
         await agregarTransaccion(e, selectedCategory.value, true);
       } else if(selectedOption == "convertir"){
-        console.log("fue por convertir");
         let montoAnterior =  (valor * monedaDesconocida.value);
         await agregarTransaccion(e, selectedCategory.value, false, montoAnterior);
       } else {
-        console.log("fue por else");
         await agregarTransaccion(e, selectedCategory.value);
       }
     } catch (error) {
@@ -179,6 +182,7 @@ function ModalForm({
   const closeWindow = () => {
     setModalError("");
     setSelectedOption("");
+    setIsRecurrentDisabled(false);
     closeModal();
   };
 
@@ -215,9 +219,9 @@ function ModalForm({
       className="bg-gray-950 shadow-lg p-4 rounded-lg max-h-screen overflow-y-auto"
     >
       <h2 className="text-2xl font-bold text-center mb-0 text-gray-100">
-        {edit ? (lectura ? "Editar Transacción Recurrente" : "Editar Transacción") : "Agregar Nueva Transacción"}
+        {edit ? (lecturaLocal ? "Editar Transacción Recurrente" : "Editar Transacción") : "Agregar Nueva Transacción"}
       </h2>
-      {lectura && (
+      {lecturaLocal && (
             <p className="text-yellow-500 text-sm text-center">
               (Puede modificar Valor, Medio de Pago y Recurrencia)
             </p>
@@ -231,7 +235,7 @@ function ModalForm({
             onChange={handleMotivoChange}
             className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
             required
-            disabled={lectura}
+            disabled={lecturaLocal}
           />
         </div>
         <div>
@@ -361,7 +365,6 @@ function ModalForm({
               </button>
             </div>
           ) : (
-            // Renderiza un input de solo lectura cuando handleGroupChange es null
             <input
               type="text"
               value={
@@ -380,7 +383,7 @@ function ModalForm({
             type="date"
             value={fecha}
             onChange={(e) => setFecha(e.target.value)}
-            min={(esRecurrente && !lectura) ? new Date().toISOString().split("T")[0] : undefined}
+            min={(esRecurrente) ? new Date().toISOString().split("T")[0] : undefined}
             className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
             required
           />
@@ -397,7 +400,6 @@ function ModalForm({
             </p>
           )}
           {handleGroupChange ? (
-            // Renderiza el componente Select cuando handleGroupChange no es null
             <Select
               options={[
                 { value: null, label: "Select..." },
@@ -413,7 +415,6 @@ function ModalForm({
               styles={customSelectStyles}
             />
           ) : (
-            // Renderiza un input de solo lectura cuando handleGroupChange es null
             <input
               type="text"
               value={
@@ -432,7 +433,7 @@ function ModalForm({
           checked={esRecurrente}
           onChange={() => setEsRecurrente(!esRecurrente)}
           className="mr-2 h-5 w-5 text-yellow-500 focus:ring-yellow-400"
-          disabled={lectura || isRecurrentDisabled}
+          disabled={lecturaLocal || isRecurrentDisabled}
         />
         <label className="text-gray-100">Hacer esta transacción recurrente</label>
       </div>

@@ -10,11 +10,20 @@ const ExpandedRow = ({
     categoria: "",
     fecha: "",
     tipoGasto: "",
+    monedaOriginal: "",
+    montoOriginal: "",
+    siguienteEjecucion: "",
   },
   payCategories = [],
 }) => {
+  
   library.add(fas);
-  const category = payCategories.find((cat) => cat.value === data.categoria);
+  const category =
+  payCategories.find((cat) => cat.value === data.categoria) || {
+    value: "Otros",
+    label: "Otros",
+    iconPath: "fa-solid fa-circle-dot",
+  };
   return (
     <div className="bg-gray-950 shadow-md rounded-lg p-4 sm:p-6 min-w-full sm:min-w-max">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -34,6 +43,8 @@ const ExpandedRow = ({
         <div className="text-gray-200">{data.tipoGasto}</div>
         <div className="font-bold text-gray-300">Fecha:</div>
         <div className="text-gray-200">{data.fecha}</div>
+        <div className="font-bold text-gray-300">Valor Original:</div>
+        <div className="text-gray-200">{data.montoOriginal} {data.monedaOriginal}</div>
       </div>
     </div>
   );

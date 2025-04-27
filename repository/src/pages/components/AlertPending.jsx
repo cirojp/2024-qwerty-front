@@ -71,18 +71,22 @@ function AlertPending({
     setErrorMessage("");
     isAccepted(pendingTransaction, categoria, payOption);
     setIsLoading(false);
+    setCategoria("");
+    setPayOption("");
   };
 
   const handleReject = () => {
     isRejected(pendingTransaction);
+    setCategoria("");
+    setPayOption("");
   };
 
   const handleCategoryChange = (e) => {
     const selectedValue = e.target.value;
     setCategoria(selectedValue);
-    setSelectedCategory(
+    /*setSelectedCategory(
       payCategories.find((cat) => cat.value === selectedValue)
-    );
+    );*/
   };
   if (pendingTransaction.id_reserva == "Cobro") {
     return (
@@ -100,7 +104,17 @@ function AlertPending({
             Motivo: {pendingTransaction.motivo}
           </label>
           <label className="block mb-2">
-            Valor: {pendingTransaction.valor}
+            {pendingTransaction.monedaOriginal !== "ARG" ? (
+              <>
+                Valor: {pendingTransaction.montoOriginal} {pendingTransaction.monedaOriginal}
+                <br />
+                 ( {pendingTransaction.valor} ARG )
+              </>
+            ) : (
+              <>
+                Valor: {pendingTransaction.valor} ARG
+              </>
+            )}
           </label>
           <label className="block mb-2">
             Fecha: {pendingTransaction.fecha}
@@ -206,7 +220,17 @@ function AlertPending({
             Motivo: {pendingTransaction.motivo}
           </label>
           <label className="block mb-2">
-            Valor: {pendingTransaction.valor}
+            {pendingTransaction.monedaOriginal !== "ARG" ? (
+              <>
+                Valor: {pendingTransaction.montoOriginal} {pendingTransaction.monedaOriginal}
+                <br />
+                 ( {pendingTransaction.valor} ARG )
+              </>
+            ) : (
+              <>
+                Valor: {pendingTransaction.valor} ARG
+              </>
+            )}
           </label>
           <label className="block mb-2">
             Fecha: {pendingTransaction.fecha}

@@ -4,14 +4,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 
-const ModalMedioDePago = ({
+const ModalMonedas = ({
   isOpen = false,
   onRequestClose = () => {},
-  handleCreateTP = () => {},
-  handleEditTP = () => {},
+  handleCreateMoneda = () => {},
+  handleEditMoneda = () => {},
   edit = false,
-  editTP = {},
+  editMoneda = {},
 }) => {
+    
   library.add(fas);
   // Estilos del Modal
   const customStyles = {
@@ -41,44 +42,55 @@ const ModalMedioDePago = ({
     },
   };
 
-  const [medioDePagoNombre, setMedioDePagoNombre] = useState("");
+  const [monedaNombre, setMonedaNombre] = useState("");
+  const [monedaValor, setMonedaValor] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (edit) {
-      setMedioDePagoNombre(editTP.value);
-    } else {
-      setMedioDePagoNombre("");
+
+    if (edit && editMoneda?.label !== undefined && editMoneda?.value !== undefined) {
+      setMonedaNombre(editMoneda.label);
+      setMonedaValor(editMoneda.value);
+    } else if (isOpen && !edit) {
+      setMonedaNombre("");
+      setMonedaValor("");
     }
-  }, [isOpen]);
+  }, [isOpen, edit, editMoneda]);
 
   const handleSubmit = async () => {
     setIsLoading(true);
     setError("");
-    if (!medioDePagoNombre) {
+    if (!monedaNombre) {
       setError("Debes ingresar un nombre.");
       setIsLoading(false);
       return;
     }
-    try { 
-      if (!edit) {
-        await handleCreateTP(medioDePagoNombre);
-      } else {
-        await handleEditTP(editTP, medioDePagoNombre);
+    if (!monedaValor || monedaValor< 0) {
+        setError("El valor debe ser mayor a 0.");
+        setIsLoading(false);
+        return;
       }
-      handleClose();
-    } catch (err) {
-      console.error("Error en handleSubmit:", err);
-      const mensajeError = err?.message || "Ocurrió un error al crear Medio de Pago.";
-      setError(mensajeError);
-  }
-  setIsLoading(false);
-  };
+    try { 
+        if (!edit) {
+            await handleCreateMoneda(monedaNombre, monedaValor);
+        } else {
+            await handleEditMoneda(editMoneda, monedaNombre, monedaValor);
+        }
+        handleClose();
+        } catch (err) {
+            console.error("Error en handleSubmit:", err);
+            const mensajeError = err?.message || "Ocurrió un error al crear la moneda.";
+            setError(mensajeError);
+        }
+        setIsLoading(false);
+    };
+  
 
   const handleClose = () => {
     setError("");
-    setMedioDePagoNombre("");
+    setMonedaNombre("");
+    setMonedaValor("");
     onRequestClose();
   };
 
@@ -86,20 +98,29 @@ const ModalMedioDePago = ({
     <Modal
       isOpen={isOpen}
       onRequestClose={onRequestClose}
-      contentLabel={edit ? "Editar Medio De Pago" : "Crear Medio de Pago"}
+      contentLabel={edit ? "Editar Moneda" : "Crear Moneda"}
       style={customStyles}
       className="bg-gray-900 text-white p-4 sm:p-2 rounded-lg shadow-lg"
     >
       <h2 className="text-xl sm:text-lg font-bold mb-4">
-        {edit ? "Editar Medio De Pago" : "Crear Medio de Pago"}
+        {edit ? "Editar Moneda" : "Crear Moneda"}
       </h2>
       <input
         type="text"
-        placeholder="Medio de Pago"
-        value={medioDePagoNombre}
-        onChange={(e) => setMedioDePagoNombre(e.target.value)}
+        placeholder="Moneda"
+        value={monedaNombre}
+        onChange={(e) => setMonedaNombre(e.target.value)}
+        maxLength={10}
         className="mt-1 block w-full p-2 border border-gray-600 bg-gray-800 text-white rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
       />
+      <label className="text-center text-gray-100 mb-6">Valor en pesos ARG:</label>
+      <input
+        type="number"
+        value={monedaValor}
+        onChange={(e) => setMonedaValor(e.target.value)}
+        className="mt-1 block w-full p-2 border border-gray-600 bg-gray-800 text-white rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
+        required
+        />
       {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
 
       <button
@@ -133,9 +154,9 @@ const ModalMedioDePago = ({
             <span className="ml-2">Cargando...</span>
           </div>
         ) : edit ? (
-          "Editar Medio De Pago"
+          "Editar Moneda"
         ) : (
-          "Crear Medio de Pago"
+          "Crear Moneda"
         )}
       </button>
       <button
@@ -148,4 +169,4 @@ const ModalMedioDePago = ({
   );
 };
 
-export default ModalMedioDePago;
+export default ModalMonedas;

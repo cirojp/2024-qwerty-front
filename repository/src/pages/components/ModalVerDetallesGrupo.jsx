@@ -20,6 +20,7 @@ function ModalVerDetallesGrupo({
   setGrupos,
   grupos,
   getTransacciones,
+  monedas
 }) {
   const [transacciones, setTransacciones] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -43,6 +44,7 @@ function ModalVerDetallesGrupo({
   const [fecha, setFecha] = useState(new Date().toISOString().split("T")[0]);
   const [tipoGasto, setTipoGasto] = useState("Efectivo");
   const [categoria, setCategoria] = useState("");
+  const [monedaSeleccionada, setMonedaSeleccionada] = useState("");
 
   const customStyles = {
     overlay: {
@@ -263,11 +265,14 @@ function ModalVerDetallesGrupo({
   const editRow = (row) => {
     setEdit(true);
     setMotivo(row.motivo);
-    setValor(row.valor);
-    const selectedOption = payOptions.find(
+    let monedaDeTransac = monedas.find(m => m.label == row.monedaOriginal)
+    setMonedaSeleccionada(monedaDeTransac.value);
+    setValor(row.montoOriginal);
+    const selectedGasto = payOptions.find(
       (option) => option.value === row.tipoGasto
     );
-    setSelectedPayMethod(selectedOption || null);
+    setSelectedPayMethod(selectedGasto || null);
+    setTipoGasto(selectedGasto.value || null);
     const selectedPayCategory = payCategories.find(
       (option) => option.value == row.categoria
     );
@@ -318,14 +323,20 @@ function ModalVerDetallesGrupo({
   const agregarTransaccion = async (e, categoria) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
-    console.log(transaccionId);
+    let montoOriginal = valor;
+    let moneda = monedas.find(m => m.value == monedaSeleccionada);
+    let monedaOriginal = moneda.label;
+    let valorAux = valor * moneda.value;
     let url = `https://two024-qwerty-back-1.onrender.com/api/grupos/transaccion/${transaccionId}`;
     let bodyJson = JSON.stringify({
       motivo,
-      valor,
+      valor: valorAux, 
       fecha,
       categoria,
       tipoGasto,
+      monedaOriginal, 
+      montoOriginal, 
+      frecuenciaRecurrente: null
     });
     const method = "PUT";
     try {
@@ -368,7 +379,6 @@ function ModalVerDetallesGrupo({
     setSelectedPayMethod(value);
   };
   const handleCreateCat = async (nombre, icono) => {
-    console.log("entre      ");
     const token = localStorage.getItem("token");
     if (!nombre || !icono) {
       console.error("Nombre y icono son obligatorios");
@@ -398,7 +408,6 @@ function ModalVerDetallesGrupo({
           iconPath: newCategoria.iconPath,
         };
         setPayCategories((prevOptions) => [...prevOptions, newOption]);
-        console.log(payCategories);
         setSelectedCategory(newOption);
         setCategoria(newCategoria.nombre);
       } else {
@@ -530,6 +539,13 @@ function ModalVerDetallesGrupo({
         handleGroupChange={null}
         selectedGroup={grupo}
         grupos={null}
+        monedas={monedas}
+        monedaSeleccionada={monedaSeleccionada}
+        setMonedaSeleccionada={setMonedaSeleccionada}
+        frecuenciaRecurrente={null}
+        esRecurrente={false}
+        lectura={false}
+        monedaDesconocida={null}
       />
     </Modal>
   );

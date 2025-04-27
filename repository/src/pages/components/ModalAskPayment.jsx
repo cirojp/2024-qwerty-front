@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import CreatableSelect from "react-select/creatable";
 
-function ModalSendPayment({ isModalOpen = false, payCategories }) {
+function ModalSendPayment({ isModalOpen = false, payCategories, monedas }) {
   const defaultMediosDePago = [
     {
       value: "Tarjeta de credito",
@@ -25,6 +25,7 @@ function ModalSendPayment({ isModalOpen = false, payCategories }) {
   const [fecha, setFecha] = useState(new Date().toISOString().split("T")[0]);
   const [modalError, setModalError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [monedaSeleccionada, setMonedaSeleccionada] = useState(1);
   const idReserva = 0;
 
   const fetchPersonalTipoGastos = async () => {
@@ -97,12 +98,16 @@ function ModalSendPayment({ isModalOpen = false, payCategories }) {
     setIsLoading(true);
     e.preventDefault();
     const token = localStorage.getItem("token");
+    let moneda = monedas.find(m => m.value == monedaSeleccionada);
+    let valorEnArg = valor * moneda.value;
     const transaccion = {
-      valor: valor,
+      valor: valorEnArg,
       email: emailReceptor,
       motivo: motivo,
       id_reserva: "Cobro",
       fecha: fecha,
+      monedaOriginal: moneda.label,
+      montoOriginal: valor,
     };
     if (await userExists(emailReceptor)) {
       if (validateForm()) {
@@ -147,6 +152,7 @@ function ModalSendPayment({ isModalOpen = false, payCategories }) {
     setCategoria("");
     setIsLoading(false);
     setFecha(new Date().toISOString().split("T")[0]);
+    setMonedaSeleccionada(1);
   };
 
   return (
@@ -180,14 +186,36 @@ function ModalSendPayment({ isModalOpen = false, payCategories }) {
             />
           </div>
           <div>
-            <label className="text-gray-100 mb-6">Valor:</label>
+          <label className="text-center text-gray-100 mb-6">Valor:</label>
+          <div className="flex gap-2 ">
+          <div className="flex-1">
             <input
               type="number"
               value={valor}
               onChange={(e) => setValor(e.target.value)}
-              className="mt-1 block w-full p-2 border bg-gray-900 text-white border-warning rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
+              className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
               required
             />
+            </div>
+            <div className="flex-10">
+              <select
+                value={monedaSeleccionada}
+                onChange={(e) => setMonedaSeleccionada(e.target.value)}
+                className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
+              >
+                {monedas.map((moneda) => (
+                  <option key={moneda.value} value={moneda.value}>
+                    {moneda.label}
+                  </option>
+                ))}
+              </select>
+              </div></div>
+                    {/* Mostrar el valor convertido si la moneda seleccionada no es ARG */}
+            {(Number(monedaSeleccionada) !== 1) && valor>0 && (
+              <div className="mt-2 text-yellow-400">
+                Valor en pesos ARG = {valor * monedas.find(m => m.value == monedaSeleccionada)?.value}
+              </div>
+            )}
           </div>
           <div>
             <label className="text-gray-100 mb-6">Fecha:</label>

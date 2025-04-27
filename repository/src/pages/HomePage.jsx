@@ -16,6 +16,7 @@ function HomePage() {
   const [showNotification, setShowNotification] = useState(false);
   const [motivo, setMotivo] = useState("");
   const [showNoTransactions, setShowNoTransactions] = useState(false);
+  const [showNoGraphs, setShowNoGraphs] = useState(true);
   const [valor, setValor] = useState("");
   const [fecha, setFecha] = useState(new Date().toISOString().split("T")[0]);
   const [error, setError] = useState(null);
@@ -81,7 +82,16 @@ function HomePage() {
   const [transaccionesSinFiltroCat, setTransaccionesSinFiltroCat] = useState(
     []
   );
+  const [monedas, setMonedas] = useState([ 
+      { value: 1, label: "ARG" }, 
+      { value: 1250, label: "USD" }, 
+      { value: 1300, label: "EUR" }, 
+    ]);
+  const [monedaSeleccionada, setMonedaSeleccionada] = useState(1);
+  const [frecuenciaRecurrente, setFrecuenciaRecurrente] = useState("");
+  const [esRecurrente, setEsRecurrente] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [monedaDesconocida, setMonedaDesconocida] = useState(null);
   const handleGroupChange = (selectedOption) => {
     if (selectedOption && selectedOption.value === null) {
       setSelectedGroup(null); // Restablecer a null si se selecciona "Personal"
@@ -106,6 +116,7 @@ function HomePage() {
   }, [payCategories]);
   useEffect(() => {
     fetchPersonalTipoGastos();
+    fetchPersonalMonedas();
     fetchGrupos();
   }, []);
 
@@ -138,7 +149,6 @@ function HomePage() {
 
   const showTransactionsPendientes = async () => {
     const token = localStorage.getItem("token");
-    console.log("buscando pendientes");
     try {
       const response = await fetch(
         "https://two024-qwerty-back-1.onrender.com/api/transaccionesPendientes/user",
@@ -157,8 +167,6 @@ function HomePage() {
       const data = await response.json();
       if (data[0] != null) {
         setTranPendiente(data[0]);
-        console.log(data[0]);
-        console.log("hay data");
         setPendTran(true);
       }
     } catch (err) {
@@ -197,6 +205,41 @@ function HomePage() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const fetchPersonalMonedas = async () => {
+    setIsLoading(true);
+    const token = localStorage.getItem("token");
+    if (await checkIfValidToken(token)) {
+      try {
+        const response = await fetch(
+          "https://two024-qwerty-back-1.onrender.com/api/personal-moneda",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (response.ok) {
+          const data = await response.json();
+          const customMonedas = data.map((moneda) => ({
+            label: moneda.nombre,
+            value: moneda.valor,
+            textColor: "mr-2 text-white",
+          }));
+          setMonedas([...monedas, ...customMonedas]);
+        }
+      } catch (error) {
+        console.error(
+          "Error al obtener las Monedas personalizados:",
+          error
+        );
+      }
+    } else {
+      console.log("deberia redirec");
+      navigate("/");
+    }
+    setIsLoading(false);
   };
   const checkIfValidToken = async (token) => {
     try {
@@ -258,7 +301,6 @@ function HomePage() {
       fetchPersonalCategorias();
       showTransactionsPendientes();
     } else {
-      console.log("deberia redirec");
       navigate("/");
     }
     setIsLoading(false);
@@ -325,21 +367,39 @@ function HomePage() {
       value: "Efectivo",
       label: "Efectivo",
     });
+    setMonedaSeleccionada(1);
+    setFrecuenciaRecurrente("");
+    setEsRecurrente(false);
+    setSelectedGroup(null);
+    setMonedaDesconocida(null);
   };
 
   const editRow = (row) => {
     setEdit(true);
     setMotivo(row.motivo);
-    setValor(row.valor);
+    let monedaDeTransac = monedas.find(m => m.label == row.monedaOriginal)
+    if (monedaDeTransac) {
+      setMonedaSeleccionada(monedaDeTransac.value);
+    } else {
+      const valorCalculado = row.valor / row.montoOriginal;
+      setMonedaDesconocida({ value: valorCalculado, label: row.monedaOriginal });
+      setMonedaSeleccionada(row.monedaOriginal);
+    }
+    setValor(row.montoOriginal);
     const selectedOption = payOptions.find(
       (option) => option.value === row.tipoGasto
     );
     setSelectedPayMethod(selectedOption || null);
+    setTipoGasto(selectedOption.value || null);
     const selectedPayCategory = payCategories.find(
       (option) => option.value == row.categoria
     );
     setSelectedCategory(selectedPayCategory || null);
     setFecha(row.fecha);
+    if(row.frecuenciaRecurrente != "" && row.frecuenciaRecurrente != null){
+      setEsRecurrente(true);
+      setFrecuenciaRecurrente(row.frecuenciaRecurrente);
+    }
     setTransaccionId(row.id);
     openModal();
   };
@@ -393,6 +453,8 @@ function HomePage() {
       const motivo = transaccion.motivo;
       const valor = transaccion.valor;
       const fecha = transaccion.fecha;
+      const monedaOriginal = transaccion.monedaOriginal;
+      const montoOriginal = transaccion.montoOriginal;
       try {
         const response = await fetch(url, {
           method: "POST",
@@ -400,7 +462,7 @@ function HomePage() {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ motivo, valor, fecha, categoria, tipoGasto }),
+          body: JSON.stringify({ motivo, valor, fecha, categoria, tipoGasto, monedaOriginal, montoOriginal }),
         });
         if (response.ok) {
           const data = await response.json();
@@ -421,8 +483,6 @@ function HomePage() {
       url =
         "https://two024-qwerty-back-1.onrender.com/api/grupos/agregar-usuario";
       const grupoId = transaccion.grupoId;
-      console.log("este es el id " + grupoId);
-      console.log(transaccion);
       try {
         const response = await fetch(url, {
           method: "POST",
@@ -474,14 +534,30 @@ function HomePage() {
       }
     }
   };
-  const agregarTransaccion = async (e, categoria) => {
+  const agregarTransaccion = async (e, categoria, monedaAConocer = null, montoAnterior = null) => {
     e.preventDefault();
+    let moneda = {};
+    let montoOriginal = valor;
+    let valorAux = 0;
+    if(montoAnterior != null){
+      moneda = monedas.find(m => m.value == monedaSeleccionada);
+      valorAux = montoAnterior;
+      montoOriginal = montoAnterior / moneda.value;
+    } else {
+      if(monedaAConocer){
+        moneda = monedaDesconocida;
+      } else {
+        moneda = monedas.find(m => m.value == monedaSeleccionada);
+      }
+      valorAux = valor * moneda.value;
+    }
     const token = localStorage.getItem("token");
     let bodyJson = "";
     let url = "";
+    let monedaOriginal = moneda.label;
     setTransaccionesCargadas(false);
     if (selectedGroup == null) {
-      bodyJson = JSON.stringify({ motivo, valor, fecha, categoria, tipoGasto });
+      bodyJson = JSON.stringify({ motivo, valor: valorAux, fecha, categoria, tipoGasto, monedaOriginal, montoOriginal, frecuenciaRecurrente: esRecurrente ? frecuenciaRecurrente : null });
       url = edit
         ? `https://two024-qwerty-back-1.onrender.com/api/transacciones/${transaccionId}`
         : "https://two024-qwerty-back-1.onrender.com/api/transacciones";
@@ -489,11 +565,13 @@ function HomePage() {
       const grupo = selectedGroup.value;
       bodyJson = JSON.stringify({
         motivo,
-        valor,
+        valor: valorAux,
         fecha,
         categoria,
         tipoGasto,
         grupo,
+        monedaOriginal, 
+        montoOriginal
       });
       url = edit
         ? `https://two024-qwerty-back-1.onrender.com/api/grupos/transaccion/${transaccionId}`
@@ -510,6 +588,9 @@ function HomePage() {
         body: bodyJson,
       });
       if (response.ok) {
+        if(monedaDesconocida != null && montoAnterior != null){
+          handleCreateMoneda(monedaDesconocida.label, monedaDesconocida.value);
+        }
         console.log("la respuesta fue ok");
         const data = await response.json();
         if (selectedGroup == null) {
@@ -518,7 +599,7 @@ function HomePage() {
               t.id === data.id ? data : t
             );
             setTransacciones(updatedTransacciones);
-          } else {
+          } else if(fecha.split("-")[0] === filtroAno){
             const updatedTransacciones = [...transacciones, data];
             updatedTransacciones.sort(
               (a, b) => new Date(b.fecha) - new Date(a.fecha)
@@ -528,6 +609,7 @@ function HomePage() {
         }
         closeModal();
         setSelectedGroup(null);
+        setShowNoGraphs(true);
       } else {
         console.log("la respuesta no fue ok");
       }
@@ -539,6 +621,41 @@ function HomePage() {
       if (!edit) {
         checkTransaccionAchievment();
       }
+    }
+  };
+  
+  const handleCreateMoneda = async (nombre, valor) => {
+    const nombreExiste = monedas.some(
+      (moneda) => moneda.label.toLowerCase() === nombre.toLowerCase()
+    );
+  
+    if (nombreExiste) {
+      throw new Error("Ya existe una moneda con ese nombre.");
+      return;
+    }
+    const token = localStorage.getItem("token");
+    try {
+      const response = await fetch(
+        `https://two024-qwerty-back-1.onrender.com/api/personal-moneda`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        body: JSON.stringify({ nombre, valor }),
+        }
+      );
+      if (response.ok) {
+        const newMoneda = await response.json();
+        const newOption = {
+          label: newMoneda.nombre,
+          value: newMoneda.valor,
+        };
+        setMonedas((prevOptions) => [...prevOptions, newOption]);
+      }
+    } catch (error) {
+      console.error("Error al agregar la moneda personalizada:", error);
     }
   };
 
@@ -559,8 +676,6 @@ function HomePage() {
         if (data == 1 || data == 5 || data == 10) {
           setAchievementData(data);
           setShowNotification(true);
-        } else {
-          console.log(data);
         }
       });
   };
@@ -653,7 +768,6 @@ function HomePage() {
     }
   };
   const handleCreateCat = async (nombre, icono) => {
-    console.log("entre      ");
     const token = localStorage.getItem("token");
     if (!nombre || !icono) {
       console.error("Nombre y icono son obligatorios");
@@ -683,13 +797,11 @@ function HomePage() {
           iconPath: newCategoria.iconPath,
         };
         setPayCategories((prevOptions) => [...prevOptions, newOption]);
-        console.log(payCategories);
         setSelectedCategory(newOption);
         setCategoria(newCategoria.nombre);
       } else {
         const errorMessage = await response.text();
         console.error("Error al agregar categoria:", errorMessage);
-        console.log("la categoria existeeeeeeeeeee");
         return "La categoria ya existe";
       }
     } catch (error) {
@@ -724,6 +836,8 @@ function HomePage() {
         fetchPersonalCategorias={fetchPersonalCategorias}
         getTransacciones={getTransacciones}
         openModal={openModal}
+        checkIfValidToken={checkIfValidToken}
+        monedas={monedas}
       />
       <>
         {isLoading && (
@@ -749,7 +863,7 @@ function HomePage() {
           <PresupuestosWidget transacciones={transacciones} />
         )}
 
-        {!showNoTransactions && (
+        {(!showNoTransactions && showNoGraphs) && (
           <>
             <div className="flex items-center">
               <h2 className="text-xl md:text-2xl py-2 font-bold text-gray-100">
@@ -766,6 +880,7 @@ function HomePage() {
                 filtroCategoria={categoriaSeleccionada}
                 loading={loadGraphic}
                 transaccionesSinFiltroCat={transaccionesSinFiltroCat}
+                setShowNoGraphs={setShowNoGraphs}
               />
             )}
           </>
@@ -936,11 +1051,21 @@ function HomePage() {
           handleGroupChange={handleGroupChange}
           selectedGroup={selectedGroup}
           grupos={grupos}
+          monedas={monedas}
+          monedaSeleccionada={monedaSeleccionada}
+          setMonedaSeleccionada={setMonedaSeleccionada}
+          frecuenciaRecurrente={frecuenciaRecurrente}
+          setFrecuenciaRecurrente={setFrecuenciaRecurrente}
+          esRecurrente={esRecurrente}
+          setEsRecurrente={setEsRecurrente}
+          lectura={false}
+          monedaDesconocida={monedaDesconocida}
         />
-        <ModalAskPayment payCategories={payCategories} />
+        <ModalAskPayment payCategories={payCategories} monedas={monedas} />
         <ModalSendPayment
           payCategories={payCategories}
           refreshTransacciones={refershTransacciones}
+          monedas={monedas}
         />
         <AlertPending
           isOpen={pendTran}

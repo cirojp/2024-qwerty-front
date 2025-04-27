@@ -53,6 +53,11 @@ const ModalCrearGrupo = ({
       setError("Este correo ya fue agregado.");
       return;
     }
+    const email = localStorage.getItem("mail");
+    if (correoUsuario == email) {
+      setError("No hace falta agregarte a ti mismo.");
+      return;
+    }
     const token = localStorage.getItem("token");
     if (grupoAAgregar != null) {
       try {
@@ -97,10 +102,8 @@ const ModalCrearGrupo = ({
     const response = await fetch(url);
     if (response.ok) {
       const exists = await response.json();
-      console.log(exists);
       return exists;
     } else {
-      console.log(exists);
       return exists;
     }
   };

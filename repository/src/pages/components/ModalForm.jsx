@@ -4,6 +4,7 @@ import Select from "react-select";
 import "./styles/ModalForm.css";
 import ModalCategoria from "./ModalCategoria";
 import CreatableSelect from "react-select/creatable";
+import { faL } from "@fortawesome/free-solid-svg-icons";
 
 function ModalForm({
   isModalOpen,
@@ -27,6 +28,15 @@ function ModalForm({
   handleGroupChange,
   selectedGroup,
   grupos,
+  monedas,
+  monedaSeleccionada,
+  setMonedaSeleccionada,
+  frecuenciaRecurrente,
+  setFrecuenciaRecurrente,
+  esRecurrente,
+  setEsRecurrente,
+  lectura = false,
+  monedaDesconocida = null
 }) {
   const customStyles = {
     overlay: {
@@ -89,18 +99,19 @@ function ModalForm({
       color: "white",
     }),
   };
+  const [selectedOption, setSelectedOption] = useState("");
   const [modalError, setModalError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [activeGroups, setActiveGroups] = useState([]);
   const [isModalCategoriaOpen, setIsModalCategoriaOpen] = useState(false);
   const [isGroupDisabled, setIsGroupDisabled] = useState(false);
   const [isCategoryDisabled, setIsCategoryDisabled] = useState(false);
+  const [isRecurrentDisabled, setIsRecurrentDisabled] = useState(false);
   useEffect(() => {
     if (grupos == null) {
       grupos = [selectedGroup];
     }
     setActiveGroups(grupos.filter((grupo) => grupo.estado === true));
-    console.log(selectedGroup);
   }, [grupos]);
   useEffect(() => {
     if (selectedCategory && selectedCategory.value === "Gasto Grupal") {
@@ -112,6 +123,7 @@ function ModalForm({
     } else if (selectedGroup) {
       setIsGroupDisabled(false);
       setIsCategoryDisabled(true);
+      setIsRecurrentDisabled(true);
     } else {
       setIsCategoryDisabled(false);
       setIsGroupDisabled(false);
@@ -120,6 +132,23 @@ function ModalForm({
       setIsGroupDisabled(true);
     }
   }, [selectedCategory, selectedGroup]);
+  useEffect(() => {
+    if (selectedOption === 'convertir') {
+      setMonedaSeleccionada(1);
+    }
+    if (selectedOption === 'crear') {
+      setMonedaSeleccionada(monedaDesconocida);
+    }
+  }, [selectedOption]);
+  const [lecturaLocal, setLecturaLocal] = useState(lectura);
+
+  useEffect(() => {
+    if (isModalOpen && esRecurrente) {
+      setLecturaLocal(true);
+    } else {
+      setLecturaLocal(lectura);
+    }
+  }, [isModalOpen, lectura]);
   const openModalCategoria = () => {
     setIsModalCategoriaOpen(true);
   };
@@ -134,17 +163,26 @@ function ModalForm({
     }
     setIsLoading(true);
     try {
-      await agregarTransaccion(e, selectedCategory.value); // Espera a que se complete la transacción
+      if(selectedOption == "crear"){
+        await agregarTransaccion(e, selectedCategory.value, true);
+      } else if(selectedOption == "convertir"){
+        let montoAnterior =  (valor * monedaDesconocida.value);
+        await agregarTransaccion(e, selectedCategory.value, false, montoAnterior);
+      } else {
+        await agregarTransaccion(e, selectedCategory.value);
+      }
     } catch (error) {
       console.error("Error al agregar transacción:", error);
     } finally {
-      setIsLoading(false); // Desactivamos el spinner al finalizar
+      setIsLoading(false);
       closeModal();
       setModalError("");
     }
   };
   const closeWindow = () => {
     setModalError("");
+    setSelectedOption("");
+    setIsRecurrentDisabled(false);
     closeModal();
   };
 
@@ -161,25 +199,33 @@ function ModalForm({
 
   const handleGroupSelect = (group) => {
     handleGroupChange(group);
-    if (group) {
+    if (group.value!=null) {
       setIsCategoryDisabled(true); // Desactiva categoría si hay grupo seleccionado
       handleCategoryChange({ value: "Gasto Grupal", label: "Gasto Grupal" });
+      setFrecuenciaRecurrente("");
+      setIsRecurrentDisabled(true);
+      setEsRecurrente(false)
     } else {
       setIsCategoryDisabled(false); // Habilita categoría si no hay grupo
+      setIsRecurrentDisabled(false);
     }
   };
-
   return (
     <Modal
       isOpen={isModalOpen}
       onRequestClose={closeModal}
       contentLabel="Agregar Transacción"
       style={customStyles}
-      className="bg-gray-950 shadow-lg p-4 rounded-lg"
+      className="bg-gray-950 shadow-lg p-4 rounded-lg max-h-screen overflow-y-auto"
     >
-      <h2 className="text-2xl font-bold text-center mb-1 text-gray-100">
-        {edit ? "Editar Transacción" : "Agregar Nueva Transacción"}
+      <h2 className="text-2xl font-bold text-center mb-0 text-gray-100">
+        {edit ? (lecturaLocal ? "Editar Transacción Recurrente" : "Editar Transacción") : "Agregar Nueva Transacción"}
       </h2>
+      {lecturaLocal && (
+            <p className="text-yellow-500 text-sm text-center">
+              (Puede modificar Valor, Medio de Pago y Recurrencia)
+            </p>
+          )}
       <form onSubmit={sendTransaccion} className="flex flex-col gap-3">
         <div>
           <label className="text-center text-gray-100 mb-6">Motivo:</label>
@@ -189,17 +235,99 @@ function ModalForm({
             onChange={handleMotivoChange}
             className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
             required
+            disabled={lecturaLocal}
           />
         </div>
         <div>
           <label className="text-center text-gray-100 mb-6">Valor:</label>
-          <input
-            type="number"
-            value={valor}
-            onChange={(e) => setValor(e.target.value)}
-            className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
-            required
-          />
+          <div className="flex gap-2 ">
+          <div className="flex-1">
+            <input
+              type="number"
+              value={valor}
+              onChange={(e) => setValor(e.target.value)}
+              className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
+              required
+            />
+            </div>
+            <div className="flex-10">
+            {monedaDesconocida ? (
+            <select
+              value={monedaSeleccionada}
+              disabled
+              className="mt-1 block w-full p-2 border bg-gray-700 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
+            >
+              <option value={monedaSeleccionada}>
+                {monedaDesconocida.label}
+              </option>
+            </select>
+          ) : (
+            <select
+              value={monedaSeleccionada}
+              onChange={(e) => setMonedaSeleccionada(e.target.value)}
+              className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
+            >
+              {(monedas || []).map((moneda) => (
+                <option key={moneda.label} value={moneda.value}>
+                  {moneda.label}
+                </option>
+              ))}
+            </select>
+          )}
+            
+            </div></div>
+            {monedaDesconocida && (
+            <div className="mt-4">
+              <div className="flex gap-4">
+                <label className="flex items-center text-gray-100">
+                  <input
+                    type="radio"
+                    name="monedaOption"
+                    value="crear"
+                    checked={selectedOption === 'crear'}
+                    onChange={() => setSelectedOption('crear')}
+                    className="mr-2"
+                  />
+                  Crear moneda
+                </label>
+                <label className="flex items-center text-gray-100">
+                  <input
+                    type="radio"
+                    name="monedaOption"
+                    value="convertir"
+                    checked={selectedOption === 'convertir'}
+                    onChange={() => setSelectedOption('convertir')}
+                    className="mr-2"
+                  />
+                  Convertir a moneda conocida
+                </label>
+              </div>
+
+              {selectedOption === 'convertir' && (
+                <select
+                  value={monedaSeleccionada}
+                  onChange={(e) => setMonedaSeleccionada(e.target.value)}
+                  className="mt-2 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
+                >
+                  {(monedas || []).map((moneda) => (
+                    <option key={moneda.value} value={moneda.value}>
+                      {moneda.label}
+                    </option>
+                  ))}
+                </select>
+              )}
+            </div>
+          )}
+                  {/* Mostrar el valor convertido si la moneda seleccionada no es ARG */}
+                  {((Number(monedaSeleccionada) !== 1)|| monedaDesconocida) && valor && (
+                  <div className="mt-2 text-yellow-400">
+                    Valor en pesos ARG = {
+                      monedaDesconocida 
+                        ? (valor * monedaDesconocida.value)
+                        : (valor * (monedas.find(m => m.value == monedaSeleccionada)?.value || 0))
+                    }
+                  </div>
+                )}
         </div>
         <div>
           <label className="text-center text-gray-100 mb-6">
@@ -237,7 +365,6 @@ function ModalForm({
               </button>
             </div>
           ) : (
-            // Renderiza un input de solo lectura cuando handleGroupChange es null
             <input
               type="text"
               value={
@@ -256,6 +383,7 @@ function ModalForm({
             type="date"
             value={fecha}
             onChange={(e) => setFecha(e.target.value)}
+            min={(esRecurrente) ? new Date().toISOString().split("T")[0] : undefined}
             className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
             required
           />
@@ -272,7 +400,6 @@ function ModalForm({
             </p>
           )}
           {handleGroupChange ? (
-            // Renderiza el componente Select cuando handleGroupChange no es null
             <Select
               options={[
                 { value: null, label: "Select..." },
@@ -288,7 +415,6 @@ function ModalForm({
               styles={customSelectStyles}
             />
           ) : (
-            // Renderiza un input de solo lectura cuando handleGroupChange es null
             <input
               type="text"
               value={
@@ -301,6 +427,40 @@ function ModalForm({
             />
           )}
         </div>
+        <div className="flex items-center mt-3">
+        <input
+          type="checkbox"
+          checked={esRecurrente}
+          onChange={() => setEsRecurrente(!esRecurrente)}
+          className="mr-2 h-5 w-5 text-yellow-500 focus:ring-yellow-400"
+          disabled={lecturaLocal || isRecurrentDisabled}
+        />
+        <label className="text-gray-100">Hacer esta transacción recurrente</label>
+      </div>
+      {isRecurrentDisabled && (
+            <p className="text-yellow-500 text-sm text-center">
+                transacciones grupales no pueden ser recurrentes
+            </p>
+          )}
+
+      {/* 🔹 Selector de periodicidad (se muestra solo si el checkbox está activado) */}
+      {esRecurrente && (
+        <div className="mt-2">
+          <label className="text-gray-100">Repetir transacción:</label>
+          <select
+            value={frecuenciaRecurrente}
+            onChange={(e) => setFrecuenciaRecurrente(e.target.value)}
+            required
+            className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
+          >
+            <option value="">Seleccione una opción</option>
+            <option value="diariamente">Diariamente</option>
+            <option value="semanalmente">Semanalmente</option>
+            <option value="mensualmente">Mensualmente</option>
+            <option value="anualmente">Anualmente</option>
+          </select>
+        </div>
+        )}
         {modalError && (
           <div className="text-red-500 text-sm text-center">{modalError}</div>
         )}

@@ -28,6 +28,7 @@ function BudgetCard({
   };
 
   useEffect(() => {
+    if (!budget?.payOptionBudget) return;
     const [budgetYear, budgetMonth] = budget.budgetMonth.split("-").map(Number);
     checkIfFutureBudget(budgetYear, budgetMonth);
 
@@ -43,12 +44,10 @@ function BudgetCard({
       const isSameMonth =
         transactionYear === budgetYear && transactionMonth === budgetMonth;
 
-      let isCategoryValid = 1;
-      if (transaccion.categoria == "Ingreso de Dinero") {
-        isCategoryValid = 0;
-      }
+      const isCategoryValid = transaccion.categoria !== "Ingreso de Dinero";
+      const isTipoGastoMatch = transaccion.tipoGasto === budget.payOptionBudget;
 
-      return isSameMonth && isCategoryValid;
+      return isSameMonth && isCategoryValid && isTipoGastoMatch;
     });
 
     setBudgetTransactions(filteredTransactions);
@@ -71,7 +70,7 @@ function BudgetCard({
       remaining[category] = allocatedBudget - spentInCategory;
     }
     setRemainingByCategory(remaining);
-  }, []);
+  }, [budget, budget.payOptionBudget, transacciones]);
 
   function getFirstAndLastDayOfMonth(monthString) {
     const [year, month] = monthString.split("-").map(Number);
@@ -112,6 +111,7 @@ function BudgetCard({
           <div className="flex-1">
             <div className="text-xl font-semibold">{budget.nameBudget}</div>
             <div className="text-sm text-white">{categoryString}</div>
+            <div className="text-xl text-white font-semibold">{budget.payOptionBudget}</div>
           </div>
         </div>
 
@@ -146,6 +146,7 @@ function BudgetCard({
           <div className="flex-1">
             <div className="text-xl font-semibold">{budget.nameBudget}</div>
             <div className="text-sm text-white">{categoryString}</div>
+            <div className="text-sm text-white font-semibold">{budget.payOptionBudget}</div>
             <div className="text-sm text-white">{`${dateFrom} a ${dateTo}`}</div>
           </div>
         </div>

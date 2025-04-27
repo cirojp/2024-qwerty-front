@@ -268,11 +268,11 @@ function ModalVerDetallesGrupo({
     let monedaDeTransac = monedas.find(m => m.label == row.monedaOriginal)
     setMonedaSeleccionada(monedaDeTransac.value);
     setValor(row.montoOriginal);
-    const selectedOption = payOptions.find(
+    const selectedGasto = payOptions.find(
       (option) => option.value === row.tipoGasto
     );
-    setSelectedPayMethod(selectedOption || null);
-    setTipoGasto(selectedOption.label || null);
+    setSelectedPayMethod(selectedGasto || null);
+    setTipoGasto(selectedGasto.value || null);
     const selectedPayCategory = payCategories.find(
       (option) => option.value == row.categoria
     );
@@ -324,7 +324,9 @@ function ModalVerDetallesGrupo({
     e.preventDefault();
     const token = localStorage.getItem("token");
     let montoOriginal = valor;
+    console.log(monedaSeleccionada + "xsxsxsxsxs");
     let moneda = monedas.find(m => m.value == monedaSeleccionada);
+    console.log(moneda);
     let monedaOriginal = moneda.label;
     let valorAux = valor * moneda.value;
     let url = `https://two024-qwerty-back-1.onrender.com/api/grupos/transaccion/${transaccionId}`;
@@ -547,6 +549,7 @@ function ModalVerDetallesGrupo({
         frecuenciaRecurrente={null}
         esRecurrente={false}
         lectura={false}
+        monedaDesconocida={null}
       />
     </Modal>
   );

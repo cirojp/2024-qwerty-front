@@ -91,6 +91,7 @@ function HomePage() {
   const [frecuenciaRecurrente, setFrecuenciaRecurrente] = useState("");
   const [esRecurrente, setEsRecurrente] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [monedaDesconocida, setMonedaDesconocida] = useState(null);
   const handleGroupChange = (selectedOption) => {
     if (selectedOption && selectedOption.value === null) {
       setSelectedGroup(null); // Restablecer a null si se selecciona "Personal"
@@ -371,14 +372,21 @@ function HomePage() {
     setFrecuenciaRecurrente("");
     setEsRecurrente(false);
     setSelectedGroup(null);
+    setMonedaDesconocida(null);
   };
 
   const editRow = (row) => {
-    console.log(row);
     setEdit(true);
     setMotivo(row.motivo);
     let monedaDeTransac = monedas.find(m => m.label == row.monedaOriginal)
-    setMonedaSeleccionada(monedaDeTransac.value);
+    if (monedaDeTransac) {
+      setMonedaSeleccionada(monedaDeTransac.value);
+    } else {
+      const valorCalculado = row.valor / row.montoOriginal;
+      setMonedaDesconocida({ value: valorCalculado, label: row.monedaOriginal });
+      setMonedaSeleccionada(row.monedaOriginal);
+      //console.log(monedaDesconocida);
+    }
     setValor(row.montoOriginal);
     const selectedOption = payOptions.find(
       (option) => option.value === row.tipoGasto
@@ -528,15 +536,27 @@ function HomePage() {
       }
     }
   };
-  const agregarTransaccion = async (e, categoria) => {
+  const agregarTransaccion = async (e, categoria, monedaAConocer = null, montoAnterior = null) => {
     e.preventDefault();
-    let moneda = monedas.find(m => m.value == monedaSeleccionada);
+    let moneda = {};
+    let montoOriginal = valor;
+    let valorAux = 0;
+    if(montoAnterior != null){
+      moneda = monedas.find(m => m.value == monedaSeleccionada);
+      valorAux = montoAnterior;
+      montoOriginal = montoAnterior / moneda.value;
+    } else {
+      if(monedaAConocer){
+        moneda = monedaDesconocida;
+      } else {
+        moneda = monedas.find(m => m.value == monedaSeleccionada);
+      }
+      valorAux = valor * moneda.value;
+    }
     const token = localStorage.getItem("token");
     let bodyJson = "";
     let url = "";
     let monedaOriginal = moneda.label;
-    let montoOriginal = valor;
-    let valorAux = valor * moneda.value;
     setTransaccionesCargadas(false);
     if (selectedGroup == null) {
       bodyJson = JSON.stringify({ motivo, valor: valorAux, fecha, categoria, tipoGasto, monedaOriginal, montoOriginal, frecuenciaRecurrente: esRecurrente ? frecuenciaRecurrente : null });
@@ -570,6 +590,9 @@ function HomePage() {
         body: bodyJson,
       });
       if (response.ok) {
+        if(monedaDesconocida != null && montoAnterior != null){
+          handleCreateMoneda(monedaDesconocida.label, monedaDesconocida.value);
+        }
         console.log("la respuesta fue ok");
         const data = await response.json();
         if (selectedGroup == null) {
@@ -600,6 +623,41 @@ function HomePage() {
       if (!edit) {
         checkTransaccionAchievment();
       }
+    }
+  };
+  
+  const handleCreateMoneda = async (nombre, valor) => {
+    const nombreExiste = monedas.some(
+      (moneda) => moneda.label.toLowerCase() === nombre.toLowerCase()
+    );
+  
+    if (nombreExiste) {
+      throw new Error("Ya existe una moneda con ese nombre.");
+      return;
+    }
+    const token = localStorage.getItem("token");
+    try {
+      const response = await fetch(
+        `https://two024-qwerty-back-1.onrender.com/api/personal-moneda`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        body: JSON.stringify({ nombre, valor }),
+        }
+      );
+      if (response.ok) {
+        const newMoneda = await response.json();
+        const newOption = {
+          label: newMoneda.nombre,
+          value: newMoneda.valor,
+        };
+        setMonedas((prevOptions) => [...prevOptions, newOption]);
+      }
+    } catch (error) {
+      console.error("Error al agregar la moneda personalizada:", error);
     }
   };
 
@@ -1005,6 +1063,7 @@ function HomePage() {
           esRecurrente={esRecurrente}
           setEsRecurrente={setEsRecurrente}
           lectura={false}
+          monedaDesconocida={monedaDesconocida}
         />
         <ModalAskPayment payCategories={payCategories} monedas={monedas} />
         <ModalSendPayment

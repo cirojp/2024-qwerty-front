@@ -34,7 +34,8 @@ function ModalForm({
   setFrecuenciaRecurrente,
   esRecurrente,
   setEsRecurrente,
-  lectura = false
+  lectura = false,
+  monedaDesconocida = null
 }) {
   const customStyles = {
     overlay: {
@@ -97,6 +98,7 @@ function ModalForm({
       color: "white",
     }),
   };
+  const [selectedOption, setSelectedOption] = useState("");
   const [modalError, setModalError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [activeGroups, setActiveGroups] = useState([]);
@@ -129,6 +131,18 @@ function ModalForm({
       setIsGroupDisabled(true);
     }
   }, [selectedCategory, selectedGroup]);
+  useEffect(() => {
+    if (selectedOption === 'convertir') {
+      setMonedaSeleccionada(1);
+    }
+    if (selectedOption === 'crear') {
+      setMonedaSeleccionada(monedaDesconocida);
+    }
+  }, [selectedOption]);
+  useEffect(() => {
+    console.log(monedaSeleccionada);
+    console.log(monedaDesconocida);
+  }, [monedaSeleccionada]);
   const openModalCategoria = () => {
     setIsModalCategoriaOpen(true);
   };
@@ -143,17 +157,28 @@ function ModalForm({
     }
     setIsLoading(true);
     try {
-      await agregarTransaccion(e, selectedCategory.value); // Espera a que se complete la transacción
+      if(selectedOption == "crear"){
+        console.log("fue por crear");
+        await agregarTransaccion(e, selectedCategory.value, true);
+      } else if(selectedOption == "convertir"){
+        console.log("fue por convertir");
+        let montoAnterior =  (valor * monedaDesconocida.value);
+        await agregarTransaccion(e, selectedCategory.value, false, montoAnterior);
+      } else {
+        console.log("fue por else");
+        await agregarTransaccion(e, selectedCategory.value);
+      }
     } catch (error) {
       console.error("Error al agregar transacción:", error);
     } finally {
-      setIsLoading(false); // Desactivamos el spinner al finalizar
+      setIsLoading(false);
       closeModal();
       setModalError("");
     }
   };
   const closeWindow = () => {
     setModalError("");
+    setSelectedOption("");
     closeModal();
   };
 
@@ -181,7 +206,6 @@ function ModalForm({
       setIsRecurrentDisabled(false);
     }
   };
-
   return (
     <Modal
       isOpen={isModalOpen}
@@ -223,24 +247,83 @@ function ModalForm({
             />
             </div>
             <div className="flex-10">
+            {monedaDesconocida ? (
+            <select
+              value={monedaSeleccionada}
+              disabled
+              className="mt-1 block w-full p-2 border bg-gray-700 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
+            >
+              <option value={monedaSeleccionada}>
+                {monedaDesconocida.label}
+              </option>
+            </select>
+          ) : (
             <select
               value={monedaSeleccionada}
               onChange={(e) => setMonedaSeleccionada(e.target.value)}
               className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
             >
               {(monedas || []).map((moneda) => (
-                <option key={moneda.value} value={moneda.value}>
+                <option key={moneda.label} value={moneda.value}>
                   {moneda.label}
                 </option>
               ))}
             </select>
+          )}
+            
             </div></div>
+            {monedaDesconocida && (
+            <div className="mt-4">
+              <div className="flex gap-4">
+                <label className="flex items-center text-gray-100">
+                  <input
+                    type="radio"
+                    name="monedaOption"
+                    value="crear"
+                    checked={selectedOption === 'crear'}
+                    onChange={() => setSelectedOption('crear')}
+                    className="mr-2"
+                  />
+                  Crear moneda
+                </label>
+                <label className="flex items-center text-gray-100">
+                  <input
+                    type="radio"
+                    name="monedaOption"
+                    value="convertir"
+                    checked={selectedOption === 'convertir'}
+                    onChange={() => setSelectedOption('convertir')}
+                    className="mr-2"
+                  />
+                  Convertir a moneda conocida
+                </label>
+              </div>
+
+              {selectedOption === 'convertir' && (
+                <select
+                  value={monedaSeleccionada}
+                  onChange={(e) => setMonedaSeleccionada(e.target.value)}
+                  className="mt-2 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
+                >
+                  {(monedas || []).map((moneda) => (
+                    <option key={moneda.value} value={moneda.value}>
+                      {moneda.label}
+                    </option>
+                  ))}
+                </select>
+              )}
+            </div>
+          )}
                   {/* Mostrar el valor convertido si la moneda seleccionada no es ARG */}
-        {monedaSeleccionada !== 1 && valor && (
-          <div className="mt-2 text-yellow-400">
-            Valor en pesos ARG = {valor * monedas.find(m => m.value == monedaSeleccionada)?.value}
-          </div>
-        )}
+                  {((Number(monedaSeleccionada) !== 1)|| monedaDesconocida) && valor && (
+                  <div className="mt-2 text-yellow-400">
+                    Valor en pesos ARG = {
+                      monedaDesconocida 
+                        ? (valor * monedaDesconocida.value)
+                        : (valor * (monedas.find(m => m.value == monedaSeleccionada)?.value || 0))
+                    }
+                  </div>
+                )}
         </div>
         <div>
           <label className="text-center text-gray-100 mb-6">

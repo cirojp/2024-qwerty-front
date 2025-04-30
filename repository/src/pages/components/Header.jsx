@@ -214,7 +214,7 @@ function Header({
                     className="w-full px-4 py-2 bg-yellow-500 text-gray-900 rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out"
                     onClick={() => {
                       openModalRecurrentes();
-                      setIsModalRecurrentesOpen(false);
+                      setIsModalRecurrentesOpen(true);
                     }}
                   >
                     Transac. Recurrentes

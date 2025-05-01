@@ -594,12 +594,15 @@ function HomePage() {
         console.log("la respuesta fue ok");
         const data = await response.json();
         if (selectedGroup == null) {
-          if (edit) {
+          if (edit && (!frecuenciaRecurrente || frecuenciaRecurrente.trim() === "")) {
             const updatedTransacciones = transacciones.map((t) =>
               t.id === data.id ? data : t
             );
             setTransacciones(updatedTransacciones);
-          } else if(fecha.split("-")[0] === filtroAno){
+          } else if (edit && (frecuenciaRecurrente || frecuenciaRecurrente.trim() !== "")) {
+            getTransacciones();
+            setTransacciones(updatedTransacciones);
+          }else if(fecha.split("-")[0] === filtroAno && (!frecuenciaRecurrente || frecuenciaRecurrente.trim() === "")){
             const updatedTransacciones = [...transacciones, data];
             updatedTransacciones.sort(
               (a, b) => new Date(b.fecha) - new Date(a.fecha)

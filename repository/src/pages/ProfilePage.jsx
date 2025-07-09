@@ -29,8 +29,6 @@ function ProfilePage() {
   ];
   const defaultMonedas = [
     { value: 1, label: "ARG", textColor: "mr-2 text-yellow-500" }, 
-    { value: 1250, label: "USD", textColor: "mr-2 text-yellow-500" }, 
-    { value: 1300, label: "EUR", textColor: "mr-2 text-yellow-500" }, 
   ];
 
   const [isModalOpen, setIsModalOpen] = useState(false);

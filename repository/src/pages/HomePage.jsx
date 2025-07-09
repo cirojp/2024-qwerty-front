@@ -84,8 +84,6 @@ function HomePage() {
   );
   const [monedas, setMonedas] = useState([ 
       { value: 1, label: "ARG" }, 
-      { value: 1250, label: "USD" }, 
-      { value: 1300, label: "EUR" }, 
     ]);
   const [monedaSeleccionada, setMonedaSeleccionada] = useState(1);
   const [frecuenciaRecurrente, setFrecuenciaRecurrente] = useState("");
@@ -115,6 +113,7 @@ function HomePage() {
     //getTransacciones(categoriaSeleccionada);
   }, [payCategories]);
   useEffect(() => {
+    console.log(localStorage.getItem("token"));
     fetchPersonalTipoGastos();
     fetchPersonalMonedas();
     fetchGrupos();
@@ -599,9 +598,8 @@ function HomePage() {
               t.id === data.id ? data : t
             );
             setTransacciones(updatedTransacciones);
-          } else if (edit && (frecuenciaRecurrente || frecuenciaRecurrente.trim() !== "")) {
+          } else if (frecuenciaRecurrente || frecuenciaRecurrente.trim() !== "") {
             getTransacciones();
-            setTransacciones(updatedTransacciones);
           }else if(fecha.split("-")[0] === filtroAno && (!frecuenciaRecurrente || frecuenciaRecurrente.trim() === "")){
             const updatedTransacciones = [...transacciones, data];
             updatedTransacciones.sort(
@@ -609,6 +607,7 @@ function HomePage() {
             );
             setTransacciones(updatedTransacciones);
           }
+
         }
         closeModal();
         setSelectedGroup(null);

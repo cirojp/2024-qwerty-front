@@ -255,8 +255,8 @@ function ModalVerDetallesGrupo({
         estado: false,
       });
       setGrupos((grupos) =>
-        grupos.map((grupo) =>
-          grupo.id === grupo.id ? { ...grupo, estado: false } : grupo
+        grupos.map((g) =>
+          g.id === grupo.id ? { ...g, estado: false } : g
         )
       );
       getTransacciones();

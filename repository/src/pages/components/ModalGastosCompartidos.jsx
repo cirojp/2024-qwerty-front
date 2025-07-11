@@ -17,7 +17,10 @@ function ModalGastosCompartidos({
   const [grupos, setGrupos] = useState([]); // Estado para grupos
   const [isModalDetallesGrupoOpen, setIsModalDetallesGrupoOpen] =
     useState(false);
-  const closeModalDetallesGrupo = () => setIsModalDetallesGrupoOpen(false);
+  const closeModalDetallesGrupo = () =>  {
+    setIsModalDetallesGrupoOpen(false);
+    setGrupoSeleccionado(null); // <-- AGREGADO ACÁ
+  };
   const [grupoSeleccionado, setGrupoSeleccionado] = useState(null); // Estado para el nombre del grupo seleccionado
   const [grupoAEliminar, setGrupoAEliminar] = useState(null);
   const [grupoAAgregar, setGrupoAAgregar] = useState(null);
@@ -92,11 +95,6 @@ function ModalGastosCompartidos({
     closeModalGastos();
   };
   const openModalDetallesGrupo = async (grupo) => {
-    /*const nombreGrupo = grupo.nombre;
-    const idGrupo = grupo.id;
-    const estado = grupo.estado;
-    setGrupoSeleccionado({ nombre: nombreGrupo, id: idGrupo, estado: estado });
-    setIsModalDetallesGrupoOpen(true);*/
     try {
       await fetchMiembros(grupo); // Obtener miembros primero
       setIsModalMiembrosOpen(false);
@@ -142,6 +140,12 @@ function ModalGastosCompartidos({
   const closeModal = () => {
     setGrupoAAgregar(null);
     setIsModalOpen(false);
+  };
+
+  const handleCerrarDetallesGrupo = () => {
+    setIsModalDetallesGrupoOpen(false);
+    setGrupoAAgregar(null);
+    setGrupoSeleccionado(null); // Asegura que se limpie el estado
   };
 
   const customStyles = {
@@ -260,7 +264,7 @@ function ModalGastosCompartidos({
       {grupoSeleccionado && (
         <ModalVerDetallesGrupo
           isModalDetallesGrupoOpen={isModalDetallesGrupoOpen}
-          closeModalDetallesGrupo={closeModalDetallesGrupo}
+          closeModalDetallesGrupo={handleCerrarDetallesGrupo}
           grupo={grupoSeleccionado}
           setGrupoSeleccionado={setGrupoSeleccionado}
           payCategories={payCategories}

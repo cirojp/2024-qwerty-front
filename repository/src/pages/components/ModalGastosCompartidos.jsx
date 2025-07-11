@@ -91,12 +91,23 @@ function ModalGastosCompartidos({
     setModalError("");
     closeModalGastos();
   };
-  const openModalDetallesGrupo = (grupo) => {
-    const nombreGrupo = grupo.nombre;
+  const openModalDetallesGrupo = async (grupo) => {
+    /*const nombreGrupo = grupo.nombre;
     const idGrupo = grupo.id;
     const estado = grupo.estado;
     setGrupoSeleccionado({ nombre: nombreGrupo, id: idGrupo, estado: estado });
-    setIsModalDetallesGrupoOpen(true);
+    setIsModalDetallesGrupoOpen(true);*/
+    try {
+      await fetchMiembros(grupo); // Obtener miembros primero
+      setIsModalMiembrosOpen(false);
+      const nombreGrupo = grupo.nombre;
+      const idGrupo = grupo.id;
+      const estado = grupo.estado;
+      setGrupoSeleccionado({ nombre: nombreGrupo, id: idGrupo, estado: estado });
+      setIsModalDetallesGrupoOpen(true);
+    } catch (error) {
+      setModalError("Error al obtener los miembros del grupo.");
+    }
   };
 
   const openModalEliminar = (grupo) => {
@@ -257,6 +268,7 @@ function ModalGastosCompartidos({
           grupos={grupos}
           getTransacciones={getTransacciones}
           monedas={monedas}
+          miembros={miembros}
         />
       )}
 

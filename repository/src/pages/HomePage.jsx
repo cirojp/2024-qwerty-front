@@ -535,6 +535,14 @@ function HomePage() {
   };
   const agregarTransaccion = async (e, categoria, monedaAConocer = null, montoAnterior = null) => {
     e.preventDefault();
+    if(monedaDesconocida != null && monedaAConocer == true){
+      try {
+        await handleCreateMoneda(monedaDesconocida.label, monedaDesconocida.value);
+      } catch (err) {
+        console.error("Error al crear moneda:", err);
+        return; // Salís de la función si falla
+      }
+    }
     let moneda = {};
     let montoOriginal = valor;
     let valorAux = 0;
@@ -587,9 +595,10 @@ function HomePage() {
         body: bodyJson,
       });
       if (response.ok) {
-        if(monedaDesconocida != null && montoAnterior != null){
+        /*console.log(monedaAConocer);
+        if(monedaDesconocida != null && monedaAConocer == true){
           handleCreateMoneda(monedaDesconocida.label, monedaDesconocida.value);
-        }
+        }*/
         console.log("la respuesta fue ok");
         const data = await response.json();
         if (selectedGroup == null) {

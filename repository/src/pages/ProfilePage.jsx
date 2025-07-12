@@ -29,8 +29,6 @@ function ProfilePage() {
   ];
   const defaultMonedas = [
     { value: 1, label: "ARG", textColor: "mr-2 text-yellow-500" }, 
-    { value: 1250, label: "USD", textColor: "mr-2 text-yellow-500" }, 
-    { value: 1300, label: "EUR", textColor: "mr-2 text-yellow-500" }, 
   ];
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -505,7 +503,7 @@ function ProfilePage() {
                   ))}
                 </ul>
                 <ul>
-                  {monedas.slice(3).map((moneda) => (
+                  {monedas.slice(1).map((moneda) => (
                     <li
                       key={moneda.label}
                       className="bg-gray-700 p-3 rounded-md shadow mb-3 flex justify-between"

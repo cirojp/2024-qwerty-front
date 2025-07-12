@@ -32,7 +32,7 @@ function ResetPasswordForm() {
     e.preventDefault();
     if (!validatePassword(newPassword)) {
       setMessage(
-        "La contraseña debe tener al menos 8 caracteres, una mayuscula y minuscula, un número, un carácter especial y no puede contener comillas simples, dobles, barra vertical, barra inclinada o barra invertida."
+        "La contraseña debe tener al menos 8 caracteres, una mayuscula y minuscula, un número, un carácter especial (@$!%*?&)."
       );
       return;
     } else {

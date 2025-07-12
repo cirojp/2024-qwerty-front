@@ -29,7 +29,7 @@ function RegisterForm() {
 
     if (!validatePassword(password)) {
       setError(
-        "La contraseña debe tener al menos 8 caracteres, una mayuscula y minuscula, un número, un carácter especial y no puede contener comillas simples, dobles, barra vertical, barra inclinada o barra invertida."
+        "La contraseña debe tener al menos 8 caracteres, una mayuscula y minuscula, un número y un carácter especial (@$!%*?&)."
       );
       setLoading(false);
       return;

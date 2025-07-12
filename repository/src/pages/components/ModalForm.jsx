@@ -107,6 +107,8 @@ function ModalForm({
   const [isGroupDisabled, setIsGroupDisabled] = useState(false);
   const [isCategoryDisabled, setIsCategoryDisabled] = useState(false);
   const [isRecurrentDisabled, setIsRecurrentDisabled] = useState(false);
+  const deshabilitarCamposPorMoneda = monedaDesconocida && selectedOption !== "crear" && selectedOption !== "convertir";
+
   useEffect(() => {
     if (grupos == null) {
       grupos = [selectedGroup];
@@ -175,6 +177,7 @@ function ModalForm({
       console.error("Error al agregar transacción:", error);
     } finally {
       setIsLoading(false);
+      setSelectedOption("");
       closeModal();
       setModalError("");
     }
@@ -226,6 +229,11 @@ function ModalForm({
               (Puede modificar Valor, Medio de Pago y Recurrencia)
             </p>
           )}
+          {deshabilitarCamposPorMoneda && (
+        <p className="text-red-500 text-sm text-center mt-2">
+          Elegir crear o convertir moneda para poder modificar campos.
+        </p>
+      )}
       <form onSubmit={sendTransaccion} className="flex flex-col gap-3">
         <div>
           <label className="text-center text-gray-100 mb-6">Motivo:</label>
@@ -235,7 +243,7 @@ function ModalForm({
             onChange={handleMotivoChange}
             className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
             required
-            disabled={lecturaLocal}
+            disabled={lecturaLocal || deshabilitarCamposPorMoneda}
           />
         </div>
         <div>
@@ -248,6 +256,7 @@ function ModalForm({
               onChange={(e) => setValor(e.target.value)}
               className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
               required
+              disabled={deshabilitarCamposPorMoneda}
             />
             </div>
             <div className="flex-10">
@@ -341,6 +350,7 @@ function ModalForm({
             className="custom-select mt-1 block w-full border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm border-transparent"
             styles={customSelectStyles}
             required
+            isDisabled={deshabilitarCamposPorMoneda}
           />
         </div>
         <div>
@@ -351,7 +361,7 @@ function ModalForm({
                 options={payCategories}
                 onChange={handleCategorySelect}
                 value={selectedCategory}
-                isDisabled={isCategoryDisabled} // Desactivar si ya hay un grupo seleccionado
+                isDisabled={isCategoryDisabled || deshabilitarCamposPorMoneda} // Desactivar si ya hay un grupo seleccionado
                 className="custom-select mt-1 block w-full border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm border-transparent"
                 styles={customSelectStyles}
                 required
@@ -360,6 +370,7 @@ function ModalForm({
                 type="button"
                 onClick={() => openModalCategoria()}
                 className="ml-2 bg-blue-500 text-white py-1 px-2 rounded"
+                disabled={deshabilitarCamposPorMoneda}
               >
                 +
               </button>
@@ -386,6 +397,7 @@ function ModalForm({
             min={(esRecurrente) ? new Date().toISOString().split("T")[0] : undefined}
             className="mt-1 block w-full p-2 border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500"
             required
+            disabled={deshabilitarCamposPorMoneda}
           />
         </div>
         <div>
@@ -410,7 +422,7 @@ function ModalForm({
               ]}
               onChange={handleGroupSelect}
               value={selectedGroup}
-              isDisabled={isGroupDisabled} // Desactivar si la categoría no es "Gasto Grupal"
+              isDisabled={isGroupDisabled || deshabilitarCamposPorMoneda} // Desactivar si la categoría no es "Gasto Grupal"
               className="custom-select mt-1 block w-full border bg-gray-900 text-white border-yellow-600 rounded-md shadow-sm border-transparent"
               styles={customSelectStyles}
             />
@@ -433,7 +445,7 @@ function ModalForm({
           checked={esRecurrente}
           onChange={() => setEsRecurrente(!esRecurrente)}
           className="mr-2 h-5 w-5 text-yellow-500 focus:ring-yellow-400"
-          disabled={lecturaLocal || isRecurrentDisabled}
+          disabled={lecturaLocal || isRecurrentDisabled || deshabilitarCamposPorMoneda}
         />
         <label className="text-gray-100">Hacer esta transacción recurrente</label>
       </div>

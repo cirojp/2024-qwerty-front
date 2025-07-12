@@ -84,8 +84,6 @@ function HomePage() {
   );
   const [monedas, setMonedas] = useState([ 
       { value: 1, label: "ARG" }, 
-      { value: 1250, label: "USD" }, 
-      { value: 1300, label: "EUR" }, 
     ]);
   const [monedaSeleccionada, setMonedaSeleccionada] = useState(1);
   const [frecuenciaRecurrente, setFrecuenciaRecurrente] = useState("");
@@ -115,6 +113,7 @@ function HomePage() {
     //getTransacciones(categoriaSeleccionada);
   }, [payCategories]);
   useEffect(() => {
+    console.log(localStorage.getItem("token"));
     fetchPersonalTipoGastos();
     fetchPersonalMonedas();
     fetchGrupos();
@@ -536,6 +535,14 @@ function HomePage() {
   };
   const agregarTransaccion = async (e, categoria, monedaAConocer = null, montoAnterior = null) => {
     e.preventDefault();
+    if(monedaDesconocida != null && monedaAConocer == true){
+      try {
+        await handleCreateMoneda(monedaDesconocida.label, monedaDesconocida.value);
+      } catch (err) {
+        console.error("Error al crear moneda:", err);
+        return; // Salís de la función si falla
+      }
+    }
     let moneda = {};
     let montoOriginal = valor;
     let valorAux = 0;
@@ -588,24 +595,28 @@ function HomePage() {
         body: bodyJson,
       });
       if (response.ok) {
-        if(monedaDesconocida != null && montoAnterior != null){
+        /*console.log(monedaAConocer);
+        if(monedaDesconocida != null && monedaAConocer == true){
           handleCreateMoneda(monedaDesconocida.label, monedaDesconocida.value);
-        }
+        }*/
         console.log("la respuesta fue ok");
         const data = await response.json();
         if (selectedGroup == null) {
-          if (edit) {
+          if (edit && (!frecuenciaRecurrente || frecuenciaRecurrente.trim() === "")) {
             const updatedTransacciones = transacciones.map((t) =>
               t.id === data.id ? data : t
             );
             setTransacciones(updatedTransacciones);
-          } else if(fecha.split("-")[0] === filtroAno){
+          } else if (frecuenciaRecurrente || frecuenciaRecurrente.trim() !== "") {
+            getTransacciones();
+          }else if(fecha.split("-")[0] === filtroAno && (!frecuenciaRecurrente || frecuenciaRecurrente.trim() === "")){
             const updatedTransacciones = [...transacciones, data];
             updatedTransacciones.sort(
               (a, b) => new Date(b.fecha) - new Date(a.fecha)
             );
             setTransacciones(updatedTransacciones);
           }
+
         }
         closeModal();
         setSelectedGroup(null);

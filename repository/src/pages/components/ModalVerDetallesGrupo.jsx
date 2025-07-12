@@ -20,7 +20,8 @@ function ModalVerDetallesGrupo({
   setGrupos,
   grupos,
   getTransacciones,
-  monedas
+  monedas,
+  miembros
 }) {
   const [transacciones, setTransacciones] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -181,8 +182,12 @@ function ModalVerDetallesGrupo({
   };
 
   const calcularDeudas = () => {
+    console.log(miembros);
     const usuariosGastos = {};
     // Agrupamos el gasto total por usuario
+    miembros.forEach((miembro) => {
+      usuariosGastos[miembro.email] = 0;
+    });
     transacciones.forEach(({ valor, users }) => {
       if (usuariosGastos[users]) {
         usuariosGastos[users] += valor;
@@ -250,8 +255,8 @@ function ModalVerDetallesGrupo({
         estado: false,
       });
       setGrupos((grupos) =>
-        grupos.map((grupo) =>
-          grupo.id === grupo.id ? { ...grupo, estado: false } : grupo
+        grupos.map((g) =>
+          g.id === grupo.id ? { ...g, estado: false } : g
         )
       );
       getTransacciones();
